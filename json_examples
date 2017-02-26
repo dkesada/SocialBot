@@ -1,0 +1,63 @@
+
+This results from sending a location to the bot
+
+{u'from': {u'first_name': u'Nombre', u'last_name': u'Apellido', u'id': 245622343}, 
+ u'forward_from': {u'first_name': u'Nombre', u'last_name': u'Apellido', u'id': 245622343}, 
+ u'location': {u'latitude': 40.411085, u'longitude': -3.685014}, 
+ u'chat': {u'first_name': u'Nombre', u'last_name': u'Apellido', u'type': u'private', u'id': 245622343}, 
+ u'forward_date': 1488106465, 
+ u'date': 1488112931, 
+ u'message_id': 648}
+
+This results from a query of places_nearby
+
+{u'status': u'OK', 
+ u'html_attributions': [], 
+ u'results': 
+   [{u'rating': 3.9, 
+     u'name': u'Taj', 
+     u'reference': u'CmRSAAAAMuMsx2ZEqjS0K0oUAaCpYb43A4oUmIXEdarTyk8B_vrOyUJStNSG-Frsyt3-dQK2JUSSuW5wPaIU_Ft6DQ7KcqG1VZNOi5st60derkE-Bu1Rci5vdgxB5kOIbEHWpyHUEhB6-7UmcdKTypYLziP-lzODGhSY6DM0UrXDvyV8CceN3Bt3rsG5dw', 
+     u'price_level': 2, 
+     u'geometry': {u'location': {u'lat': 40.417251, u'lng': -3.695700000000001}, 
+     u'viewport': {u'northeast': {u'lat': 40.4186071302915, u'lng': -3.694268769708497}, 
+     u'southwest': {u'lat': 40.4159091697085, u'lng': -3.696966730291502}}}, 
+     u'opening_hours': {u'weekday_text': [], u'open_now': True, u'exceptional_date': []}, 
+     u'place_id': u'ChIJ2SYbnIMoQg0ReztwwfW4iek', 
+     u'vicinity': u'Calle del Marqu\xe9s de Cubas, 6, Madrid', 
+     u'photos': [{u'photo_reference': u'CoQBdwAAAMsiqo_09qm-kDOYJj1YPUOz69OtoWfrE6Yj1_lPt9-ZCBQkrUq_RHFdnviH_txnwqmYi9m8tWNyf_zw4nGcvroJQrD8DeLAdEkQnQ8K5k017bgiPLOIayMAEZHgMZIk03lU2nQ-9Ytj1Pw-FAFAARlApW87gXNekSHoRvE3UjndEhBs1NNzU0aDT4xGMt_SlokVGhTbo_Vt1_83spseePMMwLIB87To2w', u'width': 2048, u'html_attributions': [u'<a href="https://maps.google.com/maps/contrib/104111246635874032234/photos">ZAGAT</a>'], u'height': 1367}], 
+     u'scope': u'GOOGLE', 
+     u'id': u'dc9e7627d4688b2f8801199bd35395430c45fdf7', 
+     u'types': [u'meal_delivery', u'meal_takeaway', u'restaurant', u'food', u'point_of_interest', u'establishment'], 
+     u'icon': u'https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png'}, 
+     
+     {u'rating': 4, 
+     u'name': u'Taberna La Carmencita', 
+     u'reference': u'CmRRAAAALZ1jU_1yo1ZeGDgFXSmIGWzpwvmzmELSjBuoaXk2MZs-tZyl8D1Q5gisjMrhBKm92-LQ0wNNRu9rWgDDAE5vyQ6GHSWDhA8i6QHl3T5TBbingMiKMe9cUfn0mHuWrNODEhCRPOzTQ1VNbHcNPiKD-ep3GhT9a8kitnCYie7fDI9Xl_Fc7ylXfg', 
+     u'price_level': 2, 
+     u'geometry': {u'location': {u'lat': 40.4211842, u'lng': -3.6972479}, 
+     u'viewport': {u'northeast': {u'lat': 40.4225073802915, u'lng': -3.695970019708497}, 
+     u'southwest': {u'lat': 40.4198094197085, u'lng': -3.698667980291502}}}, 
+     u'opening_hours': {u'weekday_text': [], u'open_now': True, u'exceptional_date': []}, 
+     u'place_id': u'ChIJ6bFN0IUoQg0R1XooZXPpSgg', 
+     u'vicinity': u'Calle Libertad, 16, Madrid', 
+     u'photos': [{u'photo_reference': u'CoQBcwAAACemZ1P7TtCdV4u_ZSa3pxD2CjrlS5l7HBKQ47oyH33Csc0NEPaNz3bQctdkSn5GWW_9HmfdlPF9S599msfujAv0bsrRFAw0Lws4a08_izCC_ywCUeiriooyvkyngNavdk_A0l65jJWuSOcwM8KRkSLunMQta1PDyCaCjklzy5fEEhArzEEpZQ3ltruMfelg1VnyGhSYLSK_xwXXDgPVnMmd4o51vVB5RQ', u'width': 2448, u'html_attributions': [u'<a href="https://maps.google.com/maps/contrib/107700992241694485376/photos">Bogdan Stroe</a>'], u'height': 3264}], 
+     u'scope': u'GOOGLE', 
+     u'id': u'b436ac999abe20f217c08701ab5876651b544ea0', 
+     u'types': [u'bar', u'restaurant', u'food', u'point_of_interest', u'establishment'], 
+     u'icon': u'https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png'}, 
+     
+     {u'rating': 4.1, 
+     u'name': u'Taberna de la Daniela', 
+     u'reference': u'CmRSAAAAVw-q3H43lNQRblz_oqwNvseqKj59kUrArK025XqJKQIcLj_QcIxmg0_yz_SUHwQqetBvG4I4JBSOV1ooG9-z4c036LZg1O8quTIanJNpfRGNyhtuvTyP700QgddpteAhEhBR-1ScXi_x-mGZhojKbxGJGhQ26TRod-TcnE6OkhrTKhWGNWcIEA', 
+     u'price_level': 3, 
+     u'geometry': {u'location': {u'lat': 40.42632020000001, u'lng': -3.6786533}, 
+     u'viewport': {u'northeast': {u'lat': 40.4276828802915, u'lng': -3.677244819708497}, 
+     u'southwest': {u'lat': 40.4249849197085, u'lng': -3.679942780291502}}}, 
+     u'opening_hours': {u'weekday_text': [], u'open_now': True, u'exceptional_date': []}, 
+     u'place_id': u'ChIJAdDzirwoQg0RTO4ZOhuU4Pg', 
+     u'vicinity': u'Calle del General Pardi\xf1as, 21, Madrid', 
+     u'photos': [{u'photo_reference': u'CoQBdwAAAIQNggJrGTl3lNkilokciehzl2KhDrlsaJYqISNX4TTZgQKX6JwTKWnV7Rzd2Gyq_vkT7cpsO7cKhc_gmx8Hgebwpu0YWoHA7kWfD-o9RzJlc1-YBZTXfXkCfJLEdyXPd7b6ujBUT3lXNfJY_QieGw34ESZu6m5QNbzpGb7m9-M8EhDbvKP2Ueq5_gDGHCHVQYM9GhR4ThrsLFwiQ9j-_yAn7Jk0uxAORw', u'width': 2048, u'html_attributions': [u'<a href="https://maps.google.com/maps/contrib/108340512334511374463/photos">Taberna de la Daniela Goya</a>'], u'height': 1371}], 
+     u'scope': u'GOOGLE', 
+     u'id': u'465ee93b2d2b60200f31e448290c6bf4cab57efc', 
+     u'types': [u'restaurant', u'food', u'point_of_interest', u'establishment'], 
+     u'icon': u'https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png'}]}
