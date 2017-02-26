@@ -13,24 +13,35 @@ from telepot.namedtuple import ReplyKeyboardMarkup, KeyboardButton
 from telepot.delegate import (
     per_chat_id, per_callback_query_origin, create_open, pave_event_space)
 
+import googlemaps
+from datetime import datetime
+
 """
-Deberíamos empezar de más simple a más complejo, del palo de primero la interfaz
-con algún botón, que nos manden su ubicación y mostrar los locales cercanos.
-Luego para la base de datos yo preferiría usar mongodb, parece más adecuado para este caso
-que sql. De primeras a la base de datos irían los usuarios que entren y luego los locales de
-los que tengamos algún dato. O dos colecciones de mongo o todo en la misma, por evitar los 
-join si hubiese.
-Vamos a intentar desde el principio poner todo el código en inglés, y eso que nos ahorramos
-para luego.
-Para mirar cosas del telepot la mejor documentacion es esta:
+He empezado a usar esto para sacar los locales cercanos a la ubicación que te manden:
+https://github.com/googlemaps/google-maps-services-python
+
+Con 'pip install -U googlemaps' basta para poder usarlo
+La clave de la api de google la introduzco por consola, para no tenerla publicada en github
+
+Aquí está la documentación de las funciones que tiene:
+https://googlemaps.github.io/google-maps-services-python/docs/2.4.5/
+
+Por ahora he estado probando el de places_nearby, que funciona devolviendo un json con los 
+resultados de la búsqueda que hayas puesto. Los parámetros de la función vienen explicados
+en la documentación
+
+
+Documentacion de telepot:
 http://telepot.readthedocs.io/en/latest/reference.html
-Ahí se puede buscar las funciones en concreto, lo que devuelven, lo que necesitan,...
-No está muy allá en algunos casos pero bueno, menos es nada. Entre eso y los ejemplos del tio
-va bien.
+
 """
 
-clients = {}
-q = Queue()
+# Readying the google maps client
+
+mapclient = googlemaps.Client(key=sys.argv[1]) # Input the api key as the first argument when launching
+
+#clients = {}
+#q = Queue()
 # The manager takes everything about creating conexions and to finish them
 class Manager(threading.Thread):
     def __init__(self, queue):
@@ -69,15 +80,18 @@ class UserHandler(telepot.helper.ChatHandler):
         super(UserHandler, self).__init__(*args, **kwargs)
 
     def on_chat_message(self, msg):
-		content_type, chat_type, chat_id = telepot.glance(msg,flavor='chat')
-		if content_type == 'text':	
-			markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Location', request_location=True)],])
-			 
-		bot.sendMessage(chat_id, 'Share your location', reply_markup=markup)
-		# Some content_type values: text, location, photo
-		#			
-        #elif content_type == 'location':
-        
+        content_type, chat_type, chat_id = telepot.glance(msg,flavor='chat')
+        if content_type == 'text':	
+            markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Location', request_location=True)],])
+            bot.sendMessage(chat_id, 'Share your location', reply_markup=markup)
+					
+        elif content_type == 'location':
+            print(msg['location']['latitude'])
+            print(mapclient.places_nearby(location=(msg['location']['latitude'], msg['location']['longitude']),
+                           type='restaurant', language='es-ES', radius=2000,
+                           min_price=1, max_price=4, open_now=True))
+
+            
 
 # One ButtonHandler created per message that has a button pressed.
 # There should only be one message from the bot at a time in a chat, so that
@@ -94,9 +108,9 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 # El token si quieres puedo ponerlo para que lo pongamos por consola como argumento al 
 # lanzar el bot
 TOKEN = '255866015:AAFvI3sUR1sOFbeDrUceVyAs44KlfKgx-UE'
-manage = Manager(q)
-manage.setDaemon = True
-manage.start()
+#manage = Manager(q)
+#manage.setDaemon = True
+#manage.start()
 
 bot = telepot.DelegatorBot(TOKEN, [
     pave_event_space()(
@@ -105,4 +119,4 @@ bot = telepot.DelegatorBot(TOKEN, [
         per_callback_query_origin(), create_open, ButtonHandler, timeout=30),
 ])
 
-bot.message_loop()
+bot.message_loop(run_forever='Listening')
