@@ -16,20 +16,22 @@ from telepot.delegate import (
 import googlemaps
 from datetime import datetime
 
+import json
+
 """
+Utilizando el _nearby despues de enviar la localizacion devuelvo una lista de restaurantes
+que cumplen las caracteristicas de la query. Son callback_quey asi que cuando elige uno
+le envío la localización. Hay que mirar de mostrarlos de una forma mas agradable y quizas 
+en un orden, ya sea valoración, cercania etc. También haabría que enviar las caracteristicas
+de los locales
+
+La clave de la api de google la introduzco por consola, para no tenerla publicada en github
+
 He empezado a usar esto para sacar los locales cercanos a la ubicación que te manden:
 https://github.com/googlemaps/google-maps-services-python
 
-Con 'pip install -U googlemaps' basta para poder usarlo
-La clave de la api de google la introduzco por consola, para no tenerla publicada en github
-
 Aquí está la documentación de las funciones que tiene:
 https://googlemaps.github.io/google-maps-services-python/docs/2.4.5/
-
-Por ahora he estado probando el de places_nearby, que funciona devolviendo un json con los 
-resultados de la búsqueda que hayas puesto. Los parámetros de la función vienen explicados
-en la documentación
-
 
 Documentacion de telepot:
 http://telepot.readthedocs.io/en/latest/reference.html
@@ -38,7 +40,7 @@ http://telepot.readthedocs.io/en/latest/reference.html
 
 # Readying the google maps client
 
-mapclient = googlemaps.Client(key=sys.argv[1]) # Input the api key as the first argument when launching
+mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api key as the first argument when launching
 
 #clients = {}
 #q = Queue()
@@ -86,13 +88,18 @@ class UserHandler(telepot.helper.ChatHandler):
             bot.sendMessage(chat_id, 'Share your location', reply_markup=markup)
 					
         elif content_type == 'location':
-            print(msg['location']['latitude'])
-            print(mapclient.places_nearby(location=(msg['location']['latitude'], msg['location']['longitude']),
-                           type='restaurant', language='es-ES', radius=2000,
-                           min_price=1, max_price=4, open_now=True))
-
-            
-
+			js = mapclient.places_nearby(location=(msg['location']['latitude'], msg['location']['longitude']),
+						   type='restaurant', language='es-ES', radius=2000,
+						   min_price=0, max_price=4, open_now=True)
+  
+			keyboardRestaurant= []
+			for j in js["results"]:
+				location = "Restaurant " + str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
+				keyboardRestaurant= keyboardRestaurant + [InlineKeyboardButton(text=j["name"], callback_data=location)]
+				
+			markupRestaurant = InlineKeyboardMarkup(inline_keyboard = [keyboardRestaurant])
+			bot.sendMessage(chat_id, 'Choose one', reply_markup=markupRestaurant)
+			
 # One ButtonHandler created per message that has a button pressed.
 # There should only be one message from the bot at a time in a chat, so that
 # you modify the same message over and over again.
@@ -101,9 +108,12 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
         super(ButtonHandler, self).__init__(*args, **kwargs)
         
     def on_callback_query(self, msg):
-        query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
-        bot.answerCallbackQuery(query_id)
-
+		query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
+		bot.answerCallbackQuery(query_id)
+		data = []
+		data = query_data.split(" ")
+		if data[0] == "Restaurant":
+			bot.sendLocation(from_id, data[1], data[2])
             
 # El token si quieres puedo ponerlo para que lo pongamos por consola como argumento al 
 # lanzar el bot
