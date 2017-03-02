@@ -42,6 +42,7 @@ http://telepot.readthedocs.io/en/latest/reference.html
 
 mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api key as the first argument when launching
 
+location = {}
 # One UserHandler created per chat_id. May be useful for sorting out users
 # Handles chat messages, we should sort out with telepot.glance what to do with the
 # message depending on its type (text, image, location,...)
@@ -56,9 +57,8 @@ class UserHandler(telepot.helper.ChatHandler):
             bot.sendMessage(chat_id, 'Share your location', reply_markup=markup)
 					
         elif content_type == 'location':
-			self.latitude = msg['location']['latitude']
-			self.longitude = msg['location']['longitude']
-
+			location[chat_id] = str(msg['location']['latitude']) + " " + str(msg['location']['longitude'])
+			
 			buttonsInline = InlineKeyboardMarkup(inline_keyboard=[
                    	[InlineKeyboardButton(text='Bar', callback_data='bar')] + [InlineKeyboardButton(text='Cafe', callback_data='cafe')],
 					[InlineKeyboardButton(text='Food', callback_data='food')]+ [InlineKeyboardButton(text='Night club', callback_data='night_club')],
@@ -66,15 +66,6 @@ class UserHandler(telepot.helper.ChatHandler):
                ])
                
 			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=buttonsInline)
-	
-	def getLatitude():
-		return self.latitude
-	
-	def getLongitude():
-		return self.longitude
-	
-	def on__idle(self):
-		self.close()
 			
 # One ButtonHandler created per message that has a button pressed.
 # There should only be one message from the bot at a time in a chat, so that
@@ -83,9 +74,13 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
     def __init__(self, *args, **kwargs):
         super(ButtonHandler, self).__init__(*args, **kwargs)
     
-    def placesNearBy(self, establishmentType, chat_id):
-		js = mapclient.places_nearby(location=(getLatitude(), getLongitude()), type=establishmentType, language='es-ES', radius=2000,
-min_price=0, max_price=4, open_now=True)
+	def placesNearBy(self, establishmentType, chat_id):
+		data = []
+		data = location[chat_id].split(" ")
+		latitude = data[0]
+		longitude = data[1]
+		js = mapclient.places_nearby(location=(latitude, longitude), type=establishmentType, language='es-ES', radius=2000,
+	min_price=0, max_price=4, open_now=True)
 
 		keyboardRestaurant= []
 		for j in js["results"]:
@@ -95,8 +90,6 @@ min_price=0, max_price=4, open_now=True)
 		markupRestaurant = InlineKeyboardMarkup(inline_keyboard = [keyboardRestaurant])
 		bot.sendMessage(chat_id, 'Choose one', reply_markup=markupRestaurant)
      
-    def on__idle(self):
-		self.close()
 		    
     def on_callback_query(self, msg):
 		query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
