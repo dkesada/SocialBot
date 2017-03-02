@@ -42,10 +42,9 @@ http://telepot.readthedocs.io/en/latest/reference.html
 
 mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api key as the first argument when launching
 
-location = {}
+locations = {}
 # One UserHandler created per chat_id. May be useful for sorting out users
-# Handles chat messages, we should sort out with telepot.glance what to do with the
-# message depending on its type (text, image, location,...)
+# Handles chat messages depending on its tipe
 class UserHandler(telepot.helper.ChatHandler):
     def __init__(self, *args, **kwargs):
         super(UserHandler, self).__init__(*args, **kwargs)
@@ -57,7 +56,7 @@ class UserHandler(telepot.helper.ChatHandler):
             bot.sendMessage(chat_id, 'Share your location', reply_markup=markup)
 					
         elif content_type == 'location':
-			location[chat_id] = str(msg['location']['latitude']) + " " + str(msg['location']['longitude'])
+			locations[chat_id] = str(msg['location']['latitude']) + " " + str(msg['location']['longitude'])
 			
 			buttonsInline = InlineKeyboardMarkup(inline_keyboard=[
                    	[InlineKeyboardButton(text='Bar', callback_data='bar')] + [InlineKeyboardButton(text='Cafe', callback_data='cafe')],
@@ -66,6 +65,9 @@ class UserHandler(telepot.helper.ChatHandler):
                ])
                
 			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=buttonsInline)
+    
+    def on__idle(self, event):
+        self.close()
 			
 # One ButtonHandler created per message that has a button pressed.
 # There should only be one message from the bot at a time in a chat, so that
@@ -73,37 +75,37 @@ class UserHandler(telepot.helper.ChatHandler):
 class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
     def __init__(self, *args, **kwargs):
         super(ButtonHandler, self).__init__(*args, **kwargs)
-    
-	def placesNearBy(self, establishmentType, chat_id):
-		data = []
-		data = location[chat_id].split(" ")
-		latitude = data[0]
-		longitude = data[1]
-		js = mapclient.places_nearby(location=(latitude, longitude), type=establishmentType, language='es-ES', radius=2000,
-	min_price=0, max_price=4, open_now=True)
+        
+    def placesNearBy(self, establishmentType, chat_id):
+        data = []
+        data = locations[chat_id].split(" ")
+        latitude = data[0]
+        longitude = data[1]
+        js = mapclient.places_nearby(location=(latitude, longitude), type=establishmentType, language='es-ES', radius=2000, min_price=0, max_price=4, open_now=True)
 
-		keyboardRestaurant= []
-		for j in js["results"]:
-			location = "L " + str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
-			keyboardRestaurant= keyboardRestaurant + [InlineKeyboardButton(text=j["name"], callback_data=location)]
+        keyboardRestaurant= []
+        for j in js["results"]:
+            loc = "L " + str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
+            keyboardRestaurant= keyboardRestaurant + [InlineKeyboardButton(text=j["name"], callback_data=loc)]
 
-		markupRestaurant = InlineKeyboardMarkup(inline_keyboard = [keyboardRestaurant])
-		bot.sendMessage(chat_id, 'Choose one', reply_markup=markupRestaurant)
+        markupRestaurant = InlineKeyboardMarkup(inline_keyboard = [keyboardRestaurant])
+        bot.sendMessage(chat_id, 'Choose one', reply_markup=markupRestaurant)
      
 		    
     def on_callback_query(self, msg):
-		query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
-		bot.answerCallbackQuery(query_id)
+        query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
+        bot.answerCallbackQuery(query_id)
 		
-		if query_data[0] == "L":
-			data = []
-			data = query_data.split(" ")
-			bot.sendLocation(from_id, data[0], data[1])
-		else:
-			self.placesNearBy(query_data, from_id)
+        if query_data[0] == "L":
+            data = []
+            data = query_data.split(" ")
+            bot.sendLocation(from_id, data[0], data[1])
+        else:
+            self.placesNearBy(query_data, from_id)
+            
+    def on__idle(self, event):
+        self.close()
 			
-# El token si quieres puedo ponerlo para que lo pongamos por consola como argumento al 
-# lanzar el bot
 TOKEN = '255866015:AAFvI3sUR1sOFbeDrUceVyAs44KlfKgx-UE'
 
 bot = telepot.DelegatorBot(TOKEN, [
