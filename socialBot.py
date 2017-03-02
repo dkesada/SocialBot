@@ -42,63 +42,39 @@ http://telepot.readthedocs.io/en/latest/reference.html
 
 mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api key as the first argument when launching
 
-#clients = {}
-#q = Queue()
-# The manager takes everything about creating conexions and to finish them
-class Manager(threading.Thread):
-    def __init__(self, queue):
-        threading.Thread.__init__(self)
-        self.queue = queue
-        self.num = 0
-        self.ids = [1,2]
-    
-    def run(self):
-        while(True):
-            message = self.queue.get()
-            if message[0] is 'pair':
-                self.request(message[1])
-            elif message[0] is 'delPair':
-                del clients[message[1]]
-            time.sleep(3)
-            
-    def request(self, x):
-        if self.num == 1 and self.ids[0] != x:
-            self.ids[1] = x
-            q1 = Queue()
-            q1.put([0,' '])
-            q2 = Queue()
-            partidas[self.ids[0]] = [self.ids[1],'x',q1]
-            partidas[self.ids[1]] = [self.ids[0],'o',q2]
-            self.num = 0
-        else:
-            self.ids[0] = x
-            self.num = 1
-
 # One UserHandler created per chat_id. May be useful for sorting out users
 # Handles chat messages, we should sort out with telepot.glance what to do with the
 # message depending on its type (text, image, location,...)
 class UserHandler(telepot.helper.ChatHandler):
     def __init__(self, *args, **kwargs):
         super(UserHandler, self).__init__(*args, **kwargs)
-
+        
     def on_chat_message(self, msg):
         content_type, chat_type, chat_id = telepot.glance(msg,flavor='chat')
         if content_type == 'text':	
-            markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Location', request_location=True)],])
+            markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Location', request_location=True)],], resize_keyboard=True)
             bot.sendMessage(chat_id, 'Share your location', reply_markup=markup)
 					
         elif content_type == 'location':
-			js = mapclient.places_nearby(location=(msg['location']['latitude'], msg['location']['longitude']),
-						   type='restaurant', language='es-ES', radius=2000,
-						   min_price=0, max_price=4, open_now=True)
-  
-			keyboardRestaurant= []
-			for j in js["results"]:
-				location = "Restaurant " + str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
-				keyboardRestaurant= keyboardRestaurant + [InlineKeyboardButton(text=j["name"], callback_data=location)]
-				
-			markupRestaurant = InlineKeyboardMarkup(inline_keyboard = [keyboardRestaurant])
-			bot.sendMessage(chat_id, 'Choose one', reply_markup=markupRestaurant)
+			self.latitude = msg['location']['latitude']
+			self.longitude = msg['location']['longitude']
+
+			buttonsInline = InlineKeyboardMarkup(inline_keyboard=[
+                   	[InlineKeyboardButton(text='Bar', callback_data='bar')] + [InlineKeyboardButton(text='Cafe', callback_data='cafe')],
+					[InlineKeyboardButton(text='Food', callback_data='food')]+ [InlineKeyboardButton(text='Night club', callback_data='night_club')],
+					[InlineKeyboardButton(text='Restaurant', callback_data='restaurant')],
+               ])
+               
+			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=buttonsInline)
+	
+	def getLatitude():
+		return self.latitude
+	
+	def getLongitude():
+		return self.longitude
+	
+	def on__idle(self):
+		self.close()
 			
 # One ButtonHandler created per message that has a button pressed.
 # There should only be one message from the bot at a time in a chat, so that
@@ -106,21 +82,36 @@ class UserHandler(telepot.helper.ChatHandler):
 class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
     def __init__(self, *args, **kwargs):
         super(ButtonHandler, self).__init__(*args, **kwargs)
-        
+    
+    def placesNearBy(self, establishmentType, chat_id):
+		js = mapclient.places_nearby(location=(getLatitude(), getLongitude()), type=establishmentType, language='es-ES', radius=2000,
+min_price=0, max_price=4, open_now=True)
+
+		keyboardRestaurant= []
+		for j in js["results"]:
+			location = "L " + str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
+			keyboardRestaurant= keyboardRestaurant + [InlineKeyboardButton(text=j["name"], callback_data=location)]
+
+		markupRestaurant = InlineKeyboardMarkup(inline_keyboard = [keyboardRestaurant])
+		bot.sendMessage(chat_id, 'Choose one', reply_markup=markupRestaurant)
+     
+    def on__idle(self):
+		self.close()
+		    
     def on_callback_query(self, msg):
 		query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
 		bot.answerCallbackQuery(query_id)
-		data = []
-		data = query_data.split(" ")
-		if data[0] == "Restaurant":
-			bot.sendLocation(from_id, data[1], data[2])
-            
+		
+		if query_data[0] == "L":
+			data = []
+			data = query_data.split(" ")
+			bot.sendLocation(from_id, data[0], data[1])
+		else:
+			self.placesNearBy(query_data, from_id)
+			
 # El token si quieres puedo ponerlo para que lo pongamos por consola como argumento al 
 # lanzar el bot
 TOKEN = '255866015:AAFvI3sUR1sOFbeDrUceVyAs44KlfKgx-UE'
-#manage = Manager(q)
-#manage.setDaemon = True
-#manage.start()
 
 bot = telepot.DelegatorBot(TOKEN, [
     pave_event_space()(
