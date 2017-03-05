@@ -1,0 +1,25 @@
+#!/bin/bash
+# Script for mounting the mongo dataBase. If an exported version of 
+# the data base exists, it will be imported
+
+dir="datos"
+bkup="minitweet.json"
+
+# Checking if there is any mongod running
+st=$(($(ls -l | pgrep -c "mongod") + $(ls -l | grep -c "mongod")))
+
+if [ $st = 0 ];
+then
+ if [ ! -d $dir ]; then
+  mkdir $dir
+ fi
+ 
+ # Opens mongod in a terminal, can be changed to have mongod on the background
+ gnome-terminal -e "bash -c \"mongod --dbpath $dir; exec bash\""
+ 
+ # If there's a backup I import it
+ if [ -f $bkup ]; then
+  mongoimport --db bot --collection locations --file $bkup
+ fi
+ 
+fi

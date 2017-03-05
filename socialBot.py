@@ -17,6 +17,9 @@ import googlemaps
 from datetime import datetime
 
 import json
+import pymongo
+from pymongo import MongoClient
+import datetime
 
 """
 Utilizando el _nearby despues de enviar la localizacion devuelvo una lista de restaurantes
@@ -40,10 +43,26 @@ http://telepot.readthedocs.io/en/latest/reference.html
 
 # Readying the google maps client
 
-mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api key as the first argument when launching
-mapdirections = googlemaps.Client(key=sys.argv[2]) #Input the api key as the second argument when launching
+mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api places key as the first argument when launching
+mapdirections = googlemaps.Client(key=sys.argv[2]) #Input the api directions key as the second argument when launching
 
-locations = {}
+class DbHandler():
+	def __init__(self, *args, **kwargs):
+		self.connection = MongoClient('localhost', 27017)
+		self.db = self.connection.bot
+		self.locations = self.db.locations
+		
+	def storeLocation(self, chat_id, loc):
+		loc = {'_id':chat_id,'location':loc}
+		self.locations.insert_one(loc)
+		
+	def getLocation(self, chat_id):
+		loc = self.locations.find_one({'_id':chat_id},{'_id':0})
+		return [loc['location']['latitude'],loc['location']['longitude']]
+
+# Creating a db client
+db = DbHandler()
+
 # One UserHandler created per chat_id. May be useful for sorting out users
 # Handles chat messages depending on its tipe
 class UserHandler(telepot.helper.ChatHandler):
@@ -57,7 +76,8 @@ class UserHandler(telepot.helper.ChatHandler):
             bot.sendMessage(chat_id, 'Share your location', reply_markup=markup)
 					
         elif content_type == 'location':
-			locations[chat_id] = str(msg['location']['latitude']) + " " + str(msg['location']['longitude'])
+			#locations[chat_id] = str(msg['location']['latitude']) + " " + str(msg['location']['longitude'])
+			db.storeLocation(chat_id, msg['location'])
 			
 			buttonsInline = InlineKeyboardMarkup(inline_keyboard=[
                    	[InlineKeyboardButton(text='Bar', callback_data='bar')] + [InlineKeyboardButton(text='Cafe', callback_data='cafe')],
@@ -78,8 +98,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
         super(ButtonHandler, self).__init__(*args, **kwargs)
         
     def placesNearBy(self, establishmentType, chat_id):
-        data = []
-        data = locations[chat_id].split(" ")
+        data = db.getLocation(chat_id)
         latitude = data[0]
         longitude = data[1]
         js = mapclient.places_nearby(location=(latitude, longitude), type=establishmentType, language='es-ES', radius=2000, min_price=0, max_price=4, open_now=True)
@@ -94,8 +113,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
     
     #This method gets a route between the location and the selected establishment
     def directions(self, lat, lng, chat_id):
-    	data = []
-        data = locations[chat_id].split(" ")
+        data = db.getLocation(chat_id)
         latitude = data[0]
         longitude = data[1]
         """Hay una gran cantidad de parametros que se podrán a justar con el /settings o con la interfaz"""
