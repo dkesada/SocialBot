@@ -53,8 +53,7 @@ class DbHandler():
 		self.locations = self.db.locations
 		
 	def storeLocation(self, chat_id, loc):
-		loc = {'_id':chat_id,'location':loc}
-		self.locations.insert_one(loc)
+		self.locations.update_one({'_id':chat_id},{'$set':{'location':loc}},upsert=True)
 		
 	def getLocation(self, chat_id):
 		loc = self.locations.find_one({'_id':chat_id},{'_id':0})
