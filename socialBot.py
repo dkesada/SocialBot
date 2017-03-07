@@ -44,7 +44,7 @@ http://telepot.readthedocs.io/en/latest/reference.html
 # Readying the google maps client
 
 mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api places key as the first argument when launching
-mapdirections = googlemaps.Client(key=sys.argv[2]) #Input the api directions key as the second argument when launching
+#mapdirections = googlemaps.Client(key=sys.argv[2]) #Input the api directions key as the second argument when launching
 
 class DbHandler():
 	def __init__(self, *args, **kwargs):
@@ -110,14 +110,15 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
         markupRestaurant = InlineKeyboardMarkup(inline_keyboard = [keyboardRestaurant])
         bot.sendMessage(chat_id, 'Choose one', reply_markup=markupRestaurant)
     
-    #This method gets a route between the location and the selected establishment
+    #Unused
+    #This method sends the googlemaps's link of route between the location and the selected establishment
     def directions(self, lat, lng, chat_id):
+    	route = 'https://www.google.es/maps/dir/'    
         data = db.getLocation(chat_id)
         latitude = data[0]
         longitude = data[1]
-        """Hay una gran cantidad de parametros que se podrán a justar con el /settings o con la interfaz"""
-    	js = mapdirections.directions(origin=(latitude, longitude), destination=(lat, lng), mode="transit", language='es-ES', units="metric", region="es")
-    	print(js)
+        route = route + str(latitude) + ',' + str(longitude) + '/' + str(lat) + ',' + str(lng)
+        bot.sendMessage(chat_id, route)
 		    
     def on_callback_query(self, msg):
         query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
@@ -126,7 +127,10 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
         if query_data[0] == "L":
             data = []
             data = query_data.split(" ")
-            self.directions(data[1], data[2], from_id)
+            lat = data[1]
+            lng = data[2]
+            bot.sendLocation(from_id, lat, lng)
+            #self.directions(lat, lng, from_id)
         else:
             self.placesNearBy(query_data, from_id)
             
