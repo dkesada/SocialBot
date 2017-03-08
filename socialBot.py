@@ -45,22 +45,38 @@ http://telepot.readthedocs.io/en/latest/reference.html
 
 mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api places key as the first argument when launching
 #mapdirections = googlemaps.Client(key=sys.argv[2]) #Input the api directions key as the second argument when launching
+markupBack = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Back', request_location=True)],], resize_keyboard=True)
 
 class DbHandler():
 	def __init__(self, *args, **kwargs):
 		self.connection = MongoClient('localhost', 27017)
 		self.db = self.connection.bot
-		self.locations = self.db.locations
+		self.users = self.db.users
 		
 	def storeLocation(self, chat_id, loc):
-		self.locations.update_one({'_id':chat_id},{'$set':{'location':loc}},upsert=True)
+		self.users.update_one({'_id':chat_id},{'$set':{'location':loc}},upsert=True)
 		
 	def getLocation(self, chat_id):
-		loc = self.locations.find_one({'_id':chat_id},{'_id':0})
+		loc = self.users.find_one({'_id':chat_id},{'_id':0, 'location': 1})
 		return [loc['location']['latitude'],loc['location']['longitude']]
+	
+	def	setStep(self, chat_id, step):
+		self.users.update_one({'_id':chat_id},{'$set':{'step': step}},upsert=True)
+		
+	def getStep(self, chat_id):
+		return self.users.find_one({'_id':chat_id},{'_id':0, 'step': 1})
+	
+
+class Steps():
+	  def __init__(self, *args, **kwargs):
+        super(Steps, self).__init__(*args, **kwargs)
+        self.listSteps = ["Init","Choose Type", "Choose Establish", "Send Location"]
+        self.step = listSteps[0]
+        
 
 # Creating a db client
 db = DbHandler()
+step = Steps()
 
 # One UserHandler created per chat_id. May be useful for sorting out users
 # Handles chat messages depending on its tipe
@@ -71,9 +87,11 @@ class UserHandler(telepot.helper.ChatHandler):
     def on_chat_message(self, msg):
         content_type, chat_type, chat_id = telepot.glance(msg,flavor='chat')
         if content_type == 'text':	
-            markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Location', request_location=True)],], resize_keyboard=True)
-            bot.sendMessage(chat_id, 'Share your location', reply_markup=markup)
-					
+        	if msg == 'Back':
+        		#volver
+        	else:
+            	markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Location', request_location=True)],[KeyboardButton(text='Back')],], resize_keyboard=True)
+            	bot.sendMessage(chat_id, 'Share your location', reply_markup=markup)					
         elif content_type == 'location':
 			#locations[chat_id] = str(msg['location']['latitude']) + " " + str(msg['location']['longitude'])
 			db.storeLocation(chat_id, msg['location'])
@@ -97,18 +115,33 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
         super(ButtonHandler, self).__init__(*args, **kwargs)
         
     def placesNearBy(self, establishmentType, chat_id):
-        data = db.getLocation(chat_id)
-        latitude = data[0]
-        longitude = data[1]
-        js = mapclient.places_nearby(location=(latitude, longitude), type=establishmentType, language='es-ES', radius=2000, min_price=0, max_price=4, open_now=True)
-
-        keyboardRestaurant= []
-        for j in js["results"]:
-            loc = "L " + str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
-            keyboardRestaurant= keyboardRestaurant + [InlineKeyboardButton(text=j["name"], callback_data=loc)]
-
-        markupRestaurant = InlineKeyboardMarkup(inline_keyboard = [keyboardRestaurant])
-        bot.sendMessage(chat_id, 'Choose one', reply_markup=markupRestaurant)
+		data = db.getLocation(chat_id)
+		latitude = data[0]
+		longitude = data[1]
+		js = mapclient.places_nearby(location=(latitude, longitude), type=establishmentType, language='es-ES', radius=2000, min_price=0, max_price=4, open_now=True)
+		if js["results"] != 'ZERO_RESULTS':
+			i = 0
+			row = [] 
+			keyboardRestaurant= []
+			for j in js["results"]:
+				loc = "L " + str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
+				if len(j["name"]) > 15:
+					i = 0
+					keyboardRestaurant.append(row)
+					row = [InlineKeyboardButton(text=j["name"], callback_data=loc)]
+					keyboardRestaurant.append(row)
+					row = []
+				elif i == 2:
+					i = 0
+					keyboardRestaurant.append(row)
+					row = [InlineKeyboardButton(text=j["name"], callback_data=loc)]
+				else:
+					row = row + [InlineKeyboardButton(text=j["name"], callback_data=loc)]
+				i += 1
+			markupRestaurant = InlineKeyboardMarkup(inline_keyboard = keyboardRestaurant)
+			self.editor.editMessageText('Choose one', reply_markup=markupRestaurant)
+		else:
+			self.editor.editMessageText("There aren't establishment available with this parameters", reply_markup=markupRestaurant)
     
     #Unused
     #This method sends the googlemaps's link of route between the location and the selected establishment
