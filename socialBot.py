@@ -17,9 +17,8 @@ import googlemaps
 from datetime import datetime
 
 import json
-import pymongo
-from pymongo import MongoClient
 import datetime
+import db
 
 """
 Utilizando el _nearby despues de enviar la localizacion devuelvo una lista de restaurantes
@@ -47,65 +46,36 @@ mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api places key as the 
 #mapdirections = googlemaps.Client(key=sys.argv[2]) #Input the api directions key as the second argument when launching
 markupBack = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Back', request_location=True)],], resize_keyboard=True)
 
-class DbHandler():
-	def __init__(self, *args, **kwargs):
-		self.connection = MongoClient('localhost', 27017)
-		self.db = self.connection.bot
-		self.users = self.db.users
-		
-	def storeLocation(self, chat_id, loc):
-		self.users.update_one({'_id':chat_id},{'$set':{'location':loc}},upsert=True)
-		
-	def getLocation(self, chat_id):
-		loc = self.users.find_one({'_id':chat_id},{'_id':0, 'location': 1})
-		return [loc['location']['latitude'],loc['location']['longitude']]
-	
-	def	setStep(self, chat_id, step):
-		self.users.update_one({'_id':chat_id},{'$set':{'step': step}},upsert=True)
-		
-	def getStep(self, chat_id):
-		return self.users.find_one({'_id':chat_id},{'_id':0, 'step': 1})
-	
-
-class Steps():
-	  def __init__(self, *args, **kwargs):
-        super(Steps, self).__init__(*args, **kwargs)
-        self.listSteps = ["Init","Choose Type", "Choose Establish", "Send Location"]
-        self.step = listSteps[0]
-        
-
-# Creating a db client
-db = DbHandler()
-step = Steps()
 
 # One UserHandler created per chat_id. May be useful for sorting out users
 # Handles chat messages depending on its tipe
 class UserHandler(telepot.helper.ChatHandler):
     def __init__(self, *args, **kwargs):
         super(UserHandler, self).__init__(*args, **kwargs)
-        
+
     def on_chat_message(self, msg):
         content_type, chat_type, chat_id = telepot.glance(msg,flavor='chat')
         if content_type == 'text':	
-        	if msg == 'Back':
+            if msg == 'Back':
         		#volver
-        	else:
-            	markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Location', request_location=True)],[KeyboardButton(text='Back')],], resize_keyboard=True)
-            	bot.sendMessage(chat_id, 'Share your location', reply_markup=markup)					
+                print(1)
+            else:
+                markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Location', request_location=True)],[KeyboardButton(text='Back')],], resize_keyboard=True)
+                bot.sendMessage(chat_id, 'Share your location', reply_markup=markup)
         elif content_type == 'location':
-			#locations[chat_id] = str(msg['location']['latitude']) + " " + str(msg['location']['longitude'])
-			db.storeLocation(chat_id, msg['location'])
+            db.storeLocation(chat_id, msg['location'])
 			
-			buttonsInline = InlineKeyboardMarkup(inline_keyboard=[
+            buttonsInline = InlineKeyboardMarkup(inline_keyboard=[
                    	[InlineKeyboardButton(text='Bar', callback_data='bar')] + [InlineKeyboardButton(text='Cafe', callback_data='cafe')],
 					[InlineKeyboardButton(text='Food', callback_data='food')]+ [InlineKeyboardButton(text='Night club', callback_data='night_club')],
 					[InlineKeyboardButton(text='Restaurant', callback_data='restaurant')],
                ])
                
-			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=buttonsInline)
+            bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=buttonsInline)
     
     def on__idle(self, event):
         self.close()
+        
 			
 # One ButtonHandler created per message that has a button pressed.
 # There should only be one message from the bot at a time in a chat, so that
@@ -162,7 +132,8 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
             data = query_data.split(" ")
             lat = data[1]
             lng = data[2]
-            bot.sendLocation(from_id, lat, lng)
+            self.editor.editMessageText("Here it is", reply_markup=None)
+            bot.sendLocation(from_id,lat,lng)
             #self.directions(lat, lng, from_id)
         else:
             self.placesNearBy(query_data, from_id)
@@ -174,9 +145,9 @@ TOKEN = '255866015:AAFvI3sUR1sOFbeDrUceVyAs44KlfKgx-UE'
 
 bot = telepot.DelegatorBot(TOKEN, [
     pave_event_space()(
-        per_chat_id(), create_open, UserHandler, timeout=10),
+        per_chat_id(), create_open, UserHandler, timeout=3),
     pave_event_space()(
-        per_callback_query_origin(), create_open, ButtonHandler, timeout=30),
+        per_callback_query_origin(), create_open, ButtonHandler, timeout=3),
 ])
 
 bot.message_loop(run_forever='Listening')
