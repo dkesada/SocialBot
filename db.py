@@ -12,7 +12,7 @@ def getLocation(chat_id):
     loc = users.find_one({'_id':chat_id},{'_id':0, 'location': 1})
     return [loc['location']['latitude'],loc['location']['longitude']]
 
-def	setStep(chat_id, step):
+def setStep(chat_id, step):
     users.update_one({'_id':chat_id},{'$set':{'step': step}},upsert=True)
     
 def getStep(chat_id):

@@ -19,6 +19,7 @@ from datetime import datetime
 import json
 import datetime
 import db
+import steps
 
 """
 Utilizando el _nearby despues de enviar la localizacion devuelvo una lista de restaurantes
@@ -44,9 +45,16 @@ http://telepot.readthedocs.io/en/latest/reference.html
 
 mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api places key as the first argument when launching
 #mapdirections = googlemaps.Client(key=sys.argv[2]) #Input the api directions key as the second argument when launching
-markupBack = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Back', request_location=True)],], resize_keyboard=True)
+#KeyboardMarkups
+markupLocation = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Location', request_location=True)],], resize_keyboard=True)
+markupBack = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Back')],], resize_keyboard=True)
 
-
+#InlineKeyboards
+inlineEstablishment = InlineKeyboardMarkup(inline_keyboard=[
+                   	[InlineKeyboardButton(text='Bar', callback_data='bar')] + [InlineKeyboardButton(text='Cafe', callback_data='cafe')],
+					[InlineKeyboardButton(text='Food', callback_data='food')]+ [InlineKeyboardButton(text='Night club', callback_data='night_club')],
+					[InlineKeyboardButton(text='Restaurant', callback_data='restaurant')],
+               ])
 # One UserHandler created per chat_id. May be useful for sorting out users
 # Handles chat messages depending on its tipe
 class UserHandler(telepot.helper.ChatHandler):
@@ -54,24 +62,19 @@ class UserHandler(telepot.helper.ChatHandler):
         super(UserHandler, self).__init__(*args, **kwargs)
 
     def on_chat_message(self, msg):
-        content_type, chat_type, chat_id = telepot.glance(msg,flavor='chat')
-        if content_type == 'text':	
-            if msg == 'Back':
-        		#volver
-                print(1)
-            else:
-                markup = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Location', request_location=True)],[KeyboardButton(text='Back')],], resize_keyboard=True)
-                bot.sendMessage(chat_id, 'Share your location', reply_markup=markup)
-        elif content_type == 'location':
-            db.storeLocation(chat_id, msg['location'])
-			
-            buttonsInline = InlineKeyboardMarkup(inline_keyboard=[
-                   	[InlineKeyboardButton(text='Bar', callback_data='bar')] + [InlineKeyboardButton(text='Cafe', callback_data='cafe')],
-					[InlineKeyboardButton(text='Food', callback_data='food')]+ [InlineKeyboardButton(text='Night club', callback_data='night_club')],
-					[InlineKeyboardButton(text='Restaurant', callback_data='restaurant')],
-               ])
-               
-            bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=buttonsInline)
+		content_type, chat_type, chat_id = telepot.glance(msg,flavor='chat')
+		if content_type == 'text':
+			if msg['text'] == "/start":
+				db.setStep(chat_id, 0)
+			if steps.step(chat_id) == "Init":
+				bot.sendMessage(chat_id, 'Share your location', reply_markup=markupLocation)
+				steps.nextStep(chat_id)
+		elif content_type == 'location':
+			db.storeLocation(chat_id, msg['location'])
+			thanks = 'Thanks ' + msg['chat']['first_name']
+			bot.sendMessage(chat_id, thanks, reply_markup=markupBack)
+			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=inlineEstablishment)
+			steps.nextStep(chat_id)
     
     def on__idle(self, event):
         self.close()
@@ -94,7 +97,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			row = [] 
 			keyboardRestaurant= []
 			for j in js["results"]:
-				loc = "L " + str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
+				loc = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
 				if len(j["name"]) > 15:
 					i = 0
 					keyboardRestaurant.append(row)
@@ -112,31 +115,28 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			self.editor.editMessageText('Choose one', reply_markup=markupRestaurant)
 		else:
 			self.editor.editMessageText("There aren't establishment available with this parameters", reply_markup=markupRestaurant)
-    
-    #Unused
-    #This method sends the googlemaps's link of route between the location and the selected establishment
-    def directions(self, lat, lng, chat_id):
-    	route = 'https://www.google.es/maps/dir/'    
-        data = db.getLocation(chat_id)
-        latitude = data[0]
-        longitude = data[1]
-        route = route + str(latitude) + ',' + str(longitude) + '/' + str(lat) + ',' + str(lng)
-        bot.sendMessage(chat_id, route)
 		    
     def on_callback_query(self, msg):
-        query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
-        bot.answerCallbackQuery(query_id)
-		
-        if query_data[0] == "L":
-            data = []
-            data = query_data.split(" ")
-            lat = data[1]
-            lng = data[2]
-            self.editor.editMessageText("Here it is", reply_markup=None)
-            bot.sendLocation(from_id,lat,lng)
-            #self.directions(lat, lng, from_id)
-        else:
-            self.placesNearBy(query_data, from_id)
+		query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
+		bot.answerCallbackQuery(query_id)
+
+		if query_data == "Back":
+			stp = steps.stepBack(chat_id)		
+			if stp != False:
+				if stp == "Init":
+					self.editor.editMessageText('Share your location', reply_markup=markupLocation)
+				elif stp == "Choose Type":
+					self.editor.editMessageText('What are you looking for?', reply_markup=inlineEstablishment)
+		elif step.step(from_id) == "Choose Establish":
+			self.placesNearBy(query_data, from_id)
+			steps.nextStep(chat_id)
+		elif step.step(from_id) == "Send Location":
+			data = query_data.split(" ")
+			lat = data[0]
+			lng = data[1]
+			self.editor.editMessageText("Here it is", reply_markup=None)
+			bot.sendLocation(from_id,lat,lng)
+			steps.nextStep(chat_id)
             
     def on__idle(self, event):
         self.close()
