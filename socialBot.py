@@ -46,15 +46,17 @@ http://telepot.readthedocs.io/en/latest/reference.html
 mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api places key as the first argument when launching
 #mapdirections = googlemaps.Client(key=sys.argv[2]) #Input the api directions key as the second argument when launching
 #KeyboardMarkups
-markupLocation = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Location', request_location=True)],], resize_keyboard=True)
-markupBack = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Back')],], resize_keyboard=True)
+markupLocation = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Location', request_location=True)],], resize_keyboard=True, one_time_keyboard=True)
+#markupBack = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Back')],], resize_keyboard=True)
 
 #InlineKeyboards
 inlineEstablishment = InlineKeyboardMarkup(inline_keyboard=[
                    	[InlineKeyboardButton(text='Bar', callback_data='bar')] + [InlineKeyboardButton(text='Cafe', callback_data='cafe')],
 					[InlineKeyboardButton(text='Food', callback_data='food')]+ [InlineKeyboardButton(text='Night club', callback_data='night_club')],
-					[InlineKeyboardButton(text='Restaurant', callback_data='restaurant')],
+					[InlineKeyboardButton(text='Restaurant', callback_data='restaurant')], [InlineKeyboardButton(text='Back', callback_data='back')],
                ])
+inlineBack = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='Back', callback_data='back')],])
+
 # One UserHandler created per chat_id. May be useful for sorting out users
 # Handles chat messages depending on its tipe
 class UserHandler(telepot.helper.ChatHandler):
@@ -68,13 +70,12 @@ class UserHandler(telepot.helper.ChatHandler):
 				db.setStep(chat_id, 0)
 			if steps.step(chat_id) == "Init":
 				bot.sendMessage(chat_id, 'Share your location', reply_markup=markupLocation)
-				steps.nextStep(chat_id)
 		elif content_type == 'location':
 			db.storeLocation(chat_id, msg['location'])
-			thanks = 'Thanks ' + msg['chat']['first_name']
-			bot.sendMessage(chat_id, thanks, reply_markup=markupBack)
-			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=inlineEstablishment)
+			#thanks = 'Thanks ' + msg['chat']['first_name']
+			#bot.sendMessage(chat_id, thanks, reply_markup=markupBack)
 			steps.nextStep(chat_id)
+			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=inlineEstablishment)			
     
     def on__idle(self, event):
         self.close()
@@ -111,6 +112,8 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				else:
 					row = row + [InlineKeyboardButton(text=j["name"], callback_data=loc)]
 				i += 1
+			row = [InlineKeyboardButton(text='Back', callback_data='back')]
+			keyboardRestaurant.append(row)
 			markupRestaurant = InlineKeyboardMarkup(inline_keyboard = keyboardRestaurant)
 			self.editor.editMessageText('Choose one', reply_markup=markupRestaurant)
 		else:
@@ -120,23 +123,25 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
 		bot.answerCallbackQuery(query_id)
 
-		if query_data == "Back":
-			stp = steps.stepBack(chat_id)		
+		if query_data == "back":
+			stp = steps.stepBack(from_id)	
 			if stp != False:
 				if stp == "Init":
-					self.editor.editMessageText('Share your location', reply_markup=markupLocation)
+					bot.sendMessage(from_id, 'Share your location', reply_markup=markupLocation)
 				elif stp == "Choose Type":
-					self.editor.editMessageText('What are you looking for?', reply_markup=inlineEstablishment)
-		elif step.step(from_id) == "Choose Establish":
-			self.placesNearBy(query_data, from_id)
-			steps.nextStep(chat_id)
-		elif step.step(from_id) == "Send Location":
+					bot.sendMessage(from_id, 'What are you looking for?', reply_markup=inlineEstablishment)
+				elif stp == "Choose Establish":
+					self.placesNearBy(query_data, from_id)					
+		elif steps.step(from_id) == "Choose Type":
+			steps.nextStep(from_id)
+			self.placesNearBy(query_data, from_id)			
+		elif steps.step(from_id) == "Choose Establish":
+			steps.nextStep(from_id)
 			data = query_data.split(" ")
 			lat = data[0]
 			lng = data[1]
-			self.editor.editMessageText("Here it is", reply_markup=None)
-			bot.sendLocation(from_id,lat,lng)
-			steps.nextStep(chat_id)
+			self.editor.editMessageText("Here it is", reply_markup=inlineBack)
+			bot.sendLocation(from_id,lat,lng)			
             
     def on__idle(self, event):
         self.close()
