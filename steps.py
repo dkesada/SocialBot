@@ -7,12 +7,14 @@ def step(chat_id):
 	return listSteps[i]
 	
 def nextStep(chat_id):
-	i = db.getStep(chat_id)
+	stp = db.getStep(chat_id)
+	i = stp['step']
 	if i < len(listSteps)-1:
 		db.setStep(chat_id, i+1)
 		
 def stepBack(chat_id):
-	i = db.getStep(chat_id)
+	stp = db.getStep(chat_id)
+	i = stp['step']
 	if i != 0:
 		i -= 1
 		db.setStep(chat_id, i)
