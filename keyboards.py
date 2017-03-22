@@ -46,10 +46,10 @@ def resultsKeyboard(js):
 # Keyboard that shows the posible options for a displayed place
 def optionsKeyboard(loc):
 	data = db.getPlaceData(loc)
-	cb = str(loc["lat"]) + " " + str(loc["lng"])
-	res = [[InlineKeyboardButton(text=j["Rate it"], callback_data="rating")][InlineKeyboardButton(text=j["Send a photo"], callback_data=loc)]]
+	#cb = str(loc["lat"]) + " " + str(loc["lng"])
+	res = [InlineKeyboardButton(text="Rate it", callback_data="rating")] + [InlineKeyboardButton(text="Send a photo", callback_data=loc)]
 	res = res + [InlineKeyboardButton(text='Back', callback_data='back')]
 	#if data != None:
-		
-	return res
+	markupOptions = InlineKeyboardMarkup(inline_keyboard = [res])
+	return markupOptions
 	

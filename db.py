@@ -20,6 +20,13 @@ def setStep(chat_id, step):
     
 def getStep(chat_id):
     return users.find_one({'_id':chat_id},{'_id':0, 'step': 1})
+		
+def storeEType(chat_id, eType):
+	users.update_one({'_id':chat_id}, {'$set':{'eType':eType}},upsert=True)
+
+def getEType(chat_id):
+	eType = users.find_one({'_id':chat_id},{'_id':0, 'eType': 1})
+	return eType['eType']
 
 def getPlaceData(loc):
 	return places.find_one({'loc':loc},{'_id':0})

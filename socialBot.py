@@ -46,7 +46,6 @@ http://telepot.readthedocs.io/en/latest/reference.html
 mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api places key as the first argument when launching
 #mapdirections = googlemaps.Client(key=sys.argv[2]) #Input the api directions key as the second argument when launching
 
-
 # One UserHandler created per chat_id. May be useful for sorting out users
 # Handles chat messages depending on its tipe
 class UserHandler(telepot.helper.ChatHandler):
@@ -62,8 +61,6 @@ class UserHandler(telepot.helper.ChatHandler):
 				bot.sendMessage(chat_id, 'Share your location', reply_markup=keyboards.markupLocation)
 		elif content_type == 'location':
 			db.storeLocation(chat_id, msg['location'], msg['date'])
-			#thanks = 'Thanks ' + msg['chat']['first_name']
-			#bot.sendMessage(chat_id, thanks, reply_markup=markupBack)
 			steps.nextStep(chat_id)
 			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=keyboards.inlineEstablishment)			
     
@@ -83,10 +80,10 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		latitude = data[0]
 		longitude = data[1]
 		js = mapclient.places_nearby(location=(latitude, longitude), type=establishmentType, language='es-ES', radius=2000, min_price=0, max_price=4, open_now=True)
-		if js["results"] != 'ZERO_RESULTS':
+		if js["status"] != 'ZERO_RESULTS':
 			self.editor.editMessageText('Choose one', reply_markup=keyboards.resultsKeyboard(js))
 		else:
-			self.editor.editMessageText("There aren't establishment available with this parameters", reply_markup=None)
+			self.editor.editMessageText("There aren't establishment available with this parameters", reply_markup=keyboards.inlineBack)
 		    
     def on_callback_query(self, msg):
 		query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
@@ -98,11 +95,13 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				if stp == "Init":
 					bot.sendMessage(from_id, 'Share your location', reply_markup=keyboards.markupLocation)
 				elif stp == "Choose Type":
-					bot.sendMessage(from_id, 'What are you looking for?', reply_markup=keyboards.inlineEstablishment)
+					self.editor.editMessageText('What are you looking for?', reply_markup=keyboards.inlineEstablishment)
 				elif stp == "Choose Establish":
-					self.placesNearBy(query_data, from_id)					
+					eType = db.getEType(from_id)			
+					self.placesNearBy(eType, from_id) 				
 		elif steps.step(from_id) == "Choose Type":
 			steps.nextStep(from_id)
+			db.storeEType(from_id, query_data)
 			self.placesNearBy(query_data, from_id)			
 		elif steps.step(from_id) == "Choose Establish":
 			steps.nextStep(from_id)
@@ -110,18 +109,18 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			lat = data[0]
 			lng = data[1]
 			bot.sendLocation(from_id,lat,lng)	
-			bot.sendMessage(from_id,"Here it is", reply_markup=keyboards.inlineBack)		
+			bot.sendMessage(from_id,"Here it is", reply_markup=keyboards.optionsKeyboard(query_data))		
             
     def on__idle(self, event):
         self.close()
-			
+
 TOKEN = '255866015:AAFvI3sUR1sOFbeDrUceVyAs44KlfKgx-UE'
 
 bot = telepot.DelegatorBot(TOKEN, [
     pave_event_space()(
-        per_chat_id(), create_open, UserHandler, timeout=10),
+        per_chat_id(), create_open, UserHandler, timeout=180),
     pave_event_space()(
-        per_callback_query_origin(), create_open, ButtonHandler, timeout=30),
+        per_callback_query_origin(), create_open, ButtonHandler, timeout=180),
 ])
 
 bot.message_loop(run_forever='Listening')
