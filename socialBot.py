@@ -4,8 +4,6 @@
 
 import sys
 import time
-import threading
-from Queue import Queue
 import telepot
 import telepot.helper
 
@@ -56,12 +54,13 @@ class UserHandler(telepot.helper.ChatHandler):
 		content_type, chat_type, chat_id = telepot.glance(msg,flavor='chat')
 		if content_type == 'text':
 			if msg['text'] == "/start":
-				db.setStep(chat_id, 0)
-			if steps.step(chat_id) == "Init":
+				steps.saveStep(chat_id, 0)
+			if steps.step(steps.getStep(chat_id)) == "Init":
 				bot.sendMessage(chat_id, 'Share your location', reply_markup=keyboards.markupLocation)
 		elif content_type == 'location':
 			db.storeLocation(chat_id, msg['location'], msg['date'])
-			steps.nextStep(chat_id)
+			state = steps.getStep(chat_id)
+			steps.saveStep(chat_id, steps.nextStep(state))
 			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=keyboards.inlineEstablishment)			
     
     def on__idle(self, event):
@@ -72,10 +71,12 @@ class UserHandler(telepot.helper.ChatHandler):
 # There should only be one message from the bot at a time in a chat, so that
 # you modify the same message over and over again.
 class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
-    def __init__(self, *args, **kwargs):
-        super(ButtonHandler, self).__init__(*args, **kwargs)
-        
-    def placesNearBy(self, establishmentType, chat_id):
+	def __init__(self, *args, **kwargs):
+		super(ButtonHandler, self).__init__(*args, **kwargs)
+		self.state = None
+		self.chat_id = None
+
+	def placesNearBy(self, establishmentType, chat_id):
 		data = db.getLocation(chat_id)
 		latitude = data[0]
 		longitude = data[1]
@@ -85,13 +86,19 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		else:
 			self.editor.editMessageText("There aren't establishment available with this parameters", reply_markup=keyboards.inlineBack)
 		    
-    def on_callback_query(self, msg):
+	def on_callback_query(self, msg):
 		query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
 		bot.answerCallbackQuery(query_id)
-
+		
+		if self.state == None:
+			self.state = steps.getStep(from_id)
+			self.chat_id = from_id
+			print("nah bruh")
+		
 		if query_data == "back":
-			stp = steps.stepBack(from_id)	
+			stp = steps.stepBack(self.state)	
 			if stp != False:
+				self.state -= 1;
 				if stp == "Init":
 					bot.sendMessage(from_id, 'Share your location', reply_markup=keyboards.markupLocation)
 				elif stp == "Choose Type":
@@ -99,28 +106,29 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				elif stp == "Choose Establish":
 					eType = db.getEType(from_id)			
 					self.placesNearBy(eType, from_id) 				
-		elif steps.step(from_id) == "Choose Type":
-			steps.nextStep(from_id)
+		elif steps.step(self.state) == "Choose Type":
+			self.state = steps.nextStep(self.state)
 			db.storeEType(from_id, query_data)
 			self.placesNearBy(query_data, from_id)			
-		elif steps.step(from_id) == "Choose Establish":
-			steps.nextStep(from_id)
+		elif steps.step(self.state) == "Choose Establish":
+			self.state = steps.nextStep(self.state)
 			data = query_data.split(" ")
 			lat = data[0]
 			lng = data[1]
 			bot.sendLocation(from_id,lat,lng)	
 			bot.sendMessage(from_id,"Here it is", reply_markup=keyboards.optionsKeyboard(query_data))		
-            
-    def on__idle(self, event):
-        self.close()
+	def on__idle(self, event):
+		steps.saveStep(self.chat_id, self.state)
+		self.close()
 
 TOKEN = '255866015:AAFvI3sUR1sOFbeDrUceVyAs44KlfKgx-UE'
 
 bot = telepot.DelegatorBot(TOKEN, [
     pave_event_space()(
-        per_chat_id(), create_open, UserHandler, timeout=180),
+        per_chat_id(), create_open, UserHandler, timeout=1),
     pave_event_space()(
         per_callback_query_origin(), create_open, ButtonHandler, timeout=180),
 ])
 
 bot.message_loop(run_forever='Listening')
+
