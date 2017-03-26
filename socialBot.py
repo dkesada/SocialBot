@@ -61,7 +61,10 @@ class UserHandler(telepot.helper.ChatHandler):
 			db.storeLocation(chat_id, msg['location'], msg['date'])
 			state = steps.getStep(chat_id)
 			steps.saveStep(chat_id, steps.nextStep(state))
-			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=keyboards.inlineEstablishment)			
+			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=keyboards.inlineEstablishment)
+		elif content_type == 'photo':
+			# To do
+			bot.sendPhoto(chat_id, msg['photo'][2]['file_id'], caption=None, disable_notification=None, reply_to_message_id=None, reply_markup=None)
     
     def on__idle(self, event):
         self.close()
@@ -93,7 +96,6 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		if self.state == None:
 			self.state = steps.getStep(from_id)
 			self.chat_id = from_id
-			print("nah bruh")
 		
 		if query_data == "back":
 			stp = steps.stepBack(self.state)	
@@ -105,18 +107,34 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 					self.editor.editMessageText('What are you looking for?', reply_markup=keyboards.inlineEstablishment)
 				elif stp == "Choose Establish":
 					eType = db.getEType(from_id)			
-					self.placesNearBy(eType, from_id) 				
+					self.placesNearBy(eType, from_id) 
+				# Caso de estar mandando una foto			
+					
 		elif steps.step(self.state) == "Choose Type":
 			self.state = steps.nextStep(self.state)
 			db.storeEType(from_id, query_data)
 			self.placesNearBy(query_data, from_id)			
+			
 		elif steps.step(self.state) == "Choose Establish":
 			self.state = steps.nextStep(self.state)
+			steps.saveStep(self.chat_id, self.state) # After this point, the flow of options of the user can branch
 			data = query_data.split(" ")
 			lat = data[0]
 			lng = data[1]
 			bot.sendLocation(from_id,lat,lng)	
-			bot.sendMessage(from_id,"Here it is", reply_markup=keyboards.optionsKeyboard(query_data))		
+			bot.sendMessage(from_id,"Here it is", reply_markup=keyboards.optionsKeyboard(query_data))
+			
+		elif steps.step(self.state) == "Info Establish":
+			option = query_data.split(" ")
+			
+			if 	option[0] == "rating":
+				# To do
+				print('Do something with the rating.')
+				
+			elif option[0] == "photo":
+				preparePhotoSending(from_id, msg['message_id'], [loc[1],loc[2]])
+				self.editor.editMessageText('Send us a photo of the place!', reply_markup=keyboards.inlineBack)
+			
 	def on__idle(self, event):
 		steps.saveStep(self.chat_id, self.state)
 		self.close()
@@ -125,7 +143,7 @@ TOKEN = '255866015:AAFvI3sUR1sOFbeDrUceVyAs44KlfKgx-UE'
 
 bot = telepot.DelegatorBot(TOKEN, [
     pave_event_space()(
-        per_chat_id(), create_open, UserHandler, timeout=1),
+        per_chat_id(), create_open, UserHandler, timeout=180),
     pave_event_space()(
         per_callback_query_origin(), create_open, ButtonHandler, timeout=180),
 ])
