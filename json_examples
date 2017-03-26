@@ -1,3 +1,10 @@
+This results from sending a photo to the bot
+
+{u'date': 1490551276,
+ u'photo': [{u'width': 90, u'height': 51, u'file_id': u'AgADBAADB6gxG7-7wFK_lRizwLZVL8tVqRkABOcONiIUujflRw0AAgI', u'file_size': 1369}, {u'width': 320, u'height': 180, u'file_id': u'AgADBAADB6gxG7-7wFK_lRizwLZVL8tVqRkABHXkbtTVICrwSA0AAgI', u'file_size': 18236}, {u'width': 800, u'height': 450, u'file_id': u'AgADBAADB6gxG7-7wFK_lRizwLZVL8tVqRkABLLeH4HT5SEaSQ0AAgI', u'file_size': 70406}],
+ u'from': {u'first_name': u'Nombre', u'last_name': u'Apellido', u'id': 245622343},
+ u'message_id': 1466, 
+ u'chat': {u'first_name': u'Nombre', u'last_name': u'Apellido', u'type': u'private', u'id': 245622343}}
 
 This results from sending a location to the bot
 
