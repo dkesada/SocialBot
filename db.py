@@ -10,20 +10,20 @@ places = db.places
     
 def storeLocation(chat_id, loc, date):
 	"""Stores the current location of the user."""
-    users.update_one({'_id':chat_id},{'$set':{'location':loc, 'date':date}},upsert=True)
+	users.update_one({'_id':chat_id},{'$set':{'location':loc, 'date':date}},upsert=True)
     
 def getLocation(chat_id):
 	"""Returns the current location of the user."""
-    loc = users.find_one({'_id':chat_id},{'_id':0, 'location': 1})
-    return [loc['location']['latitude'],loc['location']['longitude']]
+	loc = users.find_one({'_id':chat_id},{'_id':0, 'location': 1})
+	return [loc['location']['latitude'],loc['location']['longitude']]
 
 def setStep(chat_id, step):
 	"""Stores the current step of the user."""
-    users.update_one({'_id':chat_id},{'$set':{'step': step}},upsert=True)
+	users.update_one({'_id':chat_id},{'$set':{'step': step}},upsert=True)
     
 def getStep(chat_id):
 	"""Returns the current step of the user."""
-    return users.find_one({'_id':chat_id},{'_id':0, 'step': 1})
+	return users.find_one({'_id':chat_id},{'_id':0, 'step': 1})
 		
 def storeEType(chat_id, eType):
 	"""Stores the type of stablishment that the user selected."""
