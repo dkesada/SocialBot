@@ -83,7 +83,8 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		data = db.getLocation(chat_id)
 		latitude = data[0]
 		longitude = data[1]
-		js = mapclient.places_nearby(location=(latitude, longitude), type=establishmentType, language='es-ES', radius=2000, min_price=0, max_price=4, open_now=True)
+		#js = mapclient.places_nearby(location=(latitude, longitude), type=establishmentType, language='es-ES',  radius=2000,min_price=0, max_price=4, open_now=True)
+		js = mapclient.places(None, location=(latitude, longitude), radius=2000, language='es-ES', min_price=0, max_price=4, open_now=True, type=establishmentType)
 		if js["status"] != 'ZERO_RESULTS':
 			self.editor.editMessageText('Choose one', reply_markup=keyboards.resultsKeyboard(js))
 		else:

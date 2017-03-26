@@ -24,8 +24,8 @@ def resultsKeyboard(js):
 	keyboardRestaurant= []
 	for j in js["results"]:
 		loc = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
-		if len(j["name"]) > 15:
-			i = 0
+		if len(j["name"]) > 15:			
+			i = -1
 			keyboardRestaurant.append(row)
 			row = [InlineKeyboardButton(text=j["name"], callback_data=loc)]
 			keyboardRestaurant.append(row)
@@ -37,6 +37,7 @@ def resultsKeyboard(js):
 		else:
 			row = row + [InlineKeyboardButton(text=j["name"], callback_data=loc)]
 		i += 1
+	keyboardRestaurant.append(row)
 	row = [InlineKeyboardButton(text='Back', callback_data='back')]
 	keyboardRestaurant.append(row)
 	markupRestaurant = InlineKeyboardMarkup(inline_keyboard = keyboardRestaurant)
