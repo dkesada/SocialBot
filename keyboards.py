@@ -17,8 +17,8 @@ inlineEstablishment = InlineKeyboardMarkup(inline_keyboard=[
 inlineBack = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='Back', callback_data='back')],])
 
 
-# Keyboard that displays the results of a location query
 def resultsKeyboard(js):
+	"""Keyboard that displays the results of a location query."""
 	i = 0
 	row = [] 
 	keyboardRestaurant= []
@@ -43,11 +43,10 @@ def resultsKeyboard(js):
 	
 	return markupRestaurant
 
-# Keyboard that shows the posible options for a displayed place
 def optionsKeyboard(loc):
-	data = db.getPlaceData(loc)
-	#cb = str(loc["lat"]) + " " + str(loc["lng"])
-	res = [InlineKeyboardButton(text="Rate it", callback_data="rating")] + [InlineKeyboardButton(text="Send a photo", callback_data=loc)]
+	"""Keyboard that shows the posible options for a displayed place."""
+	#data = db.getPlaceData(loc)
+	res = [InlineKeyboardButton(text="Rate it", callback_data="rating " + str(loc))] + [InlineKeyboardButton(text="Send a photo", callback_data="photo " + str(loc))]
 	res = res + [InlineKeyboardButton(text='Back', callback_data='back')]
 	#if data != None:
 	markupOptions = InlineKeyboardMarkup(inline_keyboard = [res])
