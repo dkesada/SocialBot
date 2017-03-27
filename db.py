@@ -56,3 +56,5 @@ def preparePhotoSending(chat_id, message_id, loc):
 def getSending(chat_id):
 	"""Returns the info of the next sending that the user will perform."""
 	return users.find_one({'_id':chat_id},{'_id':0,'sending':1})
+
+

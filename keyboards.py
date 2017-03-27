@@ -16,6 +16,9 @@ inlineEstablishment = InlineKeyboardMarkup(inline_keyboard=[
                ])
 inlineBack = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='Back', callback_data='back')],])
 
+rating = InlineKeyboardMarkup(inline_keyboard=[
+		[InlineKeyboardButton(text='0', callback_data='0')] + [InlineKeyboardButton(text='1', callback_data='1')] + [InlineKeyboardButton(text='2', callback_data='2')],
+		[InlineKeyboardButton(text='3', callback_data='3')] + [InlineKeyboardButton(text='4', callback_data='4')] + [InlineKeyboardButton(text='5', callback_data='5')], [InlineKeyboardButton(text='Back', callback_data='back')]])
 
 def resultsKeyboard(js):
 	"""Keyboard that displays the results of a location query."""

@@ -20,14 +20,6 @@ import steps
 import keyboards
 
 """
-Utilizando el _nearby despues de enviar la localizacion devuelvo una lista de restaurantes
-que cumplen las caracteristicas de la query. Son callback_quey asi que cuando elige uno
-le envío la localización. Hay que mirar de mostrarlos de una forma mas agradable y quizas 
-en un orden, ya sea valoración, cercania etc. También haabría que enviar las caracteristicas
-de los locales
-
-La clave de la api de google la introduzco por consola, para no tenerla publicada en github
-
 He empezado a usar esto para sacar los locales cercanos a la ubicación que te manden:
 https://github.com/googlemaps/google-maps-services-python
 
@@ -36,6 +28,7 @@ https://googlemaps.github.io/google-maps-services-python/docs/2.4.5/
 
 Documentacion de telepot:
 http://telepot.readthedocs.io/en/latest/reference.html
+https://core.telegram.org/bots
 
 """
 
@@ -78,6 +71,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		super(ButtonHandler, self).__init__(*args, **kwargs)
 		self.state = None
 		self.chat_id = None
+		self.loc = None
 
 	def placesNearBy(self, establishmentType, chat_id):
 		data = db.getLocation(chat_id)
@@ -108,7 +102,9 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 					self.editor.editMessageText('What are you looking for?', reply_markup=keyboards.inlineEstablishment)
 				elif stp == "Choose Establish":
 					eType = db.getEType(from_id)			
-					self.placesNearBy(eType, from_id) 
+					self.placesNearBy(eType, from_id)
+				elif stp == "Info Establish":
+					self.editor.editMessageText("What do you want to do?", reply_markup=keyboards.optionsKeyboard(self.loc))
 				# Caso de estar mandando una foto			
 					
 		elif steps.step(self.state) == "Choose Type":
@@ -127,14 +123,17 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			
 		elif steps.step(self.state) == "Info Establish":
 			option = query_data.split(" ")
-			
+			self.loc = [option[1], option[2]]
 			if 	option[0] == "rating":
-				# To do
-				print('Do something with the rating.')
-				
+				self.state = steps.nextStep(self.state)
+				self.editor.editMessageText("So... What's your rate?", reply_markup=keyboards.rating)
+								
 			elif option[0] == "photo":
 				preparePhotoSending(from_id, msg['message_id'], [loc[1],loc[2]])
-				self.editor.editMessageText('Send us a photo of the place!', reply_markup=keyboards.inlineBack)
+				self.editor.editMessageText('Send us a photo of the place!', reply_markup=keyboards.rating)
+				
+		elif steps.step(self.state) == "Rating":
+			db.storeRating(self.loc, from_id, int(query_data))
 			
 	def on__idle(self, event):
 		steps.saveStep(self.chat_id, self.state)
