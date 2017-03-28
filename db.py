@@ -47,14 +47,21 @@ def storeRating(loc,chat_id, rating):
 	
 def storePlacePhoto(loc, photo):
 	"""Stores a file_id from a photo of a stablishment sent by an user."""
-	places.update({'loc':loc},{'$push':{'photos':photo}})
+	places.update({'loc':loc},{'$push':{'photos':photo, "$slice":-5}}) # Slice limits the photo array
 	
 def preparePhotoSending(chat_id, message_id, loc):
 	"""Prepares de user for a photo sending. This stores the message_id to modify the markup, the location that is receiving a photo and a flag."""
-	users.update_one({'_id':chat_id},{'$set':{'sending':{'type':'photo', 'msg_id':message_id, 'location':{'latitude':loc[0],'longitude':loc[1]}}}},upsert=True)
+	users.update_one({'_id':chat_id},{'$set':{'sending':{'type':'photo', 'msg_id':message_id, 'location':loc}}},upsert=True)
+
+def getPlacePhotos(loc):
+	"""Returns all the photos of a given place."""
+	return places.find_one({'_id':loc},{'_id':0, 'photos':1})
 
 def getSending(chat_id):
 	"""Returns the info of the next sending that the user will perform."""
 	return users.find_one({'_id':chat_id},{'_id':0,'sending':1})
-
+	
+def endSending(chat_id):
+	"""Finishes a sending for the chat_id"""
+	users.update_one({'_id':chat_id},{'$unset':{'sending':""}})
 

@@ -1,7 +1,7 @@
 #-*. coding: utf-8 -*-
 #authors: David Quesada López y Mateo García Fuentes
 import db
-listSteps = ["Init","Choose Type", "Choose Establish", "Info Establish", "Rating"]
+listSteps = ["Init","Choose Type", "Choose Establish", "Info Establish", "Rating", "Viewing Photos"]
 
 # Mechanism that allows the "back" function by storing the state of the user
 

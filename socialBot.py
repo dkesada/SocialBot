@@ -20,7 +20,7 @@ import steps
 import keyboards
 
 """
-He empezado a usar esto para sacar los locales cercanos a la ubicación que te manden:
+Api para sacar los locales cercanos a la ubicación que te manden:
 https://github.com/googlemaps/google-maps-services-python
 
 Aquí está la documentación de las funciones que tiene:
@@ -56,13 +56,19 @@ class UserHandler(telepot.helper.ChatHandler):
 			steps.saveStep(chat_id, steps.nextStep(state))
 			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=keyboards.inlineEstablishment)
 		elif content_type == 'photo':
-			# To do
-			bot.sendPhoto(chat_id, msg['photo'][2]['file_id'], caption=None, disable_notification=None, reply_to_message_id=None, reply_markup=None)
+			sending = db.getSending(chat_id)['sending']
+			if sending != None and sending['type'] == 'photo':
+				db.storePlacePhoto(sending['location'], msg['photo'][2]['file_id'])
+				db.endSending(chat_id)
+				bot.editMessageReplyMarkup(msg_identifier=(chat_id,sending['msg_id']), reply_markup=None)
+				bot.sendMessage(chat_id, 'Photo received, thanks! What else would you like to do?', reply_markup=keyboards.optionsKeyboard(sending['location']))
+			
+			#bot.sendPhoto(chat_id, msg['photo'][2]['file_id'], caption=None, disable_notification=None, reply_to_message_id=None, reply_markup=None)
     
     def on__idle(self, event):
         self.close()
         
-			
+		
 # One ButtonHandler created per message that has a button pressed.
 # There should only be one message from the bot at a time in a chat, so that
 # you modify the same message over and over again.
@@ -97,15 +103,20 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			if stp != False:
 				self.state -= 1;
 				if stp == "Init":
-					bot.sendMessage(from_id, 'Share your location', reply_markup=keyboards.markupLocation)
+					self.editor.editMessageText('Share your location', reply_markup=keyboards.markupLocation)
 				elif stp == "Choose Type":
 					self.editor.editMessageText('What are you looking for?', reply_markup=keyboards.inlineEstablishment)
 				elif stp == "Choose Establish":
 					eType = db.getEType(from_id)			
 					self.placesNearBy(eType, from_id)
 				elif stp == "Info Establish":
-					self.editor.editMessageText("What do you want to do?", reply_markup=keyboards.optionsKeyboard(self.loc))
-				# Caso de estar mandando una foto			
+					# Caso de estar mandando una foto
+					if self.loc != None:
+						self.editor.editMessageText("What do you want to do?", reply_markup=keyboards.optionsKeyboard(self.loc))
+					else: # In case he times out and pushes back afterwards
+						self.state = 0
+						self.editor.editMessageText('Share your location', reply_markup=keyboards.markupLocation)
+							
 					
 		elif steps.step(self.state) == "Choose Type":
 			self.state = steps.nextStep(self.state)
@@ -118,19 +129,21 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			data = query_data.split(" ")
 			lat = data[0]
 			lng = data[1]
-			bot.sendLocation(from_id,lat,lng)	
+			bot.sendLocation(from_id,lat,lng)
+			self.editor.editMessageReplyMarkup(reply_markup=None)	
 			bot.sendMessage(from_id,"Here it is", reply_markup=keyboards.optionsKeyboard(query_data))
 			
 		elif steps.step(self.state) == "Info Establish":
+			self.loc = query_data.split(" ")
+			self.loc = str(self.loc[1]) + " " + str(self.loc[2])
 			option = query_data.split(" ")
-			self.loc = [option[1], option[2]]
 			if 	option[0] == "rating":
 				self.state = steps.nextStep(self.state)
 				self.editor.editMessageText("So... What's your rate?", reply_markup=keyboards.rating)
 								
 			elif option[0] == "photo":
-				preparePhotoSending(from_id, msg['message_id'], [loc[1],loc[2]])
-				self.editor.editMessageText('Send us a photo of the place!', reply_markup=keyboards.rating)
+				db.preparePhotoSending(from_id, msg['message']['message_id'], self.loc)
+				self.editor.editMessageText('Send us a photo of the place!', reply_markup=keyboards.inlineBack)
 				
 		elif steps.step(self.state) == "Rating":
 			db.storeRating(self.loc, from_id, int(query_data))
