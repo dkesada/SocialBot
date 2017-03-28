@@ -38,12 +38,20 @@ def getPlaceData(loc):
 	"""Returns all the data stored of a place."""
 	return places.find_one({'loc':loc},{'_id':0})
 	
-def storeRating(loc,chat_id, rating):
+def storeRating(loc, chat_id, rate):
 	"""Stores an user rating of a stablishment."""
-	previousRating = places.find_one({'loc':loc,'ratings.user':chat_id})
-	if previousRating == None:
-		places.update_one({'loc':loc}, {'$inc':{"ratings.$.rate":rating}}, upsert=True)
-		places.update_one({'loc':loc,'ratings.user':chat_id}, {'$set':{"ratings.$.rate":rating}})
+	previousRate = places.find_one({'loc':loc, 'user':chat_id}, {'_id':0, 'rate':1})
+	places.update_one({'loc':loc, 'user':chat_id}, {'$set': {'rate':rate}},upsert=True)
+	incr = 1
+	if previousRate != None:
+		pRate = previousRate['rate']
+		rate = rate - pRate
+		incr = 0
+	previousRating = places.find_one({'loc':loc}, {'_id':0, 'ratings':1})
+	if previousRating != None:
+		places.update_one({'loc':loc}, {'$inc': {'ratings.rate':rate, 'ratings.numRate':incr}})	
+	else:
+		places.update_one({'loc':loc}, {'$set': {'ratings.rate':rate, 'ratings.numRate':1}},upsert=True)
 	
 def storePlacePhoto(loc, photo):
 	"""Stores a file_id from a photo of a stablishment sent by an user."""

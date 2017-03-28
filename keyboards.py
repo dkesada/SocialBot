@@ -49,10 +49,11 @@ def resultsKeyboard(js):
 
 def optionsKeyboard(loc):
 	"""Keyboard that shows the posible options for a displayed place."""
-	#data = db.getPlaceData(loc)
+	kboard = []
 	res = [InlineKeyboardButton(text="Rate it", callback_data="rating " + str(loc))] + [InlineKeyboardButton(text="Send a photo", callback_data="photo " + str(loc))]
-	res = res + [InlineKeyboardButton(text='Back', callback_data='back')]
-	#if data != None:
-	markupOptions = InlineKeyboardMarkup(inline_keyboard = [res])
+	kboard.append(res)
+	res = [InlineKeyboardButton(text='Back', callback_data='back')]
+	kboard.append(res)
+	markupOptions = InlineKeyboardMarkup(inline_keyboard = kboard)
 	return markupOptions
 	
