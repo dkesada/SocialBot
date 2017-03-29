@@ -12,7 +12,7 @@ from telepot.delegate import (
 
 import googlemaps
 from datetime import datetime
-
+import math
 import json
 import datetime
 import db
@@ -83,10 +83,18 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		data = db.getLocation(chat_id)
 		latitude = data[0]
 		longitude = data[1]
-		#js = mapclient.places_nearby(location=(latitude, longitude), type=establishmentType, language='es-ES',  radius=2000,min_price=0, max_price=4, open_now=True)
-		js = mapclient.places(None, location=(latitude, longitude), radius=2000, language='es-ES', min_price=0, max_price=4, open_now=True, type=establishmentType)
+		js = mapclient.places(None, location=(latitude, longitude), radius=1000, language='es-ES', min_price=0, max_price=4, open_now=True, type=establishmentType)
+		uLoc = db.getLocation(chat_id)
+		message = "Choose one!\n"
 		if js["status"] != 'ZERO_RESULTS':
-			self.editor.editMessageText('Choose one', reply_markup=keyboards.resultsKeyboard(js))
+			for j in js["results"]:
+				location = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
+				distance = "{0:.2f}".format(self.haversine(location, uLoc))
+				message += j['name'] + " is " + str(distance) + " meters from your position.\n"
+				#datos = getPlaceData(location)
+				#if datos['ratings'] != None:
+					
+			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js))
 		else:
 			self.editor.editMessageText("There aren't establishment available with this parameters", reply_markup=keyboards.inlineBack)
 		    
@@ -112,7 +120,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				elif stp == "Info Establish":
 					# Caso de estar mandando una foto
 					if self.loc != None:
-						self.editor.editMessageText("What do you want to do?", reply_markup=keyboards.optionsKeyboard(self.loc))
+						self.editor.editMessageText('What do you want to do?', reply_markup=keyboards.optionsKeyboard(self.loc))
 					else: # In case he times out and pushes back afterwards
 						self.state = 0
 						self.editor.editMessageText('Share your location', reply_markup=keyboards.markupLocation)
@@ -134,9 +142,8 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			bot.sendMessage(from_id,"Here it is", reply_markup=keyboards.optionsKeyboard(query_data))
 			
 		elif steps.step(self.state) == "Info Establish":
-			self.loc = query_data.split(" ")
-			self.loc = str(self.loc[1]) + " " + str(self.loc[2])
 			option = query_data.split(" ")
+			self.loc = str(option[1]) + " " + str(option[2])
 			if 	option[0] == "rating":
 				self.state = steps.nextStep(self.state)
 				self.editor.editMessageText("So... What's your rate?", reply_markup=keyboards.rating)
@@ -147,7 +154,21 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				
 		elif steps.step(self.state) == "Rating":
 			db.storeRating(self.loc, from_id, int(query_data))
-			
+	
+	def haversine(self, locat, uLoc):
+		locat = locat.split(" ")
+		lat2 = float(locat[0])
+		lng2 = float(locat[1])
+		lat1 = float(uLoc[0])
+		lng1 = float(uLoc[1])
+		rad=math.pi/180
+		dlat=lat2-lat1
+		dlng=lng2-lng1
+		R=6371 #mean radius
+		a=(math.sin(rad*dlat/2))**2 + math.cos(rad*lat1)*math.cos(rad*lat2)*(math.sin(rad*dlng/2))**2
+		distance=2*R*math.asin(math.sqrt(a))#kilometers
+		return distance*1000#meters
+				
 	def on__idle(self, event):
 		steps.saveStep(self.chat_id, self.state)
 		self.close()
