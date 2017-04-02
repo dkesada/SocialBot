@@ -90,10 +90,12 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			for j in js["results"]:
 				location = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
 				distance = "{0:.2f}".format(self.haversine(location, uLoc))
-				message += j['name'] + " is " + str(distance) + " meters from your position.\n"
-				#datos = getPlaceData(location)
-				#if datos['ratings'] != None:
-					
+				message += j['name'] + " is " + str(distance) + " meters from you. "
+				datos = db.getPlaceData(location)
+				if datos != None:
+					rate = "{0:.1f}".format(datos['ratings']['rate']/datos['ratings']['numRate'])
+					message += "And the rate of our users are " + str(rate)
+				message += "\n"	
 			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js))
 		else:
 			self.editor.editMessageText("There aren't establishment available with this parameters", reply_markup=keyboards.inlineBack)
