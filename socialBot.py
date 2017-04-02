@@ -156,6 +156,20 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				
 		elif steps.step(self.state) == "Rating":
 			db.storeRating(self.loc, from_id, int(query_data))
+			self.state = steps.nextStep(self.state)
+			self.editor.editMessageText('And what do you want to do now?', reply_markup=keyboards.afterRate)
+			
+		elif steps.step(self.state) == "Come Back":
+			if query_data == "init":
+				self.state = 0
+				self.editor.editMessageText('Share your location', reply_markup=keyboards.markupLocation)
+			elif query_data == "type":
+				self.state = 1
+				self.editor.editMessageText('What are you looking for?', reply_markup=keyboards.inlineEstablishment)
+			elif query_data == "establishment":
+				self.state = 2
+				eType = db.getEType(from_id)			
+				self.placesNearBy(eType, from_id)
 	
 	def haversine(self, locat, uLoc):
 		locat = locat.split(" ")
