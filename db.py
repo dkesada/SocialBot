@@ -55,7 +55,7 @@ def storeRating(loc, chat_id, rate):
 	
 def storePlacePhoto(loc, photo):
 	"""Stores a file_id from a photo of a stablishment sent by an user."""
-	places.update({'loc':loc},{'$push':{'photos':photo, "$slice":-5}}) # Slice limits the photo array
+	places.update_one({'loc':loc},{'$push':{'photos':photo}},upsert=True) # Slice limits the photo array
 	
 def preparePhotoSending(chat_id, message_id, loc):
 	"""Prepares de user for a photo sending. This stores the message_id to modify the markup, the location that is receiving a photo and a flag."""

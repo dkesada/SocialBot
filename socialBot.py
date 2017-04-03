@@ -62,8 +62,6 @@ class UserHandler(telepot.helper.ChatHandler):
 				db.endSending(chat_id)
 				bot.editMessageReplyMarkup(msg_identifier=(chat_id,sending['msg_id']), reply_markup=None)
 				bot.sendMessage(chat_id, 'Photo received, thanks! What else would you like to do?', reply_markup=keyboards.optionsKeyboard(sending['location']))
-			
-			#bot.sendPhoto(chat_id, msg['photo'][2]['file_id'], caption=None, disable_notification=None, reply_to_message_id=None, reply_markup=None)
     
     def on__idle(self, event):
         self.close()
@@ -93,8 +91,9 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				message += j['name'] + " is " + str(distance) + " meters from you. "
 				datos = db.getPlaceData(location)
 				if datos != None:
-					rate = "{0:.1f}".format(datos['ratings']['rate']/datos['ratings']['numRate'])
-					message += "And the rate of our users are " + str(rate)
+					if 'ratings' in datos:
+						rate = "{0:.1f}".format(datos['ratings']['rate']/datos['ratings']['numRate'])
+						message += "And the rate of our users are " + str(rate)
 				message += "\n"	
 			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js))
 		else:
@@ -113,7 +112,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			if stp != False:
 				self.state -= 1;
 				if stp == "Init":
-					self.editor.editMessageText('Share your location', reply_markup=keyboards.markupLocation)
+					self.editor.editMessageText('Share your location', reply_markup=None)
 				elif stp == "Choose Type":
 					self.editor.editMessageText('What are you looking for?', reply_markup=keyboards.inlineEstablishment)
 				elif stp == "Choose Establish":
@@ -158,7 +157,14 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			db.storeRating(self.loc, from_id, int(query_data))
 			self.state = steps.nextStep(self.state)
 			self.editor.editMessageText('And what do you want to do now?', reply_markup=keyboards.afterRate)
+				
+		elif steps.step(self.state) == "Viewing Photos":
+			self.editor.editMessageReplyMarkup(reply_markup=None)
+			photos = db.getPlacePhotos(self.loc)
+			bot.sendPhoto(from_id, photos[0], reply_markup=None)
 			
+			#self.state = steps.nextStep(self.state)
+				
 		elif steps.step(self.state) == "Come Back":
 			if query_data == "init":
 				self.state = 0
