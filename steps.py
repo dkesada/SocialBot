@@ -18,6 +18,8 @@ def nextStep(state):
 		
 def stepBack(state):
 	if state != 0:
+		if state == 5:
+			return listSteps[3]
 		state -= 1
 		return listSteps[state]
 	else:

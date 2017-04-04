@@ -119,12 +119,13 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 					eType = db.getEType(from_id)			
 					self.placesNearBy(eType, from_id)
 				elif stp == "Info Establish":
+					self.editor.editMessageReplyMarkup(reply_markup=None)
 					# Caso de estar mandando una foto
 					if self.loc != None:
 						self.editor.editMessageText('What do you want to do?', reply_markup=keyboards.optionsKeyboard(self.loc))
 					else: # In case he times out and pushes back afterwards
 						self.state = 0
-						self.editor.editMessageText('Share your location', reply_markup=keyboards.markupLocation)
+						bot.sendMessage(self.chat_id, 'Share your location', reply_markup=keyboards.markupLocation)
 							
 					
 		elif steps.step(self.state) == "Choose Type":
@@ -153,6 +154,13 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				db.preparePhotoSending(from_id, msg['message']['message_id'], self.loc)
 				self.editor.editMessageText('Send us a photo of the place!', reply_markup=keyboards.inlineBack)
 				
+			elif option[0] == "show_photos":
+				self.state = steps.nextStep(self.state) + 1
+				steps.saveStep(self.chat_id, self.state)
+				info = db.getPlaceData(self.loc)
+				self.editor.editMessageReplyMarkup(reply_markup=None)
+				bot.sendPhoto(from_id, info['photos'][0], reply_markup=keyboards.photos(info, 0))
+				
 		elif steps.step(self.state) == "Rating":
 			db.storeRating(self.loc, from_id, int(query_data))
 			self.state = steps.nextStep(self.state)
@@ -160,8 +168,8 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				
 		elif steps.step(self.state) == "Viewing Photos":
 			self.editor.editMessageReplyMarkup(reply_markup=None)
-			photos = db.getPlacePhotos(self.loc)
-			bot.sendPhoto(from_id, photos[0], reply_markup=None)
+			info = db.getPlaceData(self.loc)
+			bot.sendPhoto(from_id, info['photos'][query_data], reply_markup=keyboards.photos(info, query_data))
 			
 			#self.state = steps.nextStep(self.state)
 				

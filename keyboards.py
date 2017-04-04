@@ -55,15 +55,28 @@ def resultsKeyboard(js):
 def optionsKeyboard(loc):
 	"""Keyboard that shows the posible options for a displayed place."""
 	kboard = []
-	photos = db.getPlaceData(loc)
-	print(photos)
+	info = db.getPlaceData(loc)
 	res = [InlineKeyboardButton(text="Rate it", callback_data="rating " + str(loc))] + [InlineKeyboardButton(text="Send a photo", callback_data="photo " + str(loc))]
 	kboard.append(res)
-	if photos != None:
-		res = [InlineKeyboardButton(text='Show photos', callback_data='show photos')]	
-		kboard.append(res)
+	if info != None:
+		if 'photos' in info:
+			res = [InlineKeyboardButton(text='Show photos', callback_data="show_photos " + str(loc))]	
+			kboard.append(res)
 	res = [InlineKeyboardButton(text='Back', callback_data='back')]
 	kboard.append(res)
 	markupOptions = InlineKeyboardMarkup(inline_keyboard = kboard)
 	return markupOptions
+	
+def photos(info, pos):
+	kboard = []
+	res = []
+	if pos > 0:
+		res = [InlineKeyboardButton(text="Previous photo", callback_data=pos-1)]
+	if pos+1 < len(info['photos']):
+		res += [InlineKeyboardButton(text="Previous photo", callback_data=pos+1)]
+	kboard.append(res)
+	res = [InlineKeyboardButton(text='Back', callback_data='back')]
+	kboard.append(res)
+	markupPhotos = InlineKeyboardMarkup(inline_keyboard = kboard)
+	return markupPhotos
 	
