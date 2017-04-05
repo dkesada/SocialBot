@@ -21,9 +21,10 @@ rating = InlineKeyboardMarkup(inline_keyboard=[
 		[InlineKeyboardButton(text='3', callback_data='3')] + [InlineKeyboardButton(text='4', callback_data='4')] + [InlineKeyboardButton(text='5', callback_data='5')], [InlineKeyboardButton(text='Back', callback_data='back')]])
 		
 afterRate = InlineKeyboardMarkup(inline_keyboard=[
-					[InlineKeyboardButton(text='Choose location', callback_data='init')] + [InlineKeyboardButton(text="Choose establishment's type", callback_data='type')],
-					[InlineKeyboardButton(text='Choose establishment', callback_data='establishment')],
-               ])
+					[InlineKeyboardButton(text='Choose location', callback_data='init')],
+					[InlineKeyboardButton(text="Choose establishment's type", callback_data='type')],
+					[InlineKeyboardButton(text='Choose establishment', callback_data='establishment')],	
+               ])#Volver a puntuacion, fotos etc
 
 def resultsKeyboard(js):
 	"""Keyboard that displays the results of a location query."""
@@ -71,9 +72,9 @@ def photos(info, pos):
 	kboard = []
 	res = []
 	if pos > 0:
-		res = [InlineKeyboardButton(text="Previous photo", callback_data=pos-1)]
+		res = [InlineKeyboardButton(text="Previous photo", callback_data=str(pos-1))]
 	if pos+1 < len(info['photos']):
-		res += [InlineKeyboardButton(text="Previous photo", callback_data=pos+1)]
+		res += [InlineKeyboardButton(text="Next photo", callback_data=str(pos+1))]
 	kboard.append(res)
 	res = [InlineKeyboardButton(text='Back', callback_data='back')]
 	kboard.append(res)

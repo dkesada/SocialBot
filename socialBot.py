@@ -52,14 +52,14 @@ class UserHandler(telepot.helper.ChatHandler):
 				bot.sendMessage(chat_id, 'Share your location', reply_markup=keyboards.markupLocation)
 		elif content_type == 'location':
 			db.storeLocation(chat_id, msg['location'], msg['date'])
-			state = steps.getStep(chat_id)
+			state = 0
 			steps.saveStep(chat_id, steps.nextStep(state))
 			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=keyboards.inlineEstablishment)
 		elif content_type == 'photo':
 			sending = db.getSending(chat_id)['sending']
 			if sending != None and sending['type'] == 'photo':
 				db.storePlacePhoto(sending['location'], msg['photo'][2]['file_id'])
-				db.endSending(chat_id)
+				#db.endSending(chat_id)
 				bot.editMessageReplyMarkup(msg_identifier=(chat_id,sending['msg_id']), reply_markup=None)
 				bot.sendMessage(chat_id, 'Photo received, thanks! What else would you like to do?', reply_markup=keyboards.optionsKeyboard(sending['location']))
     
@@ -81,7 +81,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		data = db.getLocation(chat_id)
 		latitude = data[0]
 		longitude = data[1]
-		js = mapclient.places(None, location=(latitude, longitude), radius=1000, language='es-ES', min_price=0, max_price=4, open_now=True, type=establishmentType)
+		js = mapclient.places(None, location=(latitude, longitude), radius=500, language='es-ES', min_price=None, max_price=None, open_now=False, type=establishmentType)
 		uLoc = db.getLocation(chat_id)
 		message = "Choose one!\n"
 		if js["status"] != 'ZERO_RESULTS':
@@ -102,11 +102,14 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 	def on_callback_query(self, msg):
 		query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
 		bot.answerCallbackQuery(query_id)
-		
+
 		if self.state == None:
 			self.state = steps.getStep(from_id)
 			self.chat_id = from_id
-		
+			sending = db.getSending(self.chat_id)
+			if sending != None and 'sending' in sending:
+				self.loc = sending['sending']['location']
+				
 		if query_data == "back":
 			stp = steps.stepBack(self.state)	
 			if stp != False:
@@ -119,13 +122,10 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 					eType = db.getEType(from_id)			
 					self.placesNearBy(eType, from_id)
 				elif stp == "Info Establish":
+					self.state -= 1;
+					steps.saveStep(from_id, self.state)
 					self.editor.editMessageReplyMarkup(reply_markup=None)
-					# Caso de estar mandando una foto
-					if self.loc != None:
-						self.editor.editMessageText('What do you want to do?', reply_markup=keyboards.optionsKeyboard(self.loc))
-					else: # In case he times out and pushes back afterwards
-						self.state = 0
-						bot.sendMessage(self.chat_id, 'Share your location', reply_markup=keyboards.markupLocation)
+					bot.sendMessage(self.chat_id, 'What do you want to do?', reply_markup=keyboards.optionsKeyboard(self.loc))
 							
 					
 		elif steps.step(self.state) == "Choose Type":
@@ -139,6 +139,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			data = query_data.split(" ")
 			lat = data[0]
 			lng = data[1]
+			self.loc = str(data[0]) + " " + str(data[1])
 			bot.sendLocation(from_id,lat,lng)
 			self.editor.editMessageReplyMarkup(reply_markup=None)	
 			bot.sendMessage(from_id,"Here it is", reply_markup=keyboards.optionsKeyboard(query_data))
@@ -158,6 +159,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				self.state = steps.nextStep(self.state) + 1
 				steps.saveStep(self.chat_id, self.state)
 				info = db.getPlaceData(self.loc)
+				db.preparePhotoSending(from_id, msg['message']['message_id'], self.loc)
 				self.editor.editMessageReplyMarkup(reply_markup=None)
 				bot.sendPhoto(from_id, info['photos'][0], reply_markup=keyboards.photos(info, 0))
 				
@@ -169,7 +171,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		elif steps.step(self.state) == "Viewing Photos":
 			self.editor.editMessageReplyMarkup(reply_markup=None)
 			info = db.getPlaceData(self.loc)
-			bot.sendPhoto(from_id, info['photos'][query_data], reply_markup=keyboards.photos(info, query_data))
+			bot.sendPhoto(from_id, info['photos'][int(query_data)], reply_markup=keyboards.photos(info, int(query_data)))
 			
 			#self.state = steps.nextStep(self.state)
 				
