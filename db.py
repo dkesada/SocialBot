@@ -36,26 +36,21 @@ def getEType(chat_id):
 
 def getPlaceData(loc):
 	"""Returns all the data stored of a place."""
-	return places.find_one({'loc':loc},{'_id':0})
+	return places.find_one({'loc.coordinates':loc},{'_id':0})
 	
 def storeRating(loc, chat_id, rate):
 	"""Stores an user rating of a stablishment."""
-	previousRate = places.find_one({'loc':loc, 'user':chat_id}, {'_id':0, 'rate':1})
-	places.update_one({'loc':loc, 'user':chat_id}, {'$set': {'rate':rate}},upsert=True)
+	previousRate = places.find_one({'loc.coordinates':loc}, {'_id':0, 'ratings':{'$elemMatch':{'user':chat_id}}})
 	incr = 1
 	if previousRate != None:
-		pRate = previousRate['rate']
-		rate = rate - pRate
-		incr = 0
-	previousRating = places.find_one({'loc':loc}, {'_id':0, 'ratings':1})
-	if previousRating != None:
-		places.update_one({'loc':loc}, {'$inc': {'ratings.rate':rate, 'ratings.numRate':incr}})	
+		pRate = previousRate['ratings'][0]['rate']
+		places.update_one({'loc.coordinates':loc, 'ratings.user':chat_id}, {'$inc': {'rate':rate-pRate}, '$set':{'ratings.$.rate':rate}})	
 	else:
-		places.update_one({'loc':loc}, {'$set': {'ratings.rate':rate, 'ratings.numRate':1}},upsert=True)
-	
+		places.update_one({'loc':{'type':'Point','coordinates':loc}},{'$push':{'ratings':{'user':chat_id, 'rate':rate}}, '$inc':{'rate':rate, 'numRate':1}},upsert=True)
+		
 def storePlacePhoto(loc, photo):
 	"""Stores a file_id from a photo of a stablishment sent by an user."""
-	places.update_one({'loc':loc},{'$push':{'photos':photo}},upsert=True) # Slice limits the photo array
+	places.update_one({'loc':{'type':'Point','coordinates':loc}},{'$push':{'photos':photo}},upsert=True) # Slice limits the photo array
 	
 def preparePhotoSending(chat_id, message_id, loc):
 	"""Prepares de user for a photo sending. This stores the message_id to modify the markup, the location that is receiving a photo and a flag."""
@@ -63,7 +58,7 @@ def preparePhotoSending(chat_id, message_id, loc):
 
 def getPlacePhotos(loc):
 	"""Returns all the photos of a given place."""
-	return places.find_one({'_id':loc},{'_id':0, 'photos':1})
+	return places.find_one({'loc.coordinates':loc},{'_id':0, 'photos':1})
 
 def getSending(chat_id):
 	"""Returns the info of the next sending that the user will perform."""

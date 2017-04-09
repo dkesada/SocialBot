@@ -139,14 +139,14 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			data = query_data.split(" ")
 			lat = data[0]
 			lng = data[1]
-			self.loc = str(data[0]) + " " + str(data[1])
+			self.loc = [lng, lat]
 			bot.sendLocation(from_id,lat,lng)
 			self.editor.editMessageReplyMarkup(reply_markup=None)	
-			bot.sendMessage(from_id,"Here it is", reply_markup=keyboards.optionsKeyboard(query_data))
+			bot.sendMessage(from_id,"Here it is", reply_markup=keyboards.optionsKeyboard(self.loc))
 			
 		elif steps.step(self.state) == "Info Establish":
 			option = query_data.split(" ")
-			self.loc = str(option[1]) + " " + str(option[2])
+			self.loc = [option[1], option[2]]
 			if 	option[0] == "rating":
 				self.state = steps.nextStep(self.state)
 				self.editor.editMessageText("So... What's your rate?", reply_markup=keyboards.rating)
