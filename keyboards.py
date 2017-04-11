@@ -26,6 +26,32 @@ afterRate = InlineKeyboardMarkup(inline_keyboard=[
 					[InlineKeyboardButton(text='Choose establishment', callback_data='establishment')],	
                ])#Volver a puntuacion, fotos etc
 
+settings = InlineKeyboardMarkup(inline_keyboard=[
+					[InlineKeyboardButton(text="Choose language", callback_data='language')],
+					[InlineKeyboardButton(text="Choose parameters", callback_data='parameters')],
+					[InlineKeyboardButton(text="Back", callback_data='back')],	
+               ])
+
+languages = InlineKeyboardMarkup(inline_keyboard=[
+					[InlineKeyboardButton(text="English", callback_data='english')],
+					[InlineKeyboardButton(text="Back", callback_data='sback')],	
+               ])
+
+languages = InlineKeyboardMarkup(inline_keyboard=[
+					[InlineKeyboardButton(text="Choose radius", callback_data='radius')]+[InlineKeyboardButton(text="Choose price", callback_data='price')],
+					[InlineKeyboardButton(text="Show only open establishments", callback_data='open')],
+					[InlineKeyboardButton(text="Back", callback_data='sback')],	
+               ])
+
+radius = rating = InlineKeyboardMarkup(inline_keyboard=[
+		[InlineKeyboardButton(text='100', callback_data='0')] + [InlineKeyboardButton(text='250', callback_data='1')] + [InlineKeyboardButton(text='500', callback_data='2')],
+		[InlineKeyboardButton(text='1000', callback_data='3')] + [InlineKeyboardButton(text='2500', callback_data='4')] + [InlineKeyboardButton(text='5000', callback_data='5')], [InlineKeyboardButton(text='Back', callback_data='sback')]])
+
+openE = InlineKeyboardMarkup(inline_keyboard=[
+					[InlineKeyboardButton(text="True", callback_data='true')]+[InlineKeyboardButton(text="False", callback_data='false')],
+					[InlineKeyboardButton(text="Back", callback_data='sback')],	
+               ])
+
 def resultsKeyboard(js):
 	"""Keyboard that displays the results of a location query."""
 	i = 0

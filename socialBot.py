@@ -47,12 +47,17 @@ class UserHandler(telepot.helper.ChatHandler):
 		content_type, chat_type, chat_id = telepot.glance(msg,flavor='chat')
 		if content_type == 'text':
 			if msg['text'] == "/start":
-				steps.saveStep(chat_id, 0)
-			if steps.step(steps.getStep(chat_id)) == "Init":
+				steps.saveStep(chat_id, 1)
 				bot.sendMessage(chat_id, 'Share your location', reply_markup=keyboards.markupLocation)
+			elif msg['text'] == "/settings":
+				steps.saveStep(chat_id, 0)
+				text = "From here you can change the bot's settings. On Choose language you can change the bot's language. "
+				text += "On Choose parameters you can change the radius of the establishments you want to go to, if you want "
+				text += "the bot show you only establishments that are open or the price of them."
+				bot.sendMessage(chat_id, text, reply_markup=keyboards.settings)
 		elif content_type == 'location':
 			db.storeLocation(chat_id, msg['location'], msg['date'])
-			state = 0
+			state = 1
 			steps.saveStep(chat_id, steps.nextStep(state))
 			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=keyboards.inlineEstablishment)
 		elif content_type == 'photo':
@@ -115,6 +120,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			if stp != False:
 				self.state -= 1;
 				if stp == "Init":
+					self.state = 1;
 					self.editor.editMessageText('Share your location', reply_markup=None)
 				elif stp == "Choose Type":
 					self.editor.editMessageText('What are you looking for?', reply_markup=keyboards.inlineEstablishment)
@@ -127,7 +133,21 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 					self.editor.editMessageReplyMarkup(reply_markup=None)
 					bot.sendMessage(self.chat_id, 'What do you want to do?', reply_markup=keyboards.optionsKeyboard(self.loc))
 							
-					
+		elif steps.step(self.state) == "Settings":
+			if query_data == "language":
+				self.editor.editMessageText("Choose your language", reply_markup=keyboards.languages)
+			elif query_data == "parameters":
+				self.editor.editMessageText("Choose the parameters for your query", reply_markup=keyboards.parameters)
+			elif query_data == "sback":
+				text = "From here you can change the bot's settings. On Choose language you can change the bot's language. "
+				text += "On Choose parameters you can change the radius of the establishments you want to go to, if you want "
+				text += "the bot show you only establishments that are open or the price of them."
+				self.editor.editMessageText(text, reply_markup=keyboards.settings)
+			elif query_data == "radius":
+				self.editor.editMessageText("Choose one of the distances which you want to set the radius of the establishments that you are looking for. The distance is in meters", reply_markup=keyboards.radius)
+			elif query_data == "open":
+				self.editor.editMessageText("If you want to the bot only show you open establishments push true else push false. ", reply_markup=keyboards.openE)
+						
 		elif steps.step(self.state) == "Choose Type":
 			self.state = steps.nextStep(self.state)
 			db.storeEType(from_id, query_data)
@@ -177,13 +197,13 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				
 		elif steps.step(self.state) == "Come Back":
 			if query_data == "init":
-				self.state = 0
+				self.state = 1
 				self.editor.editMessageText('Share your location', reply_markup=keyboards.markupLocation)
 			elif query_data == "type":
-				self.state = 1
+				self.state = 2
 				self.editor.editMessageText('What are you looking for?', reply_markup=keyboards.inlineEstablishment)
 			elif query_data == "establishment":
-				self.state = 2
+				self.state = 3
 				eType = db.getEType(from_id)			
 				self.placesNearBy(eType, from_id)
 	
