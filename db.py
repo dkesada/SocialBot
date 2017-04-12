@@ -7,6 +7,7 @@ connection = MongoClient('localhost', 27017)
 db = connection.bot
 users = db.users
 places = db.places
+settings = db.settings
     
 def storeLocation(chat_id, loc, date):
 	"""Stores the current location of the user."""
@@ -68,3 +69,38 @@ def endSending(chat_id):
 	"""Finishes a sending for the chat_id"""
 	users.update_one({'_id':chat_id},{'$unset':{'sending':""}})
 
+def storeRadius(chat_id, radius):
+	settings.update_one({'_id':chat_id},{'$set':{'radius':radius}},upsert=True)
+	
+def storeOpen(chat_id, openE):
+	settings.update_one({'_id':chat_id},{'$set':{'openE':openE}},upsert=True)
+
+def storeLanguage(chat_id, language):
+	settings.update_one({'_id':chat_id},{'$set':{'language':language}},upsert=True)
+	
+def getSettings(chat_id):
+	sett = {}
+	query = settings.find_one({'_id':chat_id},{'_id':0,'radius':1, 'openE':1})
+	if query is None:
+		sett['radius'] = 500
+		sett['openE'] = False
+		return sett
+	if 'radius' in query:
+		sett['radius'] = int(query['radius'])
+	else:
+		sett['radius'] = 500
+	if 'openE' in query:
+		if query['openE']:
+			sett['openE'] = True
+		else:			
+			sett['openE'] = False
+	else:
+		sett['openE'] = False
+	return sett
+
+def getLanguage(chat_id, language):
+	sett = settings.find_one({'_id':chat_id},{'_id':0,'language':1})
+	if 'language' in sett:
+		return sett['language']
+	else:
+		return "English"

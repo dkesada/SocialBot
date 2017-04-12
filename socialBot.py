@@ -86,7 +86,8 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		data = db.getLocation(chat_id)
 		latitude = data[0]
 		longitude = data[1]
-		js = mapclient.places(None, location=(latitude, longitude), radius=500, language='es-ES', min_price=None, max_price=None, open_now=False, type=establishmentType)
+		settings = db.getSettings(chat_id)
+		js = mapclient.places(None, location=(latitude, longitude), radius=settings['radius'], language='es-ES', min_price=None, max_price=None, open_now=settings['openE'], type=establishmentType)
 		uLoc = db.getLocation(chat_id)
 		message = "Choose one!\n"
 		if js["status"] != 'ZERO_RESULTS':
@@ -141,12 +142,23 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			elif query_data == "sback":
 				text = "From here you can change the bot's settings. On Choose language you can change the bot's language. "
 				text += "On Choose parameters you can change the radius of the establishments you want to go to, if you want "
-				text += "the bot show you only establishments that are open or the price of them."
+				text += "the bot show only establishments that are open or the price of them."
 				self.editor.editMessageText(text, reply_markup=keyboards.settings)
 			elif query_data == "radius":
 				self.editor.editMessageText("Choose one of the distances which you want to set the radius of the establishments that you are looking for. The distance is in meters", reply_markup=keyboards.radius)
 			elif query_data == "open":
-				self.editor.editMessageText("If you want to the bot only show you open establishments push true else push false. ", reply_markup=keyboards.openE)
+				self.editor.editMessageText("If you want to the bot only show open establishments push true else push false. ", reply_markup=keyboards.openE)
+			else:
+				option = query_data.split(" ")
+				if option[0] == "meters":
+					meters = option[1]
+					db.storeRadius(from_id, meters)
+				elif option[0] == "bool":
+					openE = option[1]
+					db.storeOpen(from_id, openE)
+				elif option[0] == "language":
+					language = option[1]
+					db.storeLanguage(from_id, language)
 						
 		elif steps.step(self.state) == "Choose Type":
 			self.state = steps.nextStep(self.state)

@@ -33,22 +33,22 @@ settings = InlineKeyboardMarkup(inline_keyboard=[
                ])
 
 languages = InlineKeyboardMarkup(inline_keyboard=[
-					[InlineKeyboardButton(text="English", callback_data='english')],
+					[InlineKeyboardButton(text="English", callback_data='language english')],
 					[InlineKeyboardButton(text="Back", callback_data='sback')],	
                ])
 
-languages = InlineKeyboardMarkup(inline_keyboard=[
+parameters = InlineKeyboardMarkup(inline_keyboard=[
 					[InlineKeyboardButton(text="Choose radius", callback_data='radius')]+[InlineKeyboardButton(text="Choose price", callback_data='price')],
 					[InlineKeyboardButton(text="Show only open establishments", callback_data='open')],
 					[InlineKeyboardButton(text="Back", callback_data='sback')],	
                ])
 
 radius = rating = InlineKeyboardMarkup(inline_keyboard=[
-		[InlineKeyboardButton(text='100', callback_data='0')] + [InlineKeyboardButton(text='250', callback_data='1')] + [InlineKeyboardButton(text='500', callback_data='2')],
-		[InlineKeyboardButton(text='1000', callback_data='3')] + [InlineKeyboardButton(text='2500', callback_data='4')] + [InlineKeyboardButton(text='5000', callback_data='5')], [InlineKeyboardButton(text='Back', callback_data='sback')]])
+		[InlineKeyboardButton(text='100', callback_data='meters 100')] + [InlineKeyboardButton(text='250', callback_data='meters 250')] + [InlineKeyboardButton(text='500', callback_data='meters 500')],
+		[InlineKeyboardButton(text='1000', callback_data='meters 1000')] + [InlineKeyboardButton(text='2500', callback_data='meters 2500')] + [InlineKeyboardButton(text='5000', callback_data='meters 5000')], [InlineKeyboardButton(text='Back', callback_data='sback')]])
 
 openE = InlineKeyboardMarkup(inline_keyboard=[
-					[InlineKeyboardButton(text="True", callback_data='true')]+[InlineKeyboardButton(text="False", callback_data='false')],
+					[InlineKeyboardButton(text="True", callback_data='bool true')]+[InlineKeyboardButton(text="False", callback_data='bool false')],
 					[InlineKeyboardButton(text="Back", callback_data='sback')],	
                ])
 
