@@ -147,18 +147,25 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			elif query_data == "radius":
 				self.editor.editMessageText("Choose one of the distances which you want to set the radius of the establishments that you are looking for. The distance is in meters", reply_markup=keyboards.radius)
 			elif query_data == "open":
-				self.editor.editMessageText("If you want to the bot only show open establishments push true else push false. ", reply_markup=keyboards.openE)
+				self.editor.editMessageText("If you want to the bot only show open establishments push true else push false.", reply_markup=keyboards.openE)
+			elif query_data == "restart":
+				self.state = 1;
+				steps.saveStep(self.chat_id, self.state)
+				self.editor.editMessageText('Share your location', reply_markup=None)
 			else:
 				option = query_data.split(" ")
 				if option[0] == "meters":
 					meters = option[1]
 					db.storeRadius(from_id, meters)
+					self.editor.editMessageText("Radius changed. What do you want to do now?", reply_markup=keyboards.optionChanged)
 				elif option[0] == "bool":
 					openE = option[1]
 					db.storeOpen(from_id, openE)
+					self.editor.editMessageText("Open option changed. What do you want to do now?", reply_markup=keyboards.optionChanged)
 				elif option[0] == "language":
 					language = option[1]
 					db.storeLanguage(from_id, language)
+					self.editor.editMessageText("Language changed. What do you want to do now?", reply_markup=keyboards.optionChanged)
 						
 		elif steps.step(self.state) == "Choose Type":
 			self.state = steps.nextStep(self.state)

@@ -52,6 +52,12 @@ openE = InlineKeyboardMarkup(inline_keyboard=[
 					[InlineKeyboardButton(text="Back", callback_data='sback')],	
                ])
 
+optionChanged = InlineKeyboardMarkup(inline_keyboard=[
+					[InlineKeyboardButton(text="Settings's Menu", callback_data='sback')],
+					[InlineKeyboardButton(text="(Re)Start the bot", callback_data='restart')],	
+               ])
+
+
 def resultsKeyboard(js):
 	"""Keyboard that displays the results of a location query."""
 	i = 0
