@@ -62,7 +62,7 @@ class UserHandler(telepot.helper.ChatHandler):
 			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=keyboards.inlineEstablishment)
 		elif content_type == 'photo':
 			sending = db.getSending(chat_id)['sending']
-			if sending != None and sending['type'] == 'photo':
+			if sending != None and sending['type'] == 'photo' and sending['location'] != None:
 				db.storePlacePhoto(sending['location'], msg['photo'][2]['file_id'])
 				#db.endSending(chat_id)
 				bot.editMessageReplyMarkup(msg_identifier=(chat_id,sending['msg_id']), reply_markup=None)
@@ -178,6 +178,8 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			
 		elif steps.step(self.state) == "Info Establish":
 			option = query_data.split(" ")
+			if option[2] is None:
+				print option
 			self.loc = [option[1], option[2]]
 			if 	option[0] == "rating":
 				self.state = steps.nextStep(self.state)
@@ -210,7 +212,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		elif steps.step(self.state) == "Come Back":
 			if query_data == "init":
 				self.state = 1
-				self.editor.editMessageText('Share your location', reply_markup=keyboards.markupLocation)
+				self.editor.editMessageText('Share your location', reply_markup=None)
 			elif query_data == "type":
 				self.state = 2
 				self.editor.editMessageText('What are you looking for?', reply_markup=keyboards.inlineEstablishment)
