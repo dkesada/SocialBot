@@ -1,0 +1,100 @@
+Pongo solo los errores
+Borrar segun se solucionen
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/telepot/delegate.py", line 252, in wait_loop
+    j.on_message(msg)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 630, in augmented
+    return handler(msg)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 996, in on_message
+    self._router.route(msg)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 972, in route
+    return fn(msg, *args, **kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 981, in <lambda>
+    'callback_query': lambda msg: self.on_callback_query(msg),
+  File "./socialBot.py", line 149, in on_callback_query
+    self.loc = [option[1], option[2]]
+IndexError: list index out of range
+
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/telepot/delegate.py", line 252, in wait_loop
+    j.on_message(msg)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 630, in augmented
+    return handler(msg)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 996, in on_message
+    self._router.route(msg)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 972, in route
+    return fn(msg, *args, **kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 981, in <lambda>
+    'callback_query': lambda msg: self.on_callback_query(msg),
+  File "./socialBot.py", line 149, in on_callback_query
+    self.loc = [option[1], option[2]]
+IndexError: list index out of range
+
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/telepot/delegate.py", line 256, in wait_loop
+    j.on_message(msg)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 630, in augmented
+    return handler(msg)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 996, in on_message
+    self._router.route(msg)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 972, in route
+    return fn(msg, *args, **kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 980, in <lambda>
+    self._router = Router(flavor, {'chat': lambda msg: self.on_chat_message(msg),
+  File "./socialBot.py", line 61, in on_chat_message
+    db.storePlacePhoto(sending['location'], msg['photo'][2]['file_id'])
+IndexError: list index out of range
+
+
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/telepot/delegate.py", line 256, in wait_loop
+    j.on_message(msg)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 630, in augmented
+    return handler(msg)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 996, in on_message
+    self._router.route(msg)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 972, in route
+    return fn(msg, *args, **kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 981, in <lambda>
+    'callback_query': lambda msg: self.on_callback_query(msg),
+  File "./socialBot.py", line 181, in on_callback_query
+    self.editor.editMessageText('Share your location', reply_markup=keyboards.markupLocation)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/__init__.py", line 598, in editMessageText
+    return self._api_request('editMessageText', _rectify(p))
+  File "/usr/local/lib/python2.7/dist-packages/telepot/__init__.py", line 397, in _api_request
+    return api.request((self._token, method, params, files), **kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/api.py", line 131, in request
+    return _parse(r)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/api.py", line 126, in _parse
+    raise exception.TelegramError(description, error_code, data)
+TelegramError: (u'Bad Request: inline keyboard expected', 400, {u'error_code': 400, u'ok': False, u'description': u'Bad Request: inline keyboard expected'})
+ERROR:root:on_close() called due to TelegramError: (u'Bad Request: inline keyboard expected', 400, {u'error_code': 400, u'ok': False, u'description': u'Bad Request: inline keyboard expected'})
+
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/telepot/delegate.py", line 252, in wait_loop
+    j.on_message(msg)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 630, in augmented
+    return handler(msg)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 996, in on_message
+    self._router.route(msg)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 972, in route
+    return fn(msg, *args, **kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/telepot/helper.py", line 981, in <lambda>
+    'callback_query': lambda msg: self.on_callback_query(msg),
+  File "./socialBot.py", line 174, in on_callback_query
+    bot.sendPhoto(from_id, info['photos'][int(query_data)], reply_markup=keyboards.photos(info, int(query_data)))
+ValueError: invalid literal for int() with base 10: 'init'
+ERROR:root:on_close() called due to ValueError: invalid literal for int() with base 10: 'init'
+
+
+
+
+
+
+
+
