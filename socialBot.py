@@ -55,6 +55,7 @@ class UserHandler(telepot.helper.ChatHandler):
 				text += "On Choose parameters you can change the radius of the establishments you want to go to, if you want "
 				text += "the bot show you only establishments that are open or the price of them."
 				bot.sendMessage(chat_id, text, reply_markup=keyboards.settings)
+    
 		elif content_type == 'location':
 			db.storeLocation(chat_id, msg['location'], msg['date'])
 			state = 1
@@ -62,12 +63,13 @@ class UserHandler(telepot.helper.ChatHandler):
 			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=keyboards.inlineEstablishment)
 		elif content_type == 'photo':
 			sending = db.getSending(chat_id)['sending']
-			if sending != None and sending['type'] == 'photo' and sending['location'] != None:
-				db.storePlacePhoto(sending['location'], msg['photo'][2]['file_id'])
+			if sending != None and sending['type'] == 'photo':
+				index = len(msg['photo'])-1
+				db.storePlacePhoto(sending['location'], msg['photo'][index]['file_id'])
 				#db.endSending(chat_id)
 				bot.editMessageReplyMarkup(msg_identifier=(chat_id,sending['msg_id']), reply_markup=None)
 				bot.sendMessage(chat_id, 'Photo received, thanks! What else would you like to do?', reply_markup=keyboards.optionsKeyboard(sending['location']))
-    
+		
     def on__idle(self, event):
         self.close()
         
@@ -107,7 +109,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		    
 	def on_callback_query(self, msg):
 		query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
-		bot.answerCallbackQuery(query_id)
+		#bot.answerCallbackQuery(query_id)
 
 		if self.state == None:
 			self.state = steps.getStep(from_id)
@@ -138,7 +140,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			if query_data == "language":
 				self.editor.editMessageText("Choose your language", reply_markup=keyboards.languages)
 			elif query_data == "parameters":
-				self.editor.editMessageText("Choose the parameters for your query", reply_markup=keyboards.parameters)
+				self.editor.editMessageText("Choose the parameters for your query (radius, open now, etc.).", reply_markup=keyboards.parameters)
 			elif query_data == "sback":
 				text = "From here you can change the bot's settings. On Choose language you can change the bot's language. "
 				text += "On Choose parameters you can change the radius of the establishments you want to go to, if you want "
@@ -147,7 +149,10 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			elif query_data == "radius":
 				self.editor.editMessageText("Choose one of the distances which you want to set the radius of the establishments that you are looking for. The distance is in meters", reply_markup=keyboards.radius)
 			elif query_data == "open":
-				self.editor.editMessageText("If you want to the bot only show open establishments push true else push false.", reply_markup=keyboards.openE)
+				self.editor.editMessageText("Do you want to see only open establishments?", reply_markup=keyboards.openE)
+			elif query_data == "numResults":
+				self.editor.editMessageText("How many establishments do you want to see?", reply_markup=keyboards.numE)
+			
 			elif query_data == "restart":
 				self.state = 1;
 				steps.saveStep(self.chat_id, self.state)
@@ -157,15 +162,23 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				if option[0] == "meters":
 					meters = option[1]
 					db.storeRadius(from_id, meters)
-					self.editor.editMessageText("Radius changed. What do you want to do now?", reply_markup=keyboards.optionChanged)
+					bot.answerCallbackQuery(query_id, "Radius changed")
+					self.editor.editMessageText("What do you want to do now?", reply_markup=keyboards.optionChanged)
 				elif option[0] == "bool":
 					openE = option[1]
 					db.storeOpen(from_id, openE)
-					self.editor.editMessageText("Open option changed. What do you want to do now?", reply_markup=keyboards.optionChanged)
+					bot.answerCallbackQuery(query_id, "Open option changed")
+					self.editor.editMessageText("What do you want to do now?", reply_markup=keyboards.optionChanged)
 				elif option[0] == "language":
 					language = option[1]
 					db.storeLanguage(from_id, language)
-					self.editor.editMessageText("Language changed. What do you want to do now?", reply_markup=keyboards.optionChanged)
+					bot.answerCallbackQuery(query_id, "Language changed")
+					self.editor.editMessageText("What do you want to do now?", reply_markup=keyboards.optionChanged)
+				elif option[0] == "num":
+					num = option[1]
+					db.storeNumberE(from_id, num)
+					bot.answerCallbackQuery(query_id, "Number of establishment changed")
+					self.editor.editMessageText("What do you want to do now?", reply_markup=keyboards.optionChanged)
 						
 		elif steps.step(self.state) == "Choose Type":
 			self.state = steps.nextStep(self.state)
@@ -207,7 +220,12 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		elif steps.step(self.state) == "Rating":
 			db.storeRating(self.loc, from_id, int(query_data))
 			self.state = steps.nextStep(self.state)
-			self.editor.editMessageText('And what do you want to do now?', reply_markup=keyboards.afterRate)
+			star = u'\u2b50\ufe0f'
+			text = ''
+			for i in range(int(query_data)):
+				text += star
+			bot.answerCallbackQuery(query_id, text)
+			self.editor.editMessageText('And what do you want to do now?', reply_markup=keyboards.optionsKeyboard(self.loc))
 				
 		elif steps.step(self.state) == "Viewing Photos":
 			self.editor.editMessageReplyMarkup(reply_markup=None)

@@ -17,12 +17,12 @@ inlineEstablishment = InlineKeyboardMarkup(inline_keyboard=[
 inlineBack = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='Back', callback_data='back')],])
 
 rating = InlineKeyboardMarkup(inline_keyboard=[
-		[InlineKeyboardButton(text='0', callback_data='0')] + [InlineKeyboardButton(text='1', callback_data='1')] + [InlineKeyboardButton(text='2', callback_data='2')],
-		[InlineKeyboardButton(text='3', callback_data='3')] + [InlineKeyboardButton(text='4', callback_data='4')] + [InlineKeyboardButton(text='5', callback_data='5')], [InlineKeyboardButton(text='Back', callback_data='back')]])
+		[InlineKeyboardButton(text='0'+u'\u2b50\ufe0f', callback_data='0')] + [InlineKeyboardButton(text='1'+u'\u2b50\ufe0f', callback_data='1')] + [InlineKeyboardButton(text='2'+u'\u2b50\ufe0f', callback_data='2')],
+		[InlineKeyboardButton(text='3'+u'\u2b50\ufe0f', callback_data='3')] + [InlineKeyboardButton(text='4'+u'\u2b50\ufe0f', callback_data='4')] + [InlineKeyboardButton(text='5'+u'\u2b50\ufe0f', callback_data='5')], [InlineKeyboardButton(text='Back', callback_data='back')]])
 		
 afterRate = InlineKeyboardMarkup(inline_keyboard=[
 					[InlineKeyboardButton(text='Choose location', callback_data='init')],
-					[InlineKeyboardButton(text="Choose establishment's type", callback_data='type')],
+					[InlineKeyboardButton(text="Choose type of establishments", callback_data='type')],
 					[InlineKeyboardButton(text='Choose establishment', callback_data='establishment')],	
                ])#Volver a puntuacion, fotos etc
 
@@ -38,17 +38,18 @@ languages = InlineKeyboardMarkup(inline_keyboard=[
                ])
 
 parameters = InlineKeyboardMarkup(inline_keyboard=[
-					[InlineKeyboardButton(text="Choose radius", callback_data='radius')]+[InlineKeyboardButton(text="Choose price", callback_data='price')],
+					[InlineKeyboardButton(text="Choose radius", callback_data='radius')],
+					[InlineKeyboardButton(text="Choose number of establishments", callback_data='price')],
 					[InlineKeyboardButton(text="Show only open establishments", callback_data='open')],
 					[InlineKeyboardButton(text="Back", callback_data='sback')],	
                ])
 
-radius = rating = InlineKeyboardMarkup(inline_keyboard=[
+radius = InlineKeyboardMarkup(inline_keyboard=[
 		[InlineKeyboardButton(text='100', callback_data='meters 100')] + [InlineKeyboardButton(text='250', callback_data='meters 250')] + [InlineKeyboardButton(text='500', callback_data='meters 500')],
 		[InlineKeyboardButton(text='1000', callback_data='meters 1000')] + [InlineKeyboardButton(text='2500', callback_data='meters 2500')] + [InlineKeyboardButton(text='5000', callback_data='meters 5000')], [InlineKeyboardButton(text='Back', callback_data='sback')]])
 
 openE = InlineKeyboardMarkup(inline_keyboard=[
-					[InlineKeyboardButton(text="True", callback_data='bool true')]+[InlineKeyboardButton(text="False", callback_data='bool false')],
+					[InlineKeyboardButton(text="Yes", callback_data='bool true')]+[InlineKeyboardButton(text="No", callback_data='bool false')],
 					[InlineKeyboardButton(text="Back", callback_data='sback')],	
                ])
 
@@ -57,6 +58,10 @@ optionChanged = InlineKeyboardMarkup(inline_keyboard=[
 					[InlineKeyboardButton(text="(Re)Start the bot", callback_data='restart')],	
                ])
 
+numE = InlineKeyboardMarkup(inline_keyboard=[
+		[InlineKeyboardButton(text='5', callback_data='num 5')] + [InlineKeyboardButton(text='10', callback_data='num 10')],
+		[InlineKeyboardButton(text='15', callback_data='num 15')] + [InlineKeyboardButton(text='20', callback_data='num 20')], 	
+		[InlineKeyboardButton(text='Back', callback_data='sback')]])
 
 def resultsKeyboard(js):
 	"""Keyboard that displays the results of a location query."""

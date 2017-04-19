@@ -11,7 +11,7 @@ def step(state):
 def nextStep(state):
 	if state < len(listSteps)-1:
 		if state == 5: #Rating
-			state += 1
+			return state - 1
 		return state + 1
 	else:
 		return state

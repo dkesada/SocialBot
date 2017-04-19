@@ -77,6 +77,9 @@ def storeOpen(chat_id, openE):
 
 def storeLanguage(chat_id, language):
 	settings.update_one({'_id':chat_id},{'$set':{'language':language}},upsert=True)
+
+def storeNumberE(chat_id, number):
+	settings.update_one({'_id':chat_id},{'$set':{'numberE':number}},upsert=True)
 	
 def getSettings(chat_id):
 	sett = {}
