@@ -18,6 +18,7 @@ import datetime
 import db
 import steps
 import keyboards
+import translate
 
 """
 Api para sacar los locales cercanos a la ubicación que te manden:
@@ -48,27 +49,23 @@ class UserHandler(telepot.helper.ChatHandler):
 		if content_type == 'text':
 			if msg['text'] == "/start":
 				steps.saveStep(chat_id, 1)
-				bot.sendMessage(chat_id, 'Share your location', reply_markup=keyboards.markupLocation)
+				bot.sendMessage(chat_id, translate.location(db.getLanguage(chat_id)), reply_markup=keyboards.markupLocation)
 			elif msg['text'] == "/settings":
-				steps.saveStep(chat_id, 0)
-				text = "From here you can change the bot's settings. On Choose language you can change the bot's language. "
-				text += "On Choose parameters you can change the radius of the establishments you want to go to, if you want "
-				text += "the bot show you only establishments that are open or the price of them."
-				bot.sendMessage(chat_id, text, reply_markup=keyboards.settings)
+				steps.saveStep(chat_id, 0)				
+				bot.sendMessage(chat_id, translate.settings(db.getLanguage(chat_id)), reply_markup=keyboards.settings)
     
 		elif content_type == 'location':
 			db.storeLocation(chat_id, msg['location'], msg['date'])
 			state = 1
 			steps.saveStep(chat_id, steps.nextStep(state))
-			bot.sendMessage(chat_id, 'What are you looking for?', reply_markup=keyboards.inlineEstablishment)
+			bot.sendMessage(chat_id, translate.lookingFor(db.getLanguage(chat_id)), reply_markup=keyboards.inlineEstablishment)
 		elif content_type == 'photo':
 			sending = db.getSending(chat_id)['sending']
 			if sending != None and sending['type'] == 'photo':
 				index = len(msg['photo'])-1
 				db.storePlacePhoto(sending['location'], msg['photo'][index]['file_id'])
-				#db.endSending(chat_id)
 				bot.editMessageReplyMarkup(msg_identifier=(chat_id,sending['msg_id']), reply_markup=None)
-				bot.sendMessage(chat_id, 'Photo received, thanks! What else would you like to do?', reply_markup=keyboards.optionsKeyboard(sending['location']))
+				bot.sendMessage(chat_id, translate.photoRec(db.getLanguage(chat_id)), reply_markup=keyboards.optionsKeyboard(sending['location']))
 		
     def on__idle(self, event):
         self.close()
@@ -83,6 +80,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		self.state = None
 		self.chat_id = None
 		self.loc = None
+		self.language = None
 
 	def placesNearBy(self, establishmentType, chat_id):
 		data = db.getLocation(chat_id)
@@ -91,21 +89,21 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		settings = db.getSettings(chat_id)
 		js = mapclient.places(None, location=(latitude, longitude), radius=settings['radius'], language='es-ES', min_price=None, max_price=None, open_now=settings['openE'], type=establishmentType)
 		uLoc = db.getLocation(chat_id)
-		message = "Choose one!\n"
+		message = translate.chooseOne(self.language)
 		if js["status"] != 'ZERO_RESULTS':
 			for j in js["results"]:
 				location = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
 				distance = "{0:.2f}".format(self.haversine(location, uLoc))
-				message += j['name'] + " is " + str(distance) + " meters from you. "
+				message += j['name'] + translate.isv(self.language) + str(distance) + translate.meters(self.language)
 				datos = db.getPlaceData(location)
 				if datos != None:
 					if 'ratings' in datos:
 						rate = "{0:.1f}".format(datos['ratings']['rate']/datos['ratings']['numRate'])
-						message += "And the rate of our users are " + str(rate)
+						message += translate.rate(self.language) + str(rate)
 				message += "\n"	
 			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js))
 		else:
-			self.editor.editMessageText("There aren't establishment available with this parameters", reply_markup=keyboards.inlineBack)
+			self.editor.editMessageText(translate.noEstablish(self.language), reply_markup=keyboards.inlineBack)
 		    
 	def on_callback_query(self, msg):
 		query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
@@ -115,6 +113,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			self.state = steps.getStep(from_id)
 			self.chat_id = from_id
 			sending = db.getSending(self.chat_id)
+			self.language = db.getLanguage(self.chat_id)
 			if sending != None and 'sending' in sending:
 				self.loc = sending['sending']['location']
 				
@@ -124,9 +123,9 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				self.state -= 1;
 				if stp == "Init":
 					self.state = 1;
-					self.editor.editMessageText('Share your location', reply_markup=None)
+					self.editor.editMessageText(translate.location(self.language), reply_markup=None)
 				elif stp == "Choose Type":
-					self.editor.editMessageText('What are you looking for?', reply_markup=keyboards.inlineEstablishment)
+					self.editor.editMessageText(translate.lookingFor(self.language), reply_markup=keyboards.inlineEstablishment)
 				elif stp == "Choose Establish":
 					eType = db.getEType(from_id)			
 					self.placesNearBy(eType, from_id)

@@ -33,7 +33,7 @@ settings = InlineKeyboardMarkup(inline_keyboard=[
                ])
 
 languages = InlineKeyboardMarkup(inline_keyboard=[
-					[InlineKeyboardButton(text="English", callback_data='language english')],
+					[InlineKeyboardButton(text="English", callback_data='language English')]+[InlineKeyboardButton(text="English", callback_data='language Español')],
 					[InlineKeyboardButton(text="Back", callback_data='sback')],	
                ])
 
