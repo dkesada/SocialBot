@@ -15,7 +15,8 @@ then
  fi
  
  # Opens mongod in a terminal, can be changed to have mongod on the background
- gnome-terminal -e "bash -c \"mongod --dbpath $dir; exec bash\""
+ #gnome-terminal -e "bash -c \"mongod --dbpath $dir; exec bash\""
+ nohup mongod --dbpath $dir &
  
  # If there's a backup I import it
  if [ -f $bkup ]; then
