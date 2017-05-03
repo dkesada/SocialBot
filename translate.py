@@ -111,3 +111,73 @@ def choooseParam(lang){
 		text += "the bot can show only locals that are open."
 		return text
 }
+
+def choooseDistance(lang){
+	if lang == "Español":
+		return "Escoge una de las distancias que quieres establecer como radio de los locales que estás buscando. La distancias está en metros"
+	else:
+		return "Choose one of the distances which you want to set as radius of the establishments that you are looking for. The distance is in meters"
+}
+
+def onlyOpen(lang){
+	if lang == "Español":
+		return "¿Sólo quieres ver establecimientos abiertos en el momento de la consulta?"
+	else:
+		return "Do you want to see only open establishments at the moment of the query?"
+}
+
+def howLocals(lang){
+	if lang == "Español":
+		return "¿Cuántos establecimientos quieres ver?"
+	else:
+		return "How many establishments do you want to see?"
+}
+
+def radiusChanged(lang){
+	if lang == "Español":
+		return "Radio cambiado"
+	else:
+		return "Radius changed"
+}
+
+def openChanged(lang){
+	if lang == "Español":
+		return "Opción sólo abierto cambiada"
+	else:
+		return "Only open option changed"
+}
+
+def languageChanged(lang){
+	if lang == "Español":
+		return "Idioma cambiado"
+	else:
+		return "Language changed"
+}
+
+def numberChanged(lang){
+	if lang == "Español":
+		return "Número de locales cambiado"
+	else:
+		return "Number of establishment changed"
+}
+
+def hereIts(lang){
+	if lang == "Español":
+		return "Aquí lo tienes"
+	else:
+		return "Here it is"
+}
+
+def yourRate(lang){
+	if lang == "Español":
+		return "Entonces ... ¿Cúal es tu puntuación?"
+	else:
+		return "So... What's your rate?",
+}
+
+def sendPhoto(lang){
+	if lang == "Español":
+		return "¡Envíanos una foto del lugar!"
+	else:
+		return "Send us a photo of the place!",
+}
