@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[oneside]{memoir}
 
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
@@ -6,40 +6,69 @@
 \usepackage{mathtools}
 \usepackage{graphicx}
 
-
 \title{YourPlacesBot - A Telegram Bot}
 \author{David Quesada L\'opez y Mateo Garc\'ia Fuentes}
 
-
-\begin{document}
-
-\maketitle
+\newcommand{\romanpages}{
+\pagenumbering{roman}
+\thispagestyle{empty}
+\beforepartskip
 \centering
 
-GRADO EN INGENIER\'IA INFORM\'ATICA %\n
+\thetitle
+
+\theauthor
+
+GRADO EN INGENIER\'IA INFORM\'ATICA 
+
+FACULTAD DE INGENIER\'IA INFORM\'ATICA
 
 UNIVERSIDAD COMPLUTENSE DE MADRID
 
 \includegraphics{logo.jpg}
 
-
 TRABAJO DE FIN DE GRADO EN INGENIER\'IA INFORM\'ATICA
 
+Director: Carlos Gregorio Rodríguez
 
-Director: Carlos Gregorio
-
+\today
+\afterpartskip
+\newpage
+\thispagestyle{empty}
+\beforepartskip
 \raggedright
 
-\newpage
 \section{Autorizaci\'on de difusi\'on y utilizaci\'on}
-
+\afterpartskip
 \newpage
+\thispagestyle{empty}
+\beforepartskip
+\raggedright
+
 \section{Agradecimientos}
-Gracias a Nick Lee (https://github.com/nickoala) por desarrollar la api de python para bots de telegram y usar una licencia MIT.
+Gracias a Nick Lee (https://github.com/nickoala) por desarrollar la API de Python para bots de Telegram y usar una licencia MIT.
 
+\afterpartskip
 \newpage
+}
+
+\newcommand{\indexpage}{
+\frontmatter
+\setcounter{page}{4}
+\pagestyle{plain}
+
 \section{\'Indice}
 \tableofcontents
+
+\newpage
+}
+
+
+\begin{document}
+\romanpages
+\indexpage
+
+\mainmatter
 
 \newpage
 \section{\'Indice de figuras}
@@ -80,6 +109,5 @@ Keywords:
 
 \newpage
 \section{Glosario}
-
 
 \end{document}
