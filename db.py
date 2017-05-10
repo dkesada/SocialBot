@@ -43,7 +43,7 @@ def storeRating(loc, chat_id, rate):
 	"""Stores an user rating of a stablishment."""
 	previousRate = places.find_one({'loc.coordinates':loc}, {'_id':0, 'ratings':{'$elemMatch':{'user':chat_id}}})
 	incr = 1
-	if previousRate != None:
+	if previousRate != {}:
 		pRate = previousRate['ratings'][0]['rate']
 		places.update_one({'loc.coordinates':loc, 'ratings.user':chat_id}, {'$inc': {'rate':rate-pRate}, '$set':{'ratings.$.rate':rate}})	
 	else:
@@ -101,9 +101,6 @@ def getSettings(chat_id):
 		sett['openE'] = False
 	return sett
 
-def getLanguage(chat_id, language):
-	sett = settings.find_one({'_id':chat_id},{'_id':0,'language':1})
-	if 'language' in sett:
-		return sett['language']
-	else:
-		return "English"
+def getLanguage(chat_id):
+	lang = settings.find_one({'_id':chat_id},{'_id':0,'language':1})
+	return lang

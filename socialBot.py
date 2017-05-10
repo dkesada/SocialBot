@@ -60,7 +60,12 @@ class UserHandler(telepot.helper.ChatHandler):
 				steps.saveStep(chat_id, 0)	
 				lang = db.getLanguage(chat_id)			
 				bot.sendMessage(chat_id, translate.settings(lang), reply_markup=keyboards.settings(lang))
-				
+			elif msg['text'] == "Default" or msg['text'] == "Por defecto":
+				db.storeLocation(chat_id, {u'latitude': 40.411085, u'longitude': -3.685014}, msg['date'])
+				state = 1
+				steps.saveStep(chat_id, steps.nextStep(state))
+				lang = db.getLanguage(chat_id)
+				bot.sendMessage(chat_id, translate.lookingFor(lang), reply_markup=keyboards.inlineEstablishment(lang))
     
 		elif content_type == 'location':
 			db.storeLocation(chat_id, msg['location'], msg['date'])
@@ -200,7 +205,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			self.loc = [lng, lat]
 			bot.sendLocation(from_id,lat,lng)
 			self.editor.editMessageReplyMarkup(reply_markup=None)	
-			bot.sendMessage(from_id, translate.hereIts(self.language), reply_markup=keyboards.optionsKeyboard(self.loc))
+			bot.sendMessage(from_id, translate.hereIts(self.language), reply_markup=keyboards.optionsKeyboard(self.loc, self.language))
 			
 		elif steps.step(self.state) == "Info Establish":
 			option = query_data.split(" ")
@@ -213,7 +218,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 								
 			elif option[0] == "photo":
 				db.preparePhotoSending(from_id, msg['message']['message_id'], self.loc)
-				self.editor.editMessageText(translate.sendPhoto(self.language), reply_markup=keyboards.inlineBack)
+				self.editor.editMessageText(translate.sendPhoto(self.language), reply_markup=keyboards.inlineBack(self.language))
 				
 			elif option[0] == "show_photos":
 				self.state = steps.nextStep(self.state) + 1
@@ -231,7 +236,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			for i in range(int(query_data)):
 				text += star
 			bot.answerCallbackQuery(query_id, text)
-			self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionsKeyboard(self.loc))
+			self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionsKeyboard(self.loc, self.language))
 				
 		elif steps.step(self.state) == "Viewing Photos":
 			self.editor.editMessageReplyMarkup(reply_markup=None)

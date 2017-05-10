@@ -45,7 +45,7 @@ numE = InlineKeyboardMarkup(inline_keyboard=[
 #KeyboardMarkups
 def markupLocation(lang):
 	text = translate.markupLocation(lang)
-	return ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text=text, request_location=True)],], resize_keyboard=True, one_time_keyboard=True)
+	return ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text=text[0], request_location=True)],[KeyboardButton(text=text[1])]], resize_keyboard=True, one_time_keyboard=True)
 
 #InlineKeyboards
 def settings(lang):
@@ -58,7 +58,7 @@ def settings(lang):
 
 def inlineEstablishment(lang):
 	text = translate.inlineEstablishment(lang)
-	return inlineEstablishment = InlineKeyboardMarkup(inline_keyboard=[
+	return InlineKeyboardMarkup(inline_keyboard=[
                    	[InlineKeyboardButton(text=text[0], callback_data='bar')] + [InlineKeyboardButton(text=text[1], callback_data='cafe')],
 					[InlineKeyboardButton(text=text[2], callback_data='food')]+ [InlineKeyboardButton(text=text[3], callback_data='night_club')],
 					[InlineKeyboardButton(text=text[4], callback_data='restaurant')], [InlineKeyboardButton(text=text[5], callback_data='back')],
