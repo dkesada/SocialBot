@@ -3,9 +3,10 @@
 
 def location(lang):
 	if lang == "Español":
-		return "¡Comparte tu localización!"
+		return "¡Comparte tu localización! También puedes probar el bot con la localización por defecto."
 	else:
-		return "Share your location!"
+		return "Share your location! You can also try our bot with the default location."
+
 
 def settings(lang):
 	if lang == "Español":
@@ -15,7 +16,7 @@ def settings(lang):
 	else:
 		text = "From here you can change the bot's settings. On Choose language you can change the bot's language. "
 		text += "On Choose parameters you can change the radius of the establishments you want to go to, if you want "
-		text += "the bot show you only local that are open at the momment of the query."
+		text += "the bot will show you only locals that are open at the moment of the query."
 		
 	return text
 
@@ -51,15 +52,15 @@ def meters(lang):
 
 def rate(lang):
 	if lang == "Español":
-		return "Y la puntucación de los usuarios es "
+		return "Y la puntuación de los usuarios es "
 	else:
-		return "And the rate of our users are "
+		return "And the rate of our users is "
 
 def noEstablish(lang):
 	if lang == "Español":
 		return "No hay establecimientos con esos parámetros"
 	else:
-		return "There aren't establishment with this parameters."
+		return "There aren't any establishments with those parameters."
 
 def langChanged(lang):
 	if lang == "Español":
@@ -89,13 +90,13 @@ def choooseParam(lang):
 def choooseParam(lang):
 	if lang == "Español":
 		text = "Desde aquí puedes cambiar los ajustes del bot. En Escoge idioma puedes cambiar el idioma del bot. "
-		text += "En Escoge los parámetros puedes cambiar el radio de los locales a los que quieres ir, si quieres "
-		text += "el bot puede mostarte solo los establecimientos abiertos."
+		text += "En Escoge los parámetros puedes cambiar el radio de los locales a los que quieres ir. Si quieres "
+		text += "el bot puede mostrarte sólo los establecimientos abiertos."
 		return tex
 	else:
-		text = "From here you can change the bot's settings. On Choose language you can change the bot's language. "
-		text += "On Choose parameters you can change the radius of the establishments you want to go to, if you want "
-		text += "the bot can show only locals that are open."
+		text = "Here you can change the bot's settings. On Choose language you can change the bot's language. "
+		text += "On Choose parameters you can change the radius of the establishments you want to go to. If you want "
+		text += "the bot can show only open locals."
 		return text
 
 def choooseDistance(lang):
@@ -150,7 +151,7 @@ def yourRate(lang):
 	if lang == "Español":
 		return "Entonces ... ¿Cúal es tu puntuación?"
 	else:
-		return "So... What's your rate?"
+		return "So... What's your rating?"
 
 def sendPhoto(lang):
 	if lang == "Español":
@@ -160,9 +161,9 @@ def sendPhoto(lang):
 
 def markupLocation(lang):
 	if lang == "Español":
-		return "Localización"
+		return ("Localización", "Por defecto")
 	else:
-		return "Location"
+		return ("Location", "Default")
 
 def back(lang):
 	if lang == "Español":
@@ -193,4 +194,3 @@ def optionsKeyboard(lang):
 	else:
 		text = ["Rate it", "Send a photo", "Show photos", "Back"]
 	return text
-
