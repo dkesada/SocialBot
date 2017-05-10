@@ -158,8 +158,39 @@ def sendPhoto(lang):
 	else:
 		return "Send us a photo of the place!"
 
-def kLocation(lang):
+def markupLocation(lang):
 	if lang == "Español":
 		return "Localización"
 	else:
 		return "Location"
+
+def back(lang):
+	if lang == "Español":
+		return "Atrás"
+	else:
+		return "Back"
+		
+def settings(lang):
+	text = []
+	if lang == "Español":
+		text = ["Escoge idioma", "Escoge parámetros", "Atrás"]
+	else:
+		text = ["Choose language", "Choose parameters", "Back"]
+	return text
+	
+def inlineEstablishment(lang):
+	text = []
+	if lang == "Español":
+		text = ["Bar", "Café", "Alimentación", "Local nocturno" "Restaurante", "Atrás"]
+	else:
+		text = ["Bar", "Cafe", "Food", "Night club", "Restaurant", "Back"]
+	return text
+	
+def optionsKeyboard(lang):
+	text = []
+	if lang == "Español":
+		text = ["Puntúalo", "Enviar una foto", "Mostrar fotos", "Atrás"]
+	else:
+		text = ["Rate it", "Send a photo", "Show photos", "Back"]
+	return text
+

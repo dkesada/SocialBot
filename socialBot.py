@@ -20,6 +20,9 @@ import steps
 import keyboards
 import translate
 
+import matplotlib.pyplot as plt
+from mpl_toolkits.basemap import Basemap
+
 """
 Api para sacar los locales cercanos a la ubicación que te manden:
 https://github.com/googlemaps/google-maps-services-python
@@ -31,6 +34,8 @@ Documentacion de telepot:
 http://telepot.readthedocs.io/en/latest/reference.html
 https://core.telegram.org/bots
 
+
+http://qingkaikong.blogspot.com.es/2016/02/plot-earthquake-heatmap-on-basemap-and.html
 """
 
 # Readying the google maps client
@@ -49,23 +54,28 @@ class UserHandler(telepot.helper.ChatHandler):
 		if content_type == 'text':
 			if msg['text'] == "/start":
 				steps.saveStep(chat_id, 1)
-				bot.sendMessage(chat_id, translate.location(db.getLanguage(chat_id)), reply_markup=keyboards.markupLocation)
+				lang = db.getLanguage(chat_id)
+				bot.sendMessage(chat_id, translate.location(lang), reply_markup=keyboards.markupLocation(lang))
 			elif msg['text'] == "/settings":
-				steps.saveStep(chat_id, 0)				
-				bot.sendMessage(chat_id, translate.settings(db.getLanguage(chat_id)), reply_markup=keyboards.settings)
+				steps.saveStep(chat_id, 0)	
+				lang = db.getLanguage(chat_id)			
+				bot.sendMessage(chat_id, translate.settings(lang), reply_markup=keyboards.settings(lang))
+				
     
 		elif content_type == 'location':
 			db.storeLocation(chat_id, msg['location'], msg['date'])
 			state = 1
 			steps.saveStep(chat_id, steps.nextStep(state))
-			bot.sendMessage(chat_id, translate.lookingFor(db.getLanguage(chat_id)), reply_markup=keyboards.inlineEstablishment)
+			lang = db.getLanguage(chat_id)
+			bot.sendMessage(chat_id, translate.lookingFor(lang), reply_markup=keyboards.inlineEstablishment(lang))
 		elif content_type == 'photo':
 			sending = db.getSending(chat_id)['sending']
 			if sending != None and sending['type'] == 'photo':
 				index = len(msg['photo'])-1
 				db.storePlacePhoto(sending['location'], msg['photo'][index]['file_id'])
+				lang = db.getLanguage(chat_id)
 				bot.editMessageReplyMarkup(msg_identifier=(chat_id,sending['msg_id']), reply_markup=None)
-				bot.sendMessage(chat_id, translate.photoRec(db.getLanguage(chat_id)), reply_markup=keyboards.optionsKeyboard(sending['location']))
+				bot.sendMessage(chat_id, translate.photoRec(db.getLanguage(chat_id)), reply_markup=keyboards.optionsKeyboard(sending['location'], lang))
 		
     def on__idle(self, event):
         self.close()
@@ -101,9 +111,9 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 						rate = "{0:.1f}".format(datos['ratings']['rate']/datos['ratings']['numRate'])
 						message += translate.rate(self.language) + str(rate)
 				message += "\n"	
-			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js))
+			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js, self.language))
 		else:
-			self.editor.editMessageText(translate.noEstablish(self.language), reply_markup=keyboards.inlineBack)
+			self.editor.editMessageText(translate.noEstablish(self.language), reply_markup=keyboards.inlineBack(self.language))
 		    
 	def on_callback_query(self, msg):
 		query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
@@ -125,7 +135,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 					self.state = 1;
 					self.editor.editMessageText(translate.location(self.language), reply_markup=None)
 				elif stp == "Choose Type":
-					self.editor.editMessageText(translate.lookingFor(self.language), reply_markup=keyboards.inlineEstablishment)
+					self.editor.editMessageText(translate.lookingFor(self.language), reply_markup=keyboards.inlineEstablishment(self.language))
 				elif stp == "Choose Establish":
 					eType = db.getEType(from_id)			
 					self.placesNearBy(eType, from_id)
@@ -133,11 +143,11 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 					self.state -= 1;
 					steps.saveStep(from_id, self.state)
 					self.editor.editMessageReplyMarkup(reply_markup=None)
-					bot.sendMessage(self.chat_id, translate.whatWant(self.language), reply_markup=keyboards.optionsKeyboard(self.loc))
+					bot.sendMessage(self.chat_id, translate.whatWant(self.language), reply_markup=keyboards.optionsKeyboard(self.loc, self.language))
 							
 		elif steps.step(self.state) == "Settings":
 			if query_data == "language":
-				self.editor.editMessageText(translate.chooseLang(self.language), reply_markup=keyboards.languages)
+				self.editor.editMessageText(translate.chooseLang(self.language), reply_markup=keyboards.languages(self.language))
 			elif query_data == "parameters":
 				self.editor.editMessageText(translate.choooseParam(self.language), reply_markup=keyboards.parameters)
 			elif query_data == "sback":				
