@@ -154,15 +154,15 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			if query_data == "language":
 				self.editor.editMessageText(translate.chooseLang(self.language), reply_markup=keyboards.languages(self.language))
 			elif query_data == "parameters":
-				self.editor.editMessageText(translate.choooseParam(self.language), reply_markup=keyboards.parameters)
+				self.editor.editMessageText(translate.choooseParam(self.language), reply_markup=keyboards.parameters(self.language))
 			elif query_data == "sback":				
-				self.editor.editMessageText(translate.settings(self.language), reply_markup=keyboards.settings)
+				self.editor.editMessageText(translate.settings(self.language), reply_markup=keyboards.settings(self.language))
 			elif query_data == "radius":
-				self.editor.editMessageText(translate.choooseDistance(self.language), reply_markup=keyboards.radius)
+				self.editor.editMessageText(translate.choooseDistance(self.language), reply_markup=keyboards.radius(self.language))
 			elif query_data == "open":
-				self.editor.editMessageText(translate.onlyOpen(self.language), reply_markup=keyboards.openE)
+				self.editor.editMessageText(translate.onlyOpen(self.language), reply_markup=keyboards.openE(self.language))
 			elif query_data == "numResults":
-				self.editor.editMessageText(translate.howLocals(self.language), reply_markup=keyboards.numE)
+				self.editor.editMessageText(translate.howLocals(self.language), reply_markup=keyboards.numE(self.language))
 			
 			elif query_data == "restart":
 				self.state = 1;
@@ -174,22 +174,22 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 					meters = option[1]
 					db.storeRadius(from_id, meters)
 					bot.answerCallbackQuery(query_id, translate.radiusChanged(self.language))
-					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged)
+					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged(self.language))
 				elif option[0] == "bool":
 					openE = option[1]
 					db.storeOpen(from_id, openE)
 					bot.answerCallbackQuery(query_id, translate.openChanged(self.language))
-					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged)
+					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged(self.language))
 				elif option[0] == "language":
 					language = option[1]
 					db.storeLanguage(from_id, language)
 					bot.answerCallbackQuery(query_id, translate.languageChanged(self.language))
-					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged)
+					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged(self.language))
 				elif option[0] == "num":
 					num = option[1]
 					db.storeNumberE(from_id, num)
 					bot.answerCallbackQuery(query_id, translate.whatWant(self.language))
-					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged)
+					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged(self.language))
 						
 		elif steps.step(self.state) == "Choose Type":
 			self.state = steps.nextStep(self.state)
@@ -214,7 +214,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			self.loc = [option[1], option[2]]
 			if 	option[0] == "rating":
 				self.state = steps.nextStep(self.state)
-				self.editor.editMessageText(translate.yourRate(self.language), reply_markup=keyboards.rating)
+				self.editor.editMessageText(translate.yourRate(self.language), reply_markup=keyboards.rating(self.language))
 								
 			elif option[0] == "photo":
 				db.preparePhotoSending(from_id, msg['message']['message_id'], self.loc)
@@ -226,7 +226,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				info = db.getPlaceData(self.loc)
 				db.preparePhotoSending(from_id, msg['message']['message_id'], self.loc)
 				self.editor.editMessageReplyMarkup(reply_markup=None)
-				bot.sendPhoto(from_id, info['photos'][0], reply_markup=keyboards.photos(info, 0))
+				bot.sendPhoto(from_id, info['photos'][0], reply_markup=keyboards.photos(info, 0, self.language))
 				
 		elif steps.step(self.state) == "Rating":
 			db.storeRating(self.loc, from_id, int(query_data))
@@ -241,7 +241,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		elif steps.step(self.state) == "Viewing Photos":
 			self.editor.editMessageReplyMarkup(reply_markup=None)
 			info = db.getPlaceData(self.loc)
-			bot.sendPhoto(from_id, info['photos'][int(query_data)], reply_markup=keyboards.photos(info, int(query_data)))
+			bot.sendPhoto(from_id, info['photos'][int(query_data)], reply_markup=keyboards.photos(info, int(query_data), self.language))
 			
 			#self.state = steps.nextStep(self.state)
 				
@@ -251,7 +251,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				self.editor.editMessageText(translate.location(self.language), reply_markup=None)
 			elif query_data == "type":
 				self.state = 2
-				self.editor.editMessageText(translate.lookingFor(self.language), reply_markup=keyboards.inlineEstablishment)
+				self.editor.editMessageText(translate.lookingFor(self.language), reply_markup=keyboards.inlineEstablishment(self.language))
 			elif query_data == "establishment":
 				self.state = 3
 				eType = db.getEType(from_id)			

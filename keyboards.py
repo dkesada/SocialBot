@@ -5,42 +5,14 @@ from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 from telepot.namedtuple import ReplyKeyboardMarkup, KeyboardButton
 import db
 import translate
-
-rating = InlineKeyboardMarkup(inline_keyboard=[
-		[InlineKeyboardButton(text='0'+u'\u2b50\ufe0f', callback_data='0')] + [InlineKeyboardButton(text='1'+u'\u2b50\ufe0f', callback_data='1')] + [InlineKeyboardButton(text='2'+u'\u2b50\ufe0f', callback_data='2')],
-		[InlineKeyboardButton(text='3'+u'\u2b50\ufe0f', callback_data='3')] + [InlineKeyboardButton(text='4'+u'\u2b50\ufe0f', callback_data='4')] + [InlineKeyboardButton(text='5'+u'\u2b50\ufe0f', callback_data='5')], [InlineKeyboardButton(text='Back', callback_data='back')]])
 		
+#Este inline no se está usando		
 afterRate = InlineKeyboardMarkup(inline_keyboard=[
 					[InlineKeyboardButton(text='Choose location', callback_data='init')],
 					[InlineKeyboardButton(text="Choose type of establishments", callback_data='type')],
 					[InlineKeyboardButton(text='Choose establishment', callback_data='establishment')],	
                ])#Volver a puntuacion, fotos etc
 
-parameters = InlineKeyboardMarkup(inline_keyboard=[
-					[InlineKeyboardButton(text="Choose radius", callback_data='radius')],
-					[InlineKeyboardButton(text="Choose number of establishments", callback_data='price')],
-					[InlineKeyboardButton(text="Show only open establishments", callback_data='open')],
-					[InlineKeyboardButton(text="Back", callback_data='sback')],	
-               ])
-
-radius = InlineKeyboardMarkup(inline_keyboard=[
-		[InlineKeyboardButton(text='100', callback_data='meters 100')] + [InlineKeyboardButton(text='250', callback_data='meters 250')] + [InlineKeyboardButton(text='500', callback_data='meters 500')],
-		[InlineKeyboardButton(text='1000', callback_data='meters 1000')] + [InlineKeyboardButton(text='2500', callback_data='meters 2500')] + [InlineKeyboardButton(text='5000', callback_data='meters 5000')], [InlineKeyboardButton(text='Back', callback_data='sback')]])
-
-openE = InlineKeyboardMarkup(inline_keyboard=[
-					[InlineKeyboardButton(text="Yes", callback_data='bool true')]+[InlineKeyboardButton(text="No", callback_data='bool false')],
-					[InlineKeyboardButton(text="Back", callback_data='sback')],	
-               ])
-
-optionChanged = InlineKeyboardMarkup(inline_keyboard=[
-					[InlineKeyboardButton(text="Settings's Menu", callback_data='sback')],
-					[InlineKeyboardButton(text="(Re)Start the bot", callback_data='restart')],	
-               ])
-
-numE = InlineKeyboardMarkup(inline_keyboard=[
-		[InlineKeyboardButton(text='5', callback_data='num 5')] + [InlineKeyboardButton(text='10', callback_data='num 10')],
-		[InlineKeyboardButton(text='15', callback_data='num 15')] + [InlineKeyboardButton(text='20', callback_data='num 20')], 	
-		[InlineKeyboardButton(text='Back', callback_data='sback')]])
 
 #KeyboardMarkups
 def markupLocation(lang):
@@ -74,7 +46,50 @@ def languages(lang):
 					[InlineKeyboardButton(text="English", callback_data='language English')]+[InlineKeyboardButton(text="English", callback_data='language Español')],
 					[InlineKeyboardButton(text=text, callback_data='sback')],	
                ])
+
+def parameters(lang):
+	text = translate.parameters(lang)
+ 	return InlineKeyboardMarkup(inline_keyboard=[
+					[InlineKeyboardButton(text=text[0], callback_data='radius')],
+					[InlineKeyboardButton(text=text[1], callback_data='price')],
+					[InlineKeyboardButton(text=text[2], callback_data='open')],
+					[InlineKeyboardButton(text=text[3], callback_data='sback')],	
+               ])
                
+def radius(lang):
+	text = translate.back(lang)
+	InlineKeyboardMarkup(inline_keyboard=[
+		[InlineKeyboardButton(text='100', callback_data='meters 100')] + [InlineKeyboardButton(text='250', callback_data='meters 250')] + [InlineKeyboardButton(text='500', callback_data='meters 500')],
+		[InlineKeyboardButton(text='1000', callback_data='meters 1000')] + [InlineKeyboardButton(text='2500', callback_data='meters 2500')] + [InlineKeyboardButton(text='5000', callback_data='meters 5000')], [InlineKeyboardButton(text=text, callback_data='sback')]])
+               
+def openE(lang):  
+	text = translate.openE(lang)     
+	return InlineKeyboardMarkup(inline_keyboard=[
+					[InlineKeyboardButton(text=text[0], callback_data='bool true')]+[InlineKeyboardButton(text=text[1], callback_data='bool false')],
+					[InlineKeyboardButton(text=text[2], callback_data='sback')],	
+               ])      
+               
+def numE(lang):  
+	text = translate.back(lang) 
+	return InlineKeyboardMarkup(inline_keyboard=[
+		[InlineKeyboardButton(text='5', callback_data='num 5')] + [InlineKeyboardButton(text='10', callback_data='num 10')],
+		[InlineKeyboardButton(text='15', callback_data='num 15')] + [InlineKeyboardButton(text='20', callback_data='num 20')], 	
+		[InlineKeyboardButton(text=text, callback_data='sback')]])   
+		
+def optionChanged(lang):  
+	text = translate.optionChanged(lang) 
+	return InlineKeyboardMarkup(inline_keyboard=[
+					[InlineKeyboardButton(text=text[0], callback_data='sback')],
+					[InlineKeyboardButton(text=text[1], callback_data='restart')],	
+               ])       
+               
+def rating(lang):  
+	text = translate.back(lang) 
+	return InlineKeyboardMarkup(inline_keyboard=[
+		[InlineKeyboardButton(text='0'+u'\u2b50\ufe0f', callback_data='0')] + [InlineKeyboardButton(text='1'+u'\u2b50\ufe0f', callback_data='1')] + [InlineKeyboardButton(text='2'+u'\u2b50\ufe0f', callback_data='2')],
+		[InlineKeyboardButton(text='3'+u'\u2b50\ufe0f', callback_data='3')] + [InlineKeyboardButton(text='4'+u'\u2b50\ufe0f', callback_data='4')] + [InlineKeyboardButton(text='5'+u'\u2b50\ufe0f', callback_data='5')], [InlineKeyboardButton(text=text, callback_data='back')]])                 
+		
+		                   
 def resultsKeyboard(js, lang):
 	"""Keyboard that displays the results of a location query."""
 	i = 0
@@ -120,15 +135,16 @@ def optionsKeyboard(loc, lang):
 	markupOptions = InlineKeyboardMarkup(inline_keyboard = kboard)
 	return markupOptions
 	
-def photos(info, pos):
+def photos(info, pos, lang):
 	kboard = []
 	res = []
+	text = translate.photos(lang)
 	if pos > 0:
-		res = [InlineKeyboardButton(text="Previous photo", callback_data=str(pos-1))]
+		res = [InlineKeyboardButton(text=text[0], callback_data=str(pos-1))]
 	if pos+1 < len(info['photos']):
-		res += [InlineKeyboardButton(text="Next photo", callback_data=str(pos+1))]
+		res += [InlineKeyboardButton(text=text[1], callback_data=str(pos+1))]
 	kboard.append(res)
-	res = [InlineKeyboardButton(text='Back', callback_data='back')]
+	res = [InlineKeyboardButton(text=text[2], callback_data='back')]
 	kboard.append(res)
 	markupPhotos = InlineKeyboardMarkup(inline_keyboard = kboard)
 	return markupPhotos

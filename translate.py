@@ -194,3 +194,36 @@ def optionsKeyboard(lang):
 	else:
 		text = ["Rate it", "Send a photo", "Show photos", "Back"]
 	return text
+	
+def parameters(lang):
+	text = []
+	if lang == "Español":
+		text = ["Escoge el radio", "Escoge un número de locales", "Mostrar solo locales abiertos", "Atrás"]
+	else:
+		text = ["Choose a radius", "Choose a number of establishments", "Show only open establishments", "Back"]
+	return text
+
+def openE(lang):
+	text = []
+	if lang == "Español":
+		text = ["Sí", "No", "Atrás"]
+	else:
+		text = ["Yes", "No", "Back"]
+	return text
+	
+def optionChanged(lang): 
+	text = []
+	if lang == "Español":
+		text = ["Menú de ajustes", "(Re)inicia el bot"]
+	else:
+		text = ["Settings", "(Re)Start the bot"]
+	return text
+	
+def photos(lang):
+	text = []
+	if lang == "Español":
+		text = ["Foto anterior", "Siguiente foto", "Atrás"]
+	else:
+		text = ["Previous photo", "Next photo", "Back"]
+	return text
+
