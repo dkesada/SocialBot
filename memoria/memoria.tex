@@ -5,6 +5,10 @@
 \usepackage[spanish,activeacute]{babel}
 \usepackage{mathtools}
 \usepackage{graphicx}
+\usepackage{titlesec}
+
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries}{}{0pt}{}
 
 \title{YourPlacesBot - A Telegram Bot}
 \author{David Quesada L\'opez y Mateo Garc\'ia Fuentes}
@@ -29,7 +33,7 @@ UNIVERSIDAD COMPLUTENSE DE MADRID
 
 TRABAJO DE FIN DE GRADO EN INGENIER\'IA INFORM\'ATICA
 
-Director: Carlos Gregorio Rodríguez
+Director: Carlos Gregorio Rodr�guez
 
 \today
 \afterpartskip
@@ -38,8 +42,8 @@ Director: Carlos Gregorio Rodríguez
 \thispagestyle{empty}
 %\beforepartskip
 \raggedright
-
 \section{Autorizaci\'on de difusi\'on y utilizaci\'on}
+%\chapter[Autorizaci\'on de difusi\'on y utilizaci\'on]{Autorizaci\'on de difusi\'on y utilizaci\'on}
 David Quesada L\'opez \newline
 \newline
 \newline
@@ -57,8 +61,8 @@ Mateo Garc\'ia Fuentes \newline
 \thispagestyle{empty}
 %\beforepartskip
 \raggedright
-
 \section{Agradecimientos}
+%\chapter[Agradecimientos]{Agradecimientos}
 
 Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un framework de Python para API de Telegram Bot y desarrollarlo bajo una licencia MIT.
 
@@ -84,35 +88,35 @@ Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un fra
 \mainmatter
 
 \newpage
-\section{\'Indice de figuras}
+\chapter[\'Indice de figuras]{\'Indice de figuras}
 
 \newpage
-\section{\'Indice de abreviaturas}
+\chapter[\'Indice de abreviaturas]{\'Indice de abreviaturas}
 
 \newpage
-\section{Resumen}
+\chapter[Resumen]{Resumen}
 
 Palabras clave:
 
 \newpage
-\section{Abstract}
+\chapter[Abstract]{Abstract}
 
 Keywords: 
 
 \newpage
-\section{Cap\'itulo 1: Introducci\'on}
+\chapter[Cap\'itulo 1: Introducci\'on]{Cap\'itulo 1: Introducci\'on}
 
 \newpage
-\section{Cap\'itulo 2: Materiales y m\'etodos}
+\chapter[Cap\'itulo 2: Materiales y m\'etodos]{Cap\'itulo 2: Materiales y m\'etodos}
 
 \newpage
-\section{Cap\'itulo 3: Resultados}
+\chapter[Cap\'itulo 3: Resultados]{Cap\'itulo 3: Resultados}
 
 \newpage
-\section{Cap\'itulo n: Conclusiones}
+\chapter[Cap\'itulo n: Conclusiones]{Cap\'itulo n: Conclusiones}
 
 \newpage
-\section{Ap\'endice}
+\chapter[Ap\'endice]{Ap\'endice}
 
 \newpage
 \begin{thebibliography}{}
@@ -130,9 +134,9 @@ Keywords:
 \end{thebibliography}
 
 \newpage
-\section{Anexo}
+\chapter[Anexo]{Anexo}
 
 \newpage
-\section{Glosario}
+\chapter[Glosario]{Glosario}
 
 \end{document}
