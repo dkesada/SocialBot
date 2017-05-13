@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.4.30)  10 MAY 2017 17:36
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.4.30)  13 MAY 2017 13:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -520,7 +520,18 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen166
 \Gin@req@width=\dimen167
 )
-(./memoria.aux
+(/usr/share/texlive/texmf-dist/tex/latex/titlesec/titlesec.sty
+Package: titlesec 2016/03/15 v2.10.1 Sectioning titles
+\ttl@box=\box31
+\beforetitleunit=\skip192
+\aftertitleunit=\skip193
+\ttl@plus=\dimen168
+\ttl@minus=\dimen169
+\ttl@toksa=\toks29
+\titlewidth=\dimen170
+\titlewidthlast=\dimen171
+\titlewidthfirst=\dimen172
+) (./memoria.aux
 LaTeX Info: Redefining \. on input line 8.
 LaTeX Info: Redefining \% on input line 8.
 
@@ -542,38 +553,38 @@ LaTeX Warning: Label `*' multiply defined.
 )
 \openout1 = `memoria.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 80.
-LaTeX Font Info:    ... okay on input line 80.
-LaTeX Font Info:    Try loading font information for T1+lmr on input line 80.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 76.
+LaTeX Font Info:    ... okay on input line 76.
+LaTeX Font Info:    Try loading font information for T1+lmr on input line 76.
  (/usr/share/texmf/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Info: Redefining \. on input line 80.
-LaTeX Info: Redefining \% on input line 80.
+LaTeX Info: Redefining \. on input line 76.
+LaTeX Info: Redefining \% on input line 76.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count156
-\scratchdimen=\dimen168
-\scratchbox=\box31
+\scratchdimen=\dimen173
+\scratchbox=\box32
 \nofMPsegments=\count157
 \nofMParguments=\count158
-\everyMPshowfont=\toks29
+\everyMPshowfont=\toks30
 \MPscratchCnt=\count159
-\MPscratchDim=\dimen169
+\MPscratchDim=\dimen174
 \MPnumerator=\count160
 \makeMPintoPDFobject=\count161
-\everyMPtoPDFconversion=\toks30
+\everyMPtoPDFconversion=\toks31
 ) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -616,17 +627,21 @@ e
 <logo.jpg, id=1, 199.2243pt x 199.2243pt>
 File: logo.jpg Graphic file (type jpg)
  <use logo.jpg>
-Package pdftex.def Info: logo.jpg used on input line 81.
+Package pdftex.def Info: logo.jpg used on input line 77.
 (pdftex.def)             Requested size: 199.22382pt x 199.22382pt.
  [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./logo.jpg>] [2] [3] (./me
-moria.toc
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./logo.jpg>]
+<autoriz.png, id=8, 778.40813pt x 1020.06094pt>
+File: autoriz.png Graphic file (type png)
+ <use autoriz.png>
+Package pdftex.def Info: autoriz.png used on input line 77.
+(pdftex.def)             Requested size: 341.0pt x 446.86703pt.
+ [2 <./autoriz.png>] [3] (./memoria.toc
 LaTeX Info: Redefining \. on input line 1.
 LaTeX Info: Redefining \% on input line 1.
 LaTeX Font Info:    Try loading font information for OT1+lmr on input line 2.
-
-(/usr/share/texmf/tex/latex/lm/ot1lmr.fd
+ (/usr/share/texmf/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Try loading font information for OML+lmm on input line 2.
@@ -653,21 +668,156 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 
 
 LaTeX Font Warning: Font shape `T1/lmr/bx/sc' undefined
-(Font)              using `T1/lmr/bx/n' instead on input line 4.
+(Font)              using `T1/lmr/bx/n' instead on input line 2.
 
 
 Package spanish Warning: Replacing `T1/lmr/bx/sc' by 
-(spanish)                faked small caps on input line 4.
+(spanish)                faked small caps on input line 2.
 
 ) [4
 
-] [1
+]
+Underfull \hbox (badness 10000) in paragraph at lines 83--83
+||
+ []
 
-] [2] [3] [4] [5] [6] [7] [8] [9]
+
+Underfull \hbox (badness 10000) in paragraph at lines 83--83
+|\T1/lmr/bx/sc/10 Índice de fi-gu-ras|
+ []
+
+[1
+
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 86--86
+||
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 86--86
+|\T1/lmr/bx/sc/10 Índice de abre-via-tu-ras|
+ []
+
+[2
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 89--89
+||
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 89--89
+|\T1/lmr/bx/sc/10 Resumen|
+ []
+
+[3
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 99--99
+||
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 99--99
+|\T1/lmr/bx/sc/10 Abstract|
+ []
+
+[4
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 107--107
+||
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 107--107
+|\T1/lmr/bx/sc/10 Capítulo 1: In-tro-duc-ción|
+ []
+
+[5
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 110--110
+||
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 110--110
+|\T1/lmr/bx/sc/10 Capítulo 2: Ma-te-ria-les y mé-to-dos|
+ []
+
+[6
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 113--113
+||
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 113--113
+|\T1/lmr/bx/sc/10 Capítulo 3: Re-sul-ta-dos|
+ []
+
+[7
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 116--116
+||
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 116--116
+|\T1/lmr/bx/sc/10 Capítulo n: Con-clu-sio-nes|
+ []
+
+[8
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 119--119
+||
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 119--119
+|\T1/lmr/bx/sc/10 Apéndice|
+ []
+
+[9
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 122--122
+|\T1/lmr/bx/sc/10 Bibliografía|
+ []
+
 bibitemlist
 [10
 
-] [11] [12]
+]
+Underfull \hbox (badness 10000) in paragraph at lines 137--137
+||
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 137--137
+|\T1/lmr/bx/sc/10 Anexo|
+ []
+
+[11
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 140--140
+||
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 140--140
+|\T1/lmr/bx/sc/10 Glosario|
+ []
+
+[12
+
+]
 \tf@toc=\write4
 \openout4 = `memoria.toc'.
 
@@ -683,21 +833,21 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 7138 strings out of 493029
- 97632 string characters out of 6136234
- 197105 words of memory out of 5000000
- 10595 multiletter control sequences out of 15000+600000
- 39795 words of font info for 35 fonts, out of 8000000 for 9000
+ 7407 strings out of 493029
+ 101089 string characters out of 6136234
+ 202340 words of memory out of 5000000
+ 10859 multiletter control sequences out of 15000+600000
+ 33798 words of font info for 33 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,10n,30p,261b,422s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,10n,30p,450b,408s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}</usr/share/texmf/fonts/type1/
 public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/s
 hare/texmf/fonts/type1/public/lm/lmbx7.pfb></usr/share/texmf/fonts/type1/public
 /lm/lmcsc10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb>
-Output written on memoria.pdf (16 pages, 862462 bytes).
+Output written on memoria.pdf (16 pages, 955460 bytes).
 PDF statistics:
- 78 PDF objects out of 1000 (max. 8388607)
+ 79 PDF objects out of 1000 (max. 8388607)
  53 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 

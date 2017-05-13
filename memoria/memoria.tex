@@ -13,6 +13,8 @@
 \title{YourPlacesBot - A Telegram Bot}
 \author{David Quesada L\'opez y Mateo Garc\'ia Fuentes}
 
+\setlength{\parskip}{1em}
+
 \newcommand{\romanpages}{
 \pagenumbering{roman}
 \thispagestyle{empty}
@@ -42,27 +44,17 @@ Director: Carlos Gregorio Rodríguez
 \thispagestyle{empty}
 %\beforepartskip
 \raggedright
-\section{Autorizaci\'on de difusi\'on y utilizaci\'on}
-%\chapter[Autorizaci\'on de difusi\'on y utilizaci\'on]{Autorizaci\'on de difusi\'on y utilizaci\'on}
-David Quesada L\'opez \newline
-\newline
-\newline
-\newline
-\today \newline
-\newline
-Mateo Garc\'ia Fuentes \newline
-\newline
-\newline
-\newline
-\today \newline
+
+\begin{center}
+  \makebox{\includegraphics[width=\textwidth]{autoriz.png}}
+\end{center}
 
 \afterpartskip
 \newpage
 \thispagestyle{empty}
-%\beforepartskip
 \raggedright
-\section{Agradecimientos}
-%\chapter[Agradecimientos]{Agradecimientos}
+
+\textbf{Agradecimientos}
 
 Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un framework de Python para API de Telegram Bot y desarrollarlo bajo una licencia MIT.
 
@@ -95,13 +87,21 @@ Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un fra
 
 \newpage
 \chapter[Resumen]{Resumen}
+Una de los principales atractivos de Telegram es su plataforma para bots. Los usuarios pueden crear sus propios bots y ponerlos en funcionamiento para que sean accesibles a todos los clientes de Telegram sin coste alguno para el desarrollador o para el consumidor. Estos bots proporcionan en su mayoría información, juegos o utilidades dentro de un chat, y aumentan en gran medida la funcionalidad de Telegram.
 
-Palabras clave:
+A la hora de que un usuario interactúe con un bot, es especialmente interesante que el servicio que se le preste pueda depender de su ubicación geográfica y pueda tener un componente social. Por ello, este proyecto tiene como objetivo informar al usuario sobre qué establecimientos cercanos hay en base a su localización, ofreciendo la posibilidad de encontrarlos fácilmente y de ver datos proporcionados por otros usuarios sobre estos.
+
+
+
+Palabras clave: bot, Telegram, geolocalización, noSQL, 
 
 \newpage
 \chapter[Abstract]{Abstract}
+One of the main features of Telegram is its bot support. Users can create their own bots and launch them to be available for everyone in Telegram without cost for neither the developer nor the client. These bots mainly offer information, games or utilities inside the chat and they increase greatly Telegrams functionality.
 
-Keywords: 
+When an user interacts with a bot, it is of special interest that the response of the bot varies depending on the users location and on a social component. That's why this project aims to inform the user about what near by establishments there are depending on his location, offering the posibility to find them easily and to see information of them given by other users.
+
+Keywords: bot, Telegram, geolocation, noSQL,
 
 \newpage
 \chapter[Cap\'itulo 1: Introducci\'on]{Cap\'itulo 1: Introducci\'on}
