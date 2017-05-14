@@ -41,15 +41,58 @@ http://qingkaikong.blogspot.com.es/2016/02/plot-earthquake-heatmap-on-basemap-an
 # Readying the google maps client
 
 mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api places key as the first argument when launching
-#mapdirections = googlemaps.Client(key=sys.argv[2]) #Input the api directions key as the second argument when launching
 
 # One UserHandler created per chat_id. May be useful for sorting out users
 # Handles chat messages depending on its tipe
 class UserHandler(telepot.helper.ChatHandler):
-    def __init__(self, *args, **kwargs):
-        super(UserHandler, self).__init__(*args, **kwargs)
+	def __init__(self, *args, **kwargs):
+		super(UserHandler, self).__init__(*args, **kwargs)
 
-    def on_chat_message(self, msg):
+	def heatmap(self, allLoc, chat_id):
+		ln = []
+		lt = []
+		for geo in allLoc:
+			if geo != {}:
+				ln.append(geo['location']['longitude'])
+				lt.append(geo['location']['latitude'])	
+		northLat = max(lt)
+		southLat = min(lt)
+		westLon = max(ln)
+		eastLon = min(ln)
+		scale = 0.005
+		llcrnrlon = eastLon-scale
+		llcrnrlat = southLat-scale
+		urcrnrlon = westLon+scale
+		urcrnrlat = northLat+scale
+		map = Basemap(llcrnrlon=llcrnrlon,llcrnrlat=llcrnrlat,urcrnrlon=urcrnrlon,urcrnrlat=urcrnrlat, epsg=5520)
+		map.arcgisimage(service='ESRI_Imagery_World_2D', xpixels = 1500, verbose= True)
+		x,y = map(ln, lt)		
+		map.plot(x, y, 'ro', markersize=5,markeredgecolor="none", alpha=0.33)
+		loc = db.getLocation(chat_id)
+		x0, y0 = map(loc[1], loc[0])
+		x1, y1 = map(loc[1]-0.001, loc[0]+0.0017)
+		#x0, y0 = map(-3.68695757504, 40.421697743)
+		#x1, y1 = map(-3.68795757504, 40.423397743)		
+		plt.imshow(plt.imread('loc.png'),  extent = (x0, x1, y0, y1))
+		plt.savefig("out.png")
+
+	def haversineReverse(self, locat, uLoc, kmeters, loc):
+		R=6371 #mean radius
+		
+		locat = locat.split(" ")
+		lat2 = float(locat[0])
+		lng2 = float(locat[1])
+		lat1 = float(uLoc[0])
+		lng1 = float(uLoc[1])
+		rad=math.pi/180
+		dlat=lat2-lat1
+		dlng=lng2-lng1
+		R=6371 #mean radius
+		a=(math.sin(rad*dlat/2))**2 + math.cos(rad*lat1)*math.cos(rad*lat2)*(math.sin(rad*dlng/2))**2
+		distance=2*R*math.asin(math.sqrt(a))#kilometers
+		return distance*1000#meters
+		
+	def on_chat_message(self, msg):
 		content_type, chat_type, chat_id = telepot.glance(msg,flavor='chat')
 		if content_type == 'text':
 			if msg['text'] == "/start":
@@ -60,13 +103,17 @@ class UserHandler(telepot.helper.ChatHandler):
 				steps.saveStep(chat_id, 0)	
 				lang = db.getLanguage(chat_id)			
 				bot.sendMessage(chat_id, translate.settings(lang), reply_markup=keyboards.settings(lang))
+			elif msg['text'] == "/heatmap":
+				locs = db.getAllLocations()
+				self.heatmap(locs, chat_id)
+				bot.sendPhoto(chat_id, open('out.png', 'rb'))
 			elif msg['text'] == "Default" or msg['text'] == "Por defecto":
 				db.storeLocation(chat_id, {u'latitude': 40.411085, u'longitude': -3.685014}, msg['date'])
 				state = 1
 				steps.saveStep(chat_id, steps.nextStep(state))
 				lang = db.getLanguage(chat_id)
 				bot.sendMessage(chat_id, translate.lookingFor(lang), reply_markup=keyboards.inlineEstablishment(lang))
-    
+
 		elif content_type == 'location':
 			db.storeLocation(chat_id, msg['location'], msg['date'])
 			state = 1
@@ -81,9 +128,9 @@ class UserHandler(telepot.helper.ChatHandler):
 				lang = db.getLanguage(chat_id)
 				bot.editMessageReplyMarkup(msg_identifier=(chat_id,sending['msg_id']), reply_markup=None)
 				bot.sendMessage(chat_id, translate.photoRec(db.getLanguage(chat_id)), reply_markup=keyboards.optionsKeyboard(sending['location'], lang))
-		
-    def on__idle(self, event):
-        self.close()
+						
+	def on__idle(self, event):
+		self.close()
         
 		
 # One ButtonHandler created per message that has a button pressed.
