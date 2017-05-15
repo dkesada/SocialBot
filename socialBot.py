@@ -48,13 +48,32 @@ class UserHandler(telepot.helper.ChatHandler):
 	def __init__(self, *args, **kwargs):
 		super(UserHandler, self).__init__(*args, **kwargs)
 
+	def calculateBounds(self, kmeters, loc):
+		R=6371 #mean radius
+		bearing = math.radians(45) #45º
+		lat = math.radians(loc[0]) #lat of the user
+		lon = math.radians(loc[1]) #lng of the user
+		latup = math.asin(math.sin(lat)*math.cos(kmeters/R) + math.cos(lat)*math.sin(kmeters/R)*math.cos(bearing))
+		lonup = lon + math.atan2(math.sin(bearing)*math.sin(kmeters/R)*math.cos(lat), math.cos(kmeters/R)-math.sin(lat)*math.sin(latup))
+		dlat=latup-lat
+		dlng=lonup-lon
+		latdw = lat-dlat
+		londw = lon-dlng
+		latup = math.degrees(latup)
+		lonup = math.degrees(lonup)
+		latdw = math.degrees(latdw)
+		londw = math.degrees(londw)
+		
+		return londw, latdw, lonup, latup   
+		
 	def heatmap(self, allLoc, chat_id):
 		ln = []
 		lt = []
 		for geo in allLoc:
 			if geo != {}:
 				ln.append(geo['location']['longitude'])
-				lt.append(geo['location']['latitude'])	
+				lt.append(geo['location']['latitude'])
+		"""	
 		northLat = max(lt)
 		southLat = min(lt)
 		westLon = max(ln)
@@ -64,33 +83,19 @@ class UserHandler(telepot.helper.ChatHandler):
 		llcrnrlat = southLat-scale
 		urcrnrlon = westLon+scale
 		urcrnrlat = northLat+scale
+		"""
+		loc = db.getLocation(chat_id)
+		llcrnrlon, llcrnrlat, urcrnrlon, urcrnrlat= self.calculateBounds(2., loc)
 		map = Basemap(llcrnrlon=llcrnrlon,llcrnrlat=llcrnrlat,urcrnrlon=urcrnrlon,urcrnrlat=urcrnrlat, epsg=5520)
 		map.arcgisimage(service='ESRI_Imagery_World_2D', xpixels = 1500, verbose= True)
 		x,y = map(ln, lt)		
 		map.plot(x, y, 'ro', markersize=5,markeredgecolor="none", alpha=0.33)
-		loc = db.getLocation(chat_id)
 		x0, y0 = map(loc[1], loc[0])
 		x1, y1 = map(loc[1]-0.001, loc[0]+0.0017)
 		#x0, y0 = map(-3.68695757504, 40.421697743)
 		#x1, y1 = map(-3.68795757504, 40.423397743)		
 		plt.imshow(plt.imread('loc.png'),  extent = (x0, x1, y0, y1))
 		plt.savefig("out.png")
-
-	def haversineReverse(self, locat, uLoc, kmeters, loc):
-		R=6371 #mean radius
-		
-		locat = locat.split(" ")
-		lat2 = float(locat[0])
-		lng2 = float(locat[1])
-		lat1 = float(uLoc[0])
-		lng1 = float(uLoc[1])
-		rad=math.pi/180
-		dlat=lat2-lat1
-		dlng=lng2-lng1
-		R=6371 #mean radius
-		a=(math.sin(rad*dlat/2))**2 + math.cos(rad*lat1)*math.cos(rad*lat2)*(math.sin(rad*dlng/2))**2
-		distance=2*R*math.asin(math.sqrt(a))#kilometers
-		return distance*1000#meters
 		
 	def on_chat_message(self, msg):
 		content_type, chat_type, chat_id = telepot.glance(msg,flavor='chat')
