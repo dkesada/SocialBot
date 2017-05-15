@@ -6,9 +6,8 @@
 \usepackage{mathtools}
 \usepackage{graphicx}
 \usepackage{titlesec}
+\usepackage[document]{ragged2e}
 
-\titleformat{\chapter}[display]
-  {\normalfont\bfseries}{}{0pt}{}
 
 \title{YourPlacesBot - A Telegram Bot}
 \author{David Quesada L\'opez y Mateo Garc\'ia Fuentes}
@@ -63,40 +62,49 @@ Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un fra
 }
 
 \newcommand{\indexpage}{
-\frontmatter
-\setcounter{page}{4}
-\pagestyle{plain}
+\begin{KeepFromToc}
+ \frontmatter
+ \setcounter{page}{4}
+ \pagestyle{plain}
 
-\tableofcontents
+ \tableofcontents
 
-\newpage
+ \newpage
+\end{KeepFromToc}
+}
+
+\newcommand{\mychapter}[2]{
+    \setcounter{chapter}{#1}
+    \setcounter{section}{0}
+    \chapter*{#2}
+    \addcontentsline{toc}{chapter}{#2}
 }
 
 
 \begin{document}
+
 \romanpages
 \indexpage
-
 \mainmatter
+\pagenumbering{roman}
+\pagestyle{plain}
+\raggedright
+\newpage
+\mychapter{0}{\'Indice de figuras}
 
 \newpage
-\chapter[\'Indice de figuras]{\'Indice de figuras}
+\mychapter{0}{\'Indice de abreviaturas}
 
 \newpage
-\chapter[\'Indice de abreviaturas]{\'Indice de abreviaturas}
-
-\newpage
-\chapter[Resumen]{Resumen}
+\mychapter{0}{Resumen}
 Una de los principales atractivos de Telegram es su plataforma para bots. Los usuarios pueden crear sus propios bots y ponerlos en funcionamiento para que sean accesibles a todos los clientes de Telegram sin coste alguno para el desarrollador o para el consumidor. Estos bots proporcionan en su mayoría información, juegos o utilidades dentro de un chat, y aumentan en gran medida la funcionalidad de Telegram.
 
 A la hora de que un usuario interactúe con un bot, es especialmente interesante que el servicio que se le preste pueda depender de su ubicación geográfica y pueda tener un componente social. Por ello, este proyecto tiene como objetivo informar al usuario sobre qué establecimientos cercanos hay en base a su localización, ofreciendo la posibilidad de encontrarlos fácilmente y de ver datos proporcionados por otros usuarios sobre estos.
 
-
-
 Palabras clave: bot, Telegram, geolocalización, noSQL, 
 
 \newpage
-\chapter[Abstract]{Abstract}
+\mychapter{0}{Abstract}
 One of the main features of Telegram is its bot support. Users can create their own bots and launch them to be available for everyone in Telegram without cost for neither the developer nor the client. These bots mainly offer information, games or utilities inside the chat and they increase greatly Telegrams functionality.
 
 When an user interacts with a bot, it is of special interest that the response of the bot varies depending on the users location and on a social component. That's why this project aims to inform the user about what near by establishments there are depending on his location, offering the posibility to find them easily and to see information of them given by other users.
@@ -104,19 +112,40 @@ When an user interacts with a bot, it is of special interest that the response o
 Keywords: bot, Telegram, geolocation, noSQL,
 
 \newpage
-\chapter[Cap\'itulo 1: Introducci\'on]{Cap\'itulo 1: Introducci\'on}
+\pagenumbering{arabic}
+
+\mychapter{1}{Cap\'itulo 1: Introducci\'on}
+\section{Motivaci\'on}
+La motivación para crear este bot surgió a partir de unas conversaciones con amigos. Se quejaban de no disponer de una herramienta sencilla para poder ver qué locales hay cercanos a nosotros y así elegir a dónde ir si no conoces el lugar. 
+
+Al intentar buscar una solución a este problema lo primero en lo que pensamos fue la aplicación de Google Maps. Google Maps tiene la funcionalidad de encontrar establecimientos cercanos a ti en base a tu localización y a qué buscas, pero el resultado fue que la aplicación es demasiado grande y no es práctico tener que abrirla, navegar entre todas las opciones y funcionalidades que ofrece y ponerte a buscar un local que te guste. %En la práctica, Google Maps lo usas en la mayoría de casos embebido en otras aplicaciones que luego te redirigen a él para una funcionalidad en concreto, como la ubicación de Telegram.
+
+En esta situación, pensamos que un bot de Telegram encajaría bien como solución. Por un lado, Telegram es una aplicación que usamos día a día y un bot resultaría fácil de manejar. Por otro lado, la función de compartir la ubicación de Telegram se adecúa perfectamente a la API de Google Maps para realizar consultas de búsqueda de establecimientos cercanos.
+
+\section{Objetivos}
+El objetivo de este proyecto será la implementación de un bot de Telegram que resuelva el problema expuesto anteriormente valiéndose de la ubicación que se le envíe para devolver locales con las características indicadas. Para esto, vamos a establecer una serie de objetivos que el bot debe cumplir:
+
+\begin{itemize}
+  \item Ser capaz de \textbf{recibir una localización y devolver una lista de locales cercanos a ella}. Estos locales deberán estar dentro de un cierto radio de distancia variable y por defecto se buscará que estén abiertos en el instante de la búsqueda.
+  \item Cuando se seleccione un establecimiento, \textbf{se devolverá su ubicación} y la información de la que disponga el bot sobre él.
+  \item Poderle dar una puntuación a los establecimientos y ser capaz de enviar fotografías al bot.
+  \item Poder mostrar un \textbf{mapa de calor} en torno a tu ubicación reflejando las ubicaciones más concurridas por otros usuarios
+\end{itemize}
+
+
+\section{Estructura del documento}
 
 \newpage
-\chapter[Cap\'itulo 2: Materiales y m\'etodos]{Cap\'itulo 2: Materiales y m\'etodos}
+\mychapter{2}{Cap\'itulo 2: Materiales y m\'etodos}
 
 \newpage
-\chapter[Cap\'itulo 3: Resultados]{Cap\'itulo 3: Resultados}
+\mychapter{3}{Cap\'itulo 3: Resultados}
 
 \newpage
-\chapter[Cap\'itulo n: Conclusiones]{Cap\'itulo n: Conclusiones}
+\mychapter{0}{Cap\'itulo n: Conclusiones}
 
 \newpage
-\chapter[Ap\'endice]{Ap\'endice}
+\mychapter{0}{Ap\'endice}
 
 \newpage
 \begin{thebibliography}{}
@@ -134,9 +163,9 @@ Keywords: bot, Telegram, geolocation, noSQL,
 \end{thebibliography}
 
 \newpage
-\chapter[Anexo]{Anexo}
+\mychapter{0}{Anexo}
 
 \newpage
-\chapter[Glosario]{Glosario}
+\mychapter{0}{Glosario}
 
 \end{document}
