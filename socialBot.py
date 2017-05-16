@@ -99,7 +99,10 @@ class UserHandler(telepot.helper.ChatHandler):
 			elif msg['text'] == "/heatmap":
 				locs = db.getAllLocations()
 				self.heatmap(locs, chat_id)
+				lang = db.getLanguage(chat_id)
+				bot.sendMessage(chat_id, translate.takesFew(lang), reply_markup=None)
 				bot.sendPhoto(chat_id, open('out.png', 'rb'))
+				bot.sendMessage(chat_id, translate.location(lang), reply_markup=keyboards.markupLocation(lang))
 			elif msg['text'] == "Default" or msg['text'] == "Por defecto":
 				db.storeLocation(chat_id, {u'latitude': 40.411085, u'longitude': -3.685014}, msg['date'])
 				state = 1

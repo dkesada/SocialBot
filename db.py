@@ -86,7 +86,7 @@ def getSettings(chat_id):
 	query = settings.find_one({'_id':chat_id},{'_id':0,'radius':1, 'openE':1})
 	if query is None:
 		sett['radius'] = 500
-		sett['openE'] = False
+		sett['openE'] = True
 		return sett
 	if 'radius' in query:
 		sett['radius'] = int(query['radius'])
@@ -96,9 +96,9 @@ def getSettings(chat_id):
 		if query['openE']:
 			sett['openE'] = True
 		else:			
-			sett['openE'] = False
+			sett['openE'] = None
 	else:
-		sett['openE'] = False
+		sett['openE'] = True
 	return sett
 
 def getLanguage(chat_id):

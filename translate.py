@@ -227,3 +227,8 @@ def photos(lang):
 		text = ["Previous photo", "Next photo", "Back"]
 	return text
 
+def takesFew(lang):
+	if lang == "Español":
+		return "La imagen tarda unos segundos en enviarse"
+	else:
+		return "The image takes a few seconds to send"
