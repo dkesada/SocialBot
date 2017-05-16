@@ -8,7 +8,6 @@
 \usepackage{titlesec}
 \usepackage[document]{ragged2e}
 
-
 \title{YourPlacesBot - A Telegram Bot}
 \author{David Quesada L\'opez y Mateo Garc\'ia Fuentes}
 
@@ -102,7 +101,7 @@ Una de los principales atractivos de Telegram es su plataforma para bots. Los us
 
 A la hora de que un usuario interactúe con un bot, es especialmente interesante que el servicio que se le preste pueda depender de su ubicación geográfica y pueda tener un componente social. Por ello, este proyecto tiene como objetivo informar al usuario sobre qué establecimientos cercanos hay en base a su localización, ofreciendo la posibilidad de encontrarlos fácilmente y de ver datos proporcionados por otros usuarios sobre estos.
 
-Palabras clave: bot, Telegram, geolocalización, noSQL, 
+Palabras clave: bot, Telegram, geolocalización, noSQL, mapas de calor.
 
 \newpage
 \mychapter{0}{Abstract}
@@ -110,7 +109,7 @@ One of the main features of Telegram is its bot support. Users can create their 
 
 When an user interacts with a bot, it is of special interest that the response of the bot varies depending on the users location and on a social component. That's why this project aims to inform the user about what near by establishments there are depending on his location, offering the posibility to find them easily and to see information of them given by other users.
 
-Keywords: bot, Telegram, geolocation, noSQL,
+Keywords: bot, Telegram, geolocation, noSQL, heatmaps.
 
 \newpage
 \pagenumbering{arabic}
@@ -152,6 +151,15 @@ A continuación mostramos sobre qué va a tratar cada capítulo:
 
 \newpage
 \mychapter{2}{Cap\'itulo 2: Infraestructura para bots - Telepot}
+%En este capítulo introduciremos al lector al desarrollo de bots en Telegram contando cómo es la infraestructura que tienen y la API que ofrece Telegram a los desarrolladores. También hablaremos de qué es y por qué hemos usado el framework de Telepot para nuestro bot en vez de la API nativa de Telegram.
+\section{Plataforma de bots de Telegram}
+El servicio de mensajería Telegram Messenger ofrece una interfaz de programación para bots, llamada Telegram Bot API. Estos bots son aplicaciones de terceros que se ejecutan en Telegram. La forma de interactuar con estos bots es muy variada: mensajes, comandos, archivos, botones, etc. Las características usuales de estos bots son proporcionar notificaciones y noticias personalizadas, juegos o integración de servicios externos a Telegram.
+
+Los mensajes, comandos y peticiones enviados por los usuarios se envían al software que se ejecuta en los servidores. Los servidores de Telegram, que son intermediarios entre nuestro servidor y el usuario, manejan el cifrado y la comunicación. Esta comunicación se realiza a través de una interfaz HTTPS que ofrece una versión simplificada de la API de Telegram. 
+
+Los desarrolladores deben crear sus bots a través de @BotFather. Este bot es el padre de todos los bots y proporciona tokens únicos para cada uno. También es necesario para administrar los bots y gestionar sus configuraciones. Además de esto, el @BotFather avisa a los desarrolladores de bots populares (300 solicitudes por minuto o más) si detecta que la tasa de conversión de solicitud/respuesta es muy baja. Está alerta consta de 3 botones de respuesta: Arreglado, Silenciar y Apoyo. Esta última opción abrira un nuevo chat con el @BotSupport que ayudará al desarrollador a detectar el problema o averiguar si hay algún problema en los servidores de Telegram.
+
+\section{Telepot}
 
 \newpage
 \mychapter{3}{Cap\'itulo 3: Experimentaci\'on previa}
@@ -172,7 +180,7 @@ A continuación mostramos sobre qué va a tratar cada capítulo:
 \bibitem
 *API Google Maps Docs -> http://googlemaps.github.io/google-maps-services-python/docs/2.4.5/
 \bibitem
-*Telegram Bots -> https://core.telegram.org/bots
+*Telegram Bots -> https://core.telegram.org/bots/api
 \bibitem
 *API Telepot -> http://telepot.readthedocs.io/en/latest/
 \end{thebibliography}
