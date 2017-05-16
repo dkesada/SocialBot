@@ -73,27 +73,15 @@ class UserHandler(telepot.helper.ChatHandler):
 			if geo != {}:
 				ln.append(geo['location']['longitude'])
 				lt.append(geo['location']['latitude'])
-		"""	
-		northLat = max(lt)
-		southLat = min(lt)
-		westLon = max(ln)
-		eastLon = min(ln)
-		scale = 0.005
-		llcrnrlon = eastLon-scale
-		llcrnrlat = southLat-scale
-		urcrnrlon = westLon+scale
-		urcrnrlat = northLat+scale
-		"""
 		loc = db.getLocation(chat_id)
 		llcrnrlon, llcrnrlat, urcrnrlon, urcrnrlat= self.calculateBounds(2., loc)
-		map = Basemap(llcrnrlon=llcrnrlon,llcrnrlat=llcrnrlat,urcrnrlon=urcrnrlon,urcrnrlat=urcrnrlat, epsg=5520)
-		map.arcgisimage(service='ESRI_Imagery_World_2D', xpixels = 1500, verbose= True)
+		#3857 o 4326
+		map = Basemap(llcrnrlon=llcrnrlon,llcrnrlat=llcrnrlat,urcrnrlon=urcrnrlon,urcrnrlat=urcrnrlat, epsg=4326)
+		map.arcgisimage(service='World_Imagery', xpixels = 1500, verbose= True)
 		x,y = map(ln, lt)		
 		map.plot(x, y, 'ro', markersize=5,markeredgecolor="none", alpha=0.33)
 		x0, y0 = map(loc[1], loc[0])
-		x1, y1 = map(loc[1]-0.001, loc[0]+0.0017)
-		#x0, y0 = map(-3.68695757504, 40.421697743)
-		#x1, y1 = map(-3.68795757504, 40.423397743)		
+		x1, y1 = map(loc[1]-0.001, loc[0]+0.0017)	
 		plt.imshow(plt.imread('loc.png'),  extent = (x0, x1, y0, y1))
 		plt.savefig("out.png")
 		
