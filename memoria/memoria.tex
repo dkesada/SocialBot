@@ -90,6 +90,7 @@ Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un fra
 \pagestyle{plain}
 \raggedright
 \newpage
+\setcounter{page}{5}
 \mychapter{0}{\'Indice de figuras}
 
 \newpage
@@ -129,20 +130,34 @@ El objetivo de este proyecto será la implementación de un bot de Telegram que re
   \item Ser capaz de \textbf{recibir una localización y devolver una lista de locales cercanos a ella}. Estos locales deberán estar dentro de un cierto radio de distancia variable y por defecto se buscará que estén abiertos en el instante de la búsqueda.
   \item Cuando se seleccione un establecimiento, \textbf{se devolverá su ubicación} y la información de la que disponga el bot sobre él.
   \item Poderle dar una puntuación a los establecimientos y ser capaz de enviar fotografías al bot.
-  \item Poder mostrar un \textbf{mapa de calor} en torno a tu ubicación reflejando las ubicaciones más concurridas por otros usuarios
+  \item Poder mostrar un \textbf{mapa de calor} en torno a tu localización reflejando las ubicaciones más concurridas por otros usuarios
 \end{itemize}
 
 
 \section{Estructura del documento}
+Vamos a estructurar este documento conforme al orden en el que fuímos desarrollando el bot. Para cada versión con nuevas funcionalidades, documentaremos qué hemos cambiado, cómo lo hemos hecho y a qué problemas nos hemos enfrentado.
+
+A continuación mostramos sobre qué va a tratar cada capítulo:
+
+\begin{itemize}
+  \item \textbf{Capítulo 2: Infraestructura para bots - Telepot}. En este capítulo introduciremos al lector al desarrollo de bots en Telegram contando cómo es la infraestructura que tienen y la API que ofrece Telegram a los desarrolladores. También hablaremos de qué es y por qué hemos usado el framework de Telepot para nuestro bot en vez de la API nativa de Telegram.
+  \item \textbf{Capítulo 3: Experimentación previa}. Esta parte tratará de nuestro primer acercamiento a la creación de bots. Hablamos de cómo empezamos a usar Telepot para codificar bots simples y lo que aprendimos para usar en un futuro en nuestro bot final.
+  \item \textbf{Capítulo 4: Primera versión - Establecimientos cercanos}. En este apartado hablamos sobre el desarrollo de la primera versión estable de YourPlacesBot. Esta versión ya cuenta con la funcionalidad y la interfaz básicas y sirve como base sobre la que poder ir implementando mejoras. % Versión que sólo devolvía la localización de los establecimientos. Hasta el "Here it is!" sin ninguna opción.
+  \item \textbf{Capítulo 5: Segunda versión - Base de datos e interacción}. Aquí tratamos el desarrollo de la versión que ya era capaz de realizar toda la interacción entre el bot y el usuario. Es la primera versión que pusimos a funcionar de manera continuada en Telegram.
+  
+  \item \textbf{Capítulo 6: Tercera versión - Opciones y Heatmaps}. Este apartado trata sobre la última versión del bot, donde se introducen opciones sobre el funcionamiento del bot que cada usuario puede variar y mapas de calor en base a tu ubicación.
+  
+  \item \textbf{Capítulo 7: Conclusiones y trabajo futuro}. En este último capítulo sacamos conclusiones sobre el desarrollo del bot en Telegram y exponemos las mejoras futuras a implementar en el bot.
+\end{itemize}
 
 \newpage
-\mychapter{2}{Cap\'itulo 2: Materiales y m\'etodos}
+\mychapter{2}{Cap\'itulo 2: Infraestructura para bots - Telepot}
 
 \newpage
-\mychapter{3}{Cap\'itulo 3: Resultados}
+\mychapter{3}{Cap\'itulo 3: Experimentaci\'on previa}
 
 \newpage
-\mychapter{0}{Cap\'itulo n: Conclusiones}
+\mychapter{0}{Cap\'itulo 7: Conclusiones y trabajo futuro}
 
 \newpage
 \mychapter{0}{Ap\'endice}
