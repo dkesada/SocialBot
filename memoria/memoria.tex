@@ -199,10 +199,15 @@ Además de esto, también ofrece funcionalidades para hacer más cómoda la gestión 
 \mychapter{3}{Cap\'itulo 3: Experimentaci\'on previa}
 De cara a afrontar este proyecto, nos encontramos con que debíamos aprender a hacer un bot sin tener conocimientos previos ni de la API de Telegram ni de Python. Por tanto, para coger soltura con el lenguaje y con el funcionamiento de los bots dedicamos la primera parte del proyecto a crear bots que realizasen tareas sencillas.
 
-Para crear estos bots, fuímos guiándonos del tutorial a base de ejemplos de Telepot (\url{http://telepot.readthedocs.io/en/latest/}).El primer paso básico para crear un bot es hablar con @BotFather para crear tu bot con un nombre y que te envíe el token de tu bot. Este token es necesario para poder pedirle al servidor de Telegram las updates de tu bot. 
-%%%
-% ¿Imágenes de cómo conseguir un token de @BotFather?
-%%%
+Para crear estos bots, fuímos guiándonos del tutorial a base de ejemplos de Telepot (\url{http://telepot.readthedocs.io/en/latest/}). El primer paso básico para crear un bot es hablar con @BotFather para crear tu bot con un nombre y que te envíe el token de tu bot. Este token es necesario para poder pedirle al servidor de Telegram las updates de tu bot. 
+
+\begin{figure}[h!]
+\centering
+\includegraphics[height=75mm]{tokenBotFather.jpg}
+\caption{@BotFather provee los TOKEN}
+\label{fig:tokenBotFather}
+\end{figure}
+
 Una vez obtenido el token, hay que crear un objeto Bot con el framework de Telepot para obtener de manera periódica las updates de nuestro bot. Este proceso sería:
 
 \lstinputlisting[language=Python, firstline=58, lastline=61]{Samples/pairingBot.py}
@@ -212,6 +217,23 @@ La clase Bot de Telepot es el wrapper principal de las funciones en HTTPS de la 
 Todos los mensajes que maneja el bot tienen formato JSON. Estos mensajes se envían primero a los servidores de Telegram, y son ellos los que se encargan de redirigirlos a su destino. Cuando el bot recibe los mensajes, se puede emplear la función \textit{telepot.glance(msg)} para saber qué contiene (texto, imágenes, audio,...), en qué tipo de chat se ha enviado (grupo o privado) y el id de la persona que lo envió. También se puede acceder a esta información accediendo directamente al JSON del mensaje.
 \lstinputlisting[language=Python, firstline=44, lastline=53, title=Ejemplo de un on\_chat\_message]{Samples/pairingBot.py}
 
+En estos primeros bots también experimentamos con los distintos tipos de teclado que ofrece la API de Telegram, los ReplyKeyboardMarkups y los InlineKeyboardMarkups. La diferencia básica entre estos dos teclados es la posición que ocupan en la pantalla. El primero se sitúa fuera del propio chat sitúandose en el lugar que le correpondería al teclado QWERTY y el segundo está dentro de la propia conversación obligatoriamente acompañado de un mensaje de texto. Otra diferencia es la manera de procesar las pulsaciones, mientras las pulsaciones a los botones de los ReplyKeyboardMarkups se escriben automáticamente en el chat como mensaje del usuario, las pulsaciones de los botones de los InlineKeyboardMarkups se procesan internamente, cada vez que se pulsa uno de estos botones se crea una clase ButtonHandler. 
+
+\begin{figure}[h!]
+\centering
+\begin{minipage}{7cm}
+  \centering
+  \includegraphics[height=40mm]{replyKB.jpg}
+  \caption{ReplyKeyboardMarkup}
+  \label{fig:ReplyKeyboardMarkup}
+\end{minipage}%
+\begin{minipage}{7cm}
+  \centering
+  \includegraphics[height=40mm]{inlineKB.jpg}
+  \caption{InlineKeyboardMarkup}
+  \label{fig:InlineKeyboardMarkups}
+\end{minipage}
+\end{figure}
 
 \newpage
 \mychapter{4}{Cap\'itulo 4: Primera versi\'on - Establecimientos cercanos}
