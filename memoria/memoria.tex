@@ -7,6 +7,37 @@
 \usepackage{graphicx}
 \usepackage{titlesec}
 \usepackage[document]{ragged2e}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+
+%Opciones para el formato de los listing
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
 
 \title{YourPlacesBot - A Telegram Bot}
 \author{David Quesada L\'opez y Mateo Garc\'ia Fuentes}
@@ -164,13 +195,35 @@ Telepot es un framework desarrollado por Nick Lee (https://github.com/nickoala/t
 
 Además de esto, también ofrece funcionalidades para hacer más cómoda la gestión de servidor de tu bot. Cuando creas un bot, tienes que ir pidiendo a los servidores de Telegram \textit{updates} para que te envíen una lista con los mensajes que le han sido enviados. Telepot te proporciona métodos para que no tengas que preocuparte de montar toda una estructura que gestione su recepción. Telepot se encarga de crear hilos de ejecución por cada chat nuevo que se abre con el bot y de pararlos cuando estos llevan demasiado tiempo sin realizar ninguna tarea. 
 
-
-
 \newpage
 \mychapter{3}{Cap\'itulo 3: Experimentaci\'on previa}
+De cara a afrontar este proyecto, nos encontramos con que debíamos aprender a hacer un bot sin tener conocimientos previos ni de la API de Telegram ni de Python. Por tanto, para coger soltura con el lenguaje y con el funcionamiento de los bots dedicamos la primera parte del proyecto a crear bots que realizasen tareas sencillas.
+
+Para crear estos bots, fuímos guiándonos del tutorial a base de ejemplos de Telepot (\url{http://telepot.readthedocs.io/en/latest/}).El primer paso básico para crear un bot es hablar con @BotFather para crear tu bot con un nombre y que te envíe el token de tu bot. Este token es necesario para poder pedirle al servidor de Telegram las updates de tu bot. 
+%%%
+% ¿Imágenes de cómo conseguir un token de @BotFather?
+%%%
+Una vez obtenido el token, hay que crear un objeto Bot con el framework de Telepot para obtener de manera periódica las updates de nuestro bot. Este proceso sería:
+
+\lstinputlisting[language=Python, firstline=58, lastline=61]{Samples/pairingBot.py}
+
+La clase Bot de Telepot es el wrapper principal de las funciones en HTTPS de la API de Telegram a Python. Llamando al método de message\_loop conseguimos que todos los updates nuevos los trate la función que le indiquemos por argumento, en este caso \textit{on\_chat\_message(msg)}.
+
+Todos los mensajes que maneja el bot tienen formato JSON. Estos mensajes se envían primero a los servidores de Telegram, y son ellos los que se encargan de redirigirlos a su destino. Cuando el bot recibe los mensajes, se puede emplear la función \textit{telepot.glance(msg)} para saber qué contiene (texto, imágenes, audio,...), en qué tipo de chat se ha enviado (grupo o privado) y el id de la persona que lo envió. También se puede acceder a esta información accediendo directamente al JSON del mensaje.
+\lstinputlisting[language=Python, firstline=44, lastline=53, title=Ejemplo de un on\_chat\_message]{Samples/pairingBot.py}
+
 
 \newpage
-\mychapter{0}{Cap\'itulo 7: Conclusiones y trabajo futuro}
+\mychapter{4}{Cap\'itulo 4: Primera versi\'on - Establecimientos cercanos}
+
+\newpage
+\mychapter{5}{Cap\'itulo 5: Segunda versi\'on - Base de datos e interacci\'on}
+
+\newpage
+\mychapter{6}{Cap\'itulo 6: Tercera versi\'on - Opciones y Heatmaps}
+
+\newpage
+\mychapter{7}{Cap\'itulo 7: Conclusiones y trabajo futuro}
 
 \newpage
 \mychapter{0}{Ap\'endice}
