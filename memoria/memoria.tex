@@ -197,9 +197,10 @@ Además de esto, también ofrece funcionalidades para hacer más cómoda la gestión 
 
 \newpage
 \mychapter{3}{Cap\'itulo 3: Experimentaci\'on previa}
-De cara a afrontar este proyecto, nos encontramos con que debíamos aprender a hacer un bot sin tener conocimientos previos ni de la API de Telegram ni de Python. Por tanto, para coger soltura con el lenguaje y con el funcionamiento de los bots dedicamos la primera parte del proyecto a crear bots que realizasen tareas sencillas.
+De cara a afrontar este proyecto, nos encontramos con que debíamos aprender a hacer un bot sin tener conocimientos previos ni de la API de Telegram ni de Python. Por tanto, para coger soltura con el lenguaje y con el funcionamiento de los bots dedicamos la primera parte del proyecto a crear bots que realizasen tareas sencillas. Para crear estos bots, fuímos guiándonos del tutorial a base de ejemplos de Telepot (\url{http://telepot.readthedocs.io/en/latest/}).
 
-Para crear estos bots, fuímos guiándonos del tutorial a base de ejemplos de Telepot (\url{http://telepot.readthedocs.io/en/latest/}). El primer paso básico para crear un bot es hablar con @BotFather para crear tu bot con un nombre y que te envíe el token de tu bot. Este token es necesario para poder pedirle al servidor de Telegram las updates de tu bot. 
+\section{Creación de los bots}
+El primer paso básico para crear un bot es hablar con @BotFather para crear tu bot con un nombre y que te envíe el token de tu bot. Este token es necesario para poder pedirle al servidor de Telegram las updates de tu bot. 
 
 \begin{figure}[h!]
 \centering
@@ -217,6 +218,7 @@ La clase Bot de Telepot es el wrapper principal de las funciones en HTTPS de la 
 Todos los mensajes que maneja el bot tienen formato JSON. Estos mensajes se envían primero a los servidores de Telegram, y son ellos los que se encargan de redirigirlos a su destino. Cuando el bot recibe los mensajes, se puede emplear la función \textit{telepot.glance(msg)} para saber qué contiene (texto, imágenes, audio,...), en qué tipo de chat se ha enviado (grupo o privado) y el id de la persona que lo envió. También se puede acceder a esta información accediendo directamente al JSON del mensaje.
 \lstinputlisting[language=Python, firstline=44, lastline=53, title=Ejemplo de un on\_chat\_message]{Samples/pairingBot.py}
 
+\section{Teclados personalizados}
 En estos primeros bots también experimentamos con los distintos tipos de teclado que ofrece la API de Telegram, los ReplyKeyboardMarkups y los InlineKeyboardMarkups. La diferencia básica entre estos dos teclados es la posición que ocupan en la pantalla. El primero se sitúa fuera del propio chat sitúandose en el lugar que le correpondería al teclado QWERTY y el segundo está dentro de la propia conversación obligatoriamente acompañado de un mensaje de texto. Otra diferencia es la manera de procesar las pulsaciones, mientras las pulsaciones a los botones de los ReplyKeyboardMarkups se escriben automáticamente en el chat como mensaje del usuario, las pulsaciones de los botones de los InlineKeyboardMarkups se procesan internamente, cada vez que se pulsa uno de estos botones se crea una clase ButtonHandler. 
 
 \begin{figure}[h!]
@@ -234,6 +236,10 @@ En estos primeros bots también experimentamos con los distintos tipos de teclado
   \label{fig:InlineKeyboardMarkups}
 \end{minipage}
 \end{figure}
+
+\section{Gestión de mensajes - DelegatorBot y handlers}
+Lo último con lo que hicimos pruebas en esta primera fase fue con la gestión del servidor. En un principio, nuestros bots procesaban los updates que les llegaban de manera secuencial. Cuando ya empezaron a realizar tareas más complejas, tuvimos que crear servidores simples que lanzasen un hilo por cada nuevo \textit{chat\_id} que les llegase en un mensaje. Así, el bot disponía de un diccionario con los chat\_id y una cola, para que cada mensaje proveniente de un chat\_id ya conocido se encolase para su hilo correspondiente.
+\lstinputlisting[language=Python, firstline=82, lastline=87, title=Ejemplo de gestión de mensajes nuevos]{Samples/espiaBot.py}
 
 \newpage
 \mychapter{4}{Cap\'itulo 4: Primera versi\'on - Establecimientos cercanos}
