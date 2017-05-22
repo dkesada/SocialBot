@@ -154,7 +154,9 @@ Al intentar buscar una solución a este problema lo primero en lo que pensamos fu
 En esta situación, pensamos que un bot de Telegram encajaría bien como solución. Por un lado, Telegram es una aplicación que usamos día a día y un bot resultaría fácil de manejar. Por otro lado, la función de compartir la ubicación de Telegram se adecúa perfectamente a la API de Google Maps para realizar consultas de búsqueda de establecimientos cercanos.
 
 \section{Objetivos}
-El objetivo de este proyecto será la implementación de un bot de Telegram que resuelva el problema expuesto anteriormente valiéndose de la ubicación que se le envíe para devolver locales con las características indicadas. Para esto, vamos a establecer una serie de objetivos que el bot debe cumplir:
+Al empezar este proyecto, la idea principal era aprender a hacer un bot de Telegram partiendo de los conocimientos previos adquiridos durante la carrera. Para esto, también teníamos como objetivo mejorar nuestra habilidad con Python, que no es un lenguaje que se use ampliamente durante el grado, y con bases de datos no SQL, en este caso MongoDB que se usa en alguna asignatura. Otro punto importante era ser capaces de buscar e integrar APIs que nos resultasen útiles para nuestro bot. Finalmente, también queríamos coger soltura escribiendo memorias de esta extensión utilizando LateX, que no es algo que se practique antes del trabajo de fin de grado.
+
+El objetivo final de este proyecto será la implementación de un bot de Telegram que valiéndose de la ubicación que se le envíe devuelva locales con las características indicadas. Para esto, vamos a establecer una serie de objetivos funcionales que el bot debe cumplir:
 
 \begin{itemize}
   \item Ser capaz de \textbf{recibir una localización y devolver una lista de locales cercanos a ella}. Estos locales deberán estar dentro de un cierto radio de distancia variable y por defecto se buscará que estén abiertos en el instante de la búsqueda.
@@ -251,16 +253,29 @@ El uso del DelegatorBot y los handlers facilita en gran medida la creación de bo
 \newpage
 \mychapter{4}{Cap\'itulo 4: Primera versi\'on - Establecimientos cercanos}
 
-La primera versión del bot que realizamos cumplía el objetivo básico del bot. Según la localización del usuario, el bot mostraba los establecimientos cercanos. Al iniciar el bot, el usuario recibía un mensaje que rezaba \textit{Share your location!} a la vez que se le ofrecía un ReplyKeyboardMarkup con un botón que al pulsarlo compartía la localización del usuario. Después de recibir la localización el bot preguntando que tipo de establecimiento estaba buscando al usuario, dando las opciones de bar, café restaurante, ... a través de un teclado inline. Cuando el usuario elegía que tipo de local que quería el bot le ofrecía una lista de los establecimientos de ese tipo a un radio de 500 metros. El usuario elegía entre alguno de los locales ofrecidos y el bot le mandaba la localización de este. 
+La primera versión del bot que realizamos cumplía el objetivo básico del bot. Según la localización del usuario, el bot mostraba los establecimientos cercanos. Al iniciar el bot, el usuario recibía un mensaje que rezaba \textit{Share your location!} a la vez que se le ofrecía un ReplyKeyboardMarkup con un botón que al pulsarlo compartía la localización del usuario. Después de recibir la localización el bot continúa preguntando que tipo de establecimiento estaba buscando al usuario, dando varias opciones a través de un teclado inline. Cuando el usuario elegía que tipo de local que quería el bot le ofrecía una lista de los establecimientos de ese tipo a un radio de 500 metros. El usuario elegía entre alguno de los locales ofrecidos y el bot le mandaba la localización de este. 
 
 %IMAGEN 2 capturas del proceso en Telegram
 
-Para conseguir los establecimientos en un radio de una localización concreta decidimos utilizar el cliente que proporcionan los servicios de Google Maps para Python. Utilizamos la función \textit{places\_nearby} que al pasarle como parámetros distintos aspectos de la consulta como la localización, el radio, el tipo de local, etc. devolvía una lista en formato JSON con todos los establecimientos, y sus datos, que cumplían los parámetros establecidos. Al recibir estos datos nos encargamos de procesarlos para mostrarle parte de esta información a los usuarios. Decidimos usar los servicios prestados por Google Maps por ser la mayor aplicación a nivel mundial que ofrece las geolocalizaciones (entre otros datos) de establecimientos de ocio.
+Para conseguir los establecimientos en un radio de una localización concreta decidimos utilizar el cliente que proporcionan los servicios de Google Maps para Python. Utilizamos la función \textit{places\_nearby} que al pasarle como parámetros distintos aspectos de la consulta como la localización, el radio, el tipo de local, etc. devolvía una lista en formato JSON con todos los establecimientos, y sus datos, que cumplían los parámetros establecidos. Al recibir estos datos nos encargamos de procesarlos para mostrarle parte de esta información a los usuarios. 
+\lstinputlisting[language=Python, firstline=148, lastline=148, title=Consulta a la API de Google Maps]{../socialBot.py}
+Decidimos usar los servicios prestados por Google Maps por ser la mayor aplicación a nivel mundial que ofrece las geolocalizaciones (entre otros datos) de establecimientos de ocio. Para poder utilizar estos servicios, tuvimos que registrarnos en Google Developers para obtener una clave de la API del maps de manera gratuíta.
 
-%Código consulta places_nearby
+%1000 consultas diarías y posible uso de una licencia de pago para aumentarlo
+
+En este punto nos dimos cuenta de una de las limitaciones del los handlers. Al definirlos en la llamada a DelegatorBot, también hay que poner qué tiempo de \textit{timeout} tienen. Una vez pasado este tiempo y si el thread de un handler no ha recibido ningún update, el DelegatorBot para ese hilo y destruye el objeto handler que hubiese. Si después de esto llegase un update en el mismo chat del hilo que se paró, se crearía un nuevo objeto handler y se lanzaría en un nuevo hilo. Esto supone que si se declaró algún atributo privado en el handler este se perdió durante el timeout, por lo que hay que tenerlo en cuenta y guardar todos los datos relevantes de los handlers en la función \textit{on\_time\_out()} definidas dentro de la clase del handler correspondiente, que es la que DelegatorBot llama antes de hacer el timeout.
+
+Para mantener el flujo de interacción con el bot por medio de botones inline utilizamos continuamente la función \textit{editMessageText()} proporcionada por Telepot. Esta función es un wrapper de la función de la API de Telegram que permite editar un mensaje enviado anteriormente y cambiar su texto y el teclado que proporciona.
+\lstinputlisting[language=Python, firstline=96, lastline=96, title=Edición de mensajes previos]{Samples/3rayaBot.py}
+Al hacer esto, se consigue que la interfaz del bot se desarrolle en un solo mensaje y así evitamos también que el usuario pueda pulsar botones de manera inesperada si se dejasen sin eliminar en el chat.
+%tal vez una imagen de un chat con botones sin eliminar frente a uno con ellos eliminados
+
+%no se si poner subsecciones
 
 \newpage
 \mychapter{5}{Cap\'itulo 5: Segunda versi\'on - Base de datos e interacci\'on}
+
+% Hablar aquí de los steps?
 
 \newpage
 \mychapter{6}{Cap\'itulo 6: Tercera versi\'on - Opciones y Heatmaps}
