@@ -223,8 +223,6 @@ Todos los mensajes que maneja el bot tienen formato JSON. Estos mensajes se enví
 \section{Teclados personalizados}
 En estos primeros bots también experimentamos con los distintos tipos de teclado que ofrece la API de Telegram, los ReplyKeyboardMarkups y los InlineKeyboardMarkups. La diferencia básica entre estos dos teclados es la posición que ocupan en la pantalla. El primero se sitúa fuera del propio chat sitúandose en el lugar que le correpondería al teclado QWERTY y el segundo está dentro de la propia conversación obligatoriamente acompañado de un mensaje de texto. Otra diferencia es la manera de procesar las pulsaciones, mientras las pulsaciones a los botones de los ReplyKeyboardMarkups se escriben automáticamente en el chat como mensaje del usuario, las pulsaciones de los botones de los InlineKeyboardMarkups se procesan internamente, cada vez que se pulsa uno de estos botones se crea una clase ButtonHandler. 
 
-%Hablar aquí del editMarkup?¿? diseño más limpio
-
 \begin{figure}[h!]
 \centering
 \begin{minipage}{7cm}
@@ -255,11 +253,35 @@ El uso del DelegatorBot y los handlers facilita en gran medida la creación de bo
 
 La primera versión del bot que realizamos cumplía el objetivo básico del bot. Según la localización del usuario, el bot mostraba los establecimientos cercanos. Al iniciar el bot, el usuario recibía un mensaje que rezaba \textit{Share your location!} a la vez que se le ofrecía un ReplyKeyboardMarkup con un botón que al pulsarlo compartía la localización del usuario. Después de recibir la localización el bot continúa preguntando que tipo de establecimiento estaba buscando al usuario, dando varias opciones a través de un teclado inline. Cuando el usuario elegía que tipo de local que quería el bot le ofrecía una lista de los establecimientos de ese tipo a un radio de 500 metros. El usuario elegía entre alguno de los locales ofrecidos y el bot le mandaba la localización de este. 
 
-%IMAGEN 2 capturas del proceso en Telegram
+\begin{figure}[h!]
+\centering
+\begin{minipage}{7cm}
+  \centering
+  \includegraphics[height=40mm]{paso1v1.jpg}
+  \caption{Enviar localización}
+  \label{fig:Paso1v1}
+\end{minipage}%
+\begin{minipage}{7cm}
+  \centering
+  \includegraphics[height=40mm]{paso2v1.jpg}
+  \caption{Escoger tipo}
+  \label{fig:Paso2v1}
+\end{minipage}
+\end{figure}
+
 
 Para conseguir los establecimientos en un radio de una localización concreta decidimos utilizar el cliente que proporcionan los servicios de Google Maps para Python. Utilizamos la función \textit{places\_nearby} que al pasarle como parámetros distintos aspectos de la consulta como la localización, el radio, el tipo de local, etc. devolvía una lista en formato JSON con todos los establecimientos, y sus datos, que cumplían los parámetros establecidos. Al recibir estos datos nos encargamos de procesarlos para mostrarle parte de esta información a los usuarios. 
 \lstinputlisting[language=Python, firstline=148, lastline=148, title=Consulta a la API de Google Maps]{../socialBot.py}
 Decidimos usar los servicios prestados por Google Maps por ser la mayor aplicación a nivel mundial que ofrece las geolocalizaciones (entre otros datos) de establecimientos de ocio. Para poder utilizar estos servicios, tuvimos que registrarnos en Google Developers para obtener una clave de la API del maps de manera gratuíta.
+
+\begin{figure}[h!]
+\begin{minipage}{7cm}
+  \centering
+  \includegraphics[height=40mm]{paso3v1.jpg}
+  \caption{Escoger local}
+  \label{fig:Paso3v1}
+\end{minipage}
+\end{figure}
 
 %1000 consultas diarías y posible uso de una licencia de pago para aumentarlo
 
@@ -275,7 +297,15 @@ Al hacer esto, se consigue que la interfaz del bot se desarrolle en un solo mens
 \newpage
 \mychapter{5}{Cap\'itulo 5: Segunda versi\'on - Base de datos e interacci\'on}
 
-% Hablar aquí de los steps?
+A medida que íbamos desarrollando el bot nos encontrabamos con los primeros problemas, observabamos la necesidad de almacenar los datos y además queríamos mejorar la interacción con el bot.
+
+Como indicabamos en el capítulo anterior el uso del DelegatorBot tenía el inconveniente de perder los atributos privados si no hay actualizaciones en un período determinado. Además queríamos guardar datos como las localizaciones que nos enviaba el usuario para utilizarlos en funcionalidades posteriores. Ante esta coyuntura decidimos crear una base de datos para el bot, algo indispinsable en casi cualquier aplicación. La problemática con la que nos encontrábamos era si utilizar una base de datos relacional o no. Nuestra decisión final fue utilizar \textbf{MongoDB}, porque nos ofrecía la capacidad de almacenar nuestros datos que no tenían la misma estructura, pero si parecida, de una manera cómoda. Además nos permitía una futura escalabilidad de esas semi-estructuras que sabíamos que íbamos a necesitar con las futuras funcionalidades del bot. 
+
+Para gestionar la base de datos con el bot implementamos un nuevo módulo utilizando \textit{pymongo}. Dentro de la nueva base de datos establecimos dos colecciones, una de usuarios y otra de establecimientos. El bot cuando quiere guardar datos o extraerlos de la base de datos llama a una función específica del nuevo módulo, y este se encargará de conectar con la base de datos para extraer o persistir los datos. Para solucionar el problema del timeout, cuando este período de tiempo transcurre invocamos al método \textit{on\_close} que persiste los atributos que van a expirar en la base de datos.
+
+% Código de un on_close?
+%Mencionar las imagenes en el texto?¿
+% Hablar aquí de los steps? Si, deberíamos
 
 \newpage
 \mychapter{6}{Cap\'itulo 6: Tercera versi\'on - Opciones y Heatmaps}
