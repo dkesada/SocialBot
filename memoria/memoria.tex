@@ -221,7 +221,7 @@ Todos los mensajes que maneja el bot tienen formato JSON. Estos mensajes se enví
 \lstinputlisting[language=Python, firstline=44, lastline=53, title=Ejemplo de un on\_chat\_message]{Samples/pairingBot.py}
 
 \section{Teclados personalizados}
-En estos primeros bots también experimentamos con los distintos tipos de teclado que ofrece la API de Telegram, los ReplyKeyboardMarkups y los InlineKeyboardMarkups. La diferencia básica entre estos dos teclados es la posición que ocupan en la pantalla. El primero se sitúa fuera del propio chat sitúandose en el lugar que le correpondería al teclado QWERTY y el segundo está dentro de la propia conversación obligatoriamente acompañado de un mensaje de texto. Otra diferencia es la manera de procesar las pulsaciones, mientras las pulsaciones a los botones de los ReplyKeyboardMarkups se escriben automáticamente en el chat como mensaje del usuario, las pulsaciones de los botones de los InlineKeyboardMarkups se procesan internamente, cada vez que se pulsa uno de estos botones se crea una clase ButtonHandler. 
+En estos primeros bots también experimentamos con los distintos tipos de teclado que ofrece la API de Telegram, los ReplyKeyboardMarkups y los InlineKeyboardMarkups. La diferencia básica entre estos dos teclados es la posición que ocupan en la pantalla. El primero se sitúa fuera del propio chat sitúandose en el lugar que le correpondería al teclado QWERTY y el segundo está dentro de la propia conversación obligatoriamente acompañado de un mensaje de texto. Otra diferencia es la manera de procesar las pulsaciones, mientras las pulsaciones a los botones de los ReplyKeyboardMarkups se escriben automáticamente en el chat como mensaje del usuario, las pulsaciones de los botones de los InlineKeyboardMarkups se procesan internamente, cada vez que se pulsa uno de estos botones se crea una clase ButtonHandler. Estos botones se procesan como inline queries al ser pulsados, de manera que al llegar al bot se diferencian del resto de los mensajes del chat.
 
 \begin{figure}[h!]
 \centering
@@ -297,15 +297,33 @@ Al hacer esto, se consigue que la interfaz del bot se desarrolle en un solo mens
 \newpage
 \mychapter{5}{Cap\'itulo 5: Segunda versi\'on - Base de datos e interacci\'on}
 
+\section{MongoDB}
 A medida que íbamos desarrollando el bot nos encontrabamos con los primeros problemas, observabamos la necesidad de almacenar los datos y además queríamos mejorar la interacción con el bot.
 
-Como indicabamos en el capítulo anterior el uso del DelegatorBot tenía el inconveniente de perder los atributos privados si no hay actualizaciones en un período determinado. Además queríamos guardar datos como las localizaciones que nos enviaba el usuario para utilizarlos en funcionalidades posteriores. Ante esta coyuntura decidimos crear una base de datos para el bot, algo indispinsable en casi cualquier aplicación. La problemática con la que nos encontrábamos era si utilizar una base de datos relacional o no. Nuestra decisión final fue utilizar \textbf{MongoDB}, porque nos ofrecía la capacidad de almacenar nuestros datos que no tenían la misma estructura, pero si parecida, de una manera cómoda. Además nos permitía una futura escalabilidad de esas semi-estructuras que sabíamos que íbamos a necesitar con las futuras funcionalidades del bot. 
+Como indicabamos en el capítulo anterior el uso del DelegatorBot tenía el inconveniente de perder los atributos privados si no hay actualizaciones en un período determinado. Además queríamos guardar datos como las localizaciones que nos enviaba el usuario para utilizarlos en funcionalidades posteriores. Ante esta coyuntura decidimos crear una base de datos para el bot, algo indispensable en casi cualquier aplicación. La problemática con la que nos encontrábamos era si utilizar una base de datos relacional o no. Nuestra decisión final fue utilizar \textbf{MongoDB}, porque nos ofrecía la capacidad de almacenar nuestros datos que no tenían la misma estructura, pero si parecida, de una manera cómoda. Además nos permitía una futura escalabilidad de esas semi-estructuras que sabíamos que íbamos a necesitar con las futuras funcionalidades del bot. 
 
-Para gestionar la base de datos con el bot implementamos un nuevo módulo utilizando \textit{pymongo}. Dentro de la nueva base de datos establecimos dos colecciones, una de usuarios y otra de establecimientos. El bot cuando quiere guardar datos o extraerlos de la base de datos llama a una función específica del nuevo módulo, y este se encargará de conectar con la base de datos para extraer o persistir los datos. Para solucionar el problema del timeout, cuando este período de tiempo transcurre invocamos al método \textit{on\_close} que persiste los atributos que van a expirar en la base de datos.
+Para gestionar la base de datos con el bot implementamos un nuevo módulo utilizando \textit{pymongo}. Dentro de la nueva base de datos establecimos dos colecciones, una de usuarios y otra de establecimientos. Estas dos colecciones no implementan funciones \textit{join}, dado que en MongoDB y en NoSQL en general son muy lentas. El bot cuando quiere guardar datos o extraerlos de la base de datos llama a una función específica del nuevo módulo, y este se encargará de conectar con la base de datos para extraer o persistir los datos. Para solucionar el problema del timeout, cuando este período de tiempo transcurre invocamos al método \textit{on\_close} que persiste los atributos que van a expirar en la base de datos.
+
+\section{Puntuación e imágenes}
+Llegados a este punto, aumentamos la funcionalidad del bot para que una vez que te enviase la localización de algún local también te diese más opciones a realizar con ella. Pusimos la posibilidad de darle una valoración al local que se haya seleccionado, de una a cinco estrellas, que también se muestra a la hora de enseñarte los locales cercanos a tí. Introducimos también la posibilidad de mandar imágenes de los locales, de forma que si un local tiene imágenes en la base de datos, damos la opción de ir viéndolas a través de la interfaz con botones.
+
+Cuando se le envía una imágen al bot, este recibe un JSON como si se tratase de un mensaje normal, pero una de las claves contiene el id que Telegram le da a la imagen. Es posible descargar el archivo de la imagen si se desea, pero con tener esta clave se puede reenviar y se recibirá como una imagen normal. De este modo, sólo es necesario guardar el id de las imágenes que se reciben en el documento de su local correspondiente. Usar MongoDB viene bien es este caso para poder guardar dentro de una misma colección documentos con distintas claves, ya que puede haber locales que no tengan puntuación o imágenes mientras que otros sí.
+
+\section{Steps}
+Como ahora el bot dispone de más opciones para interactuar con él, también debía disponer de un botón en su interfaz para volver atrás. Como el flujo del bot se desarrolla parecido a una máquina de estados, creamos un módulo \textit{steps} para definir los diferentes estados en los que puede encontrarse el bot, y así saber en cada momento a dónde debe ir en caso de recibir un update o de querer volver atrás. Estos estados ayudan también en el caso del timeout, ya que en la función on\_close() se puede guardar en la base de datos el estado en el que se quedó un usuario, y cuando vuelva puede continuar usando el bot desde el punto en el que lo dejó. Ahora que disponemos de base de datos, todas las variables locales que utiliza el handler también se pueden guardar en caso de timeout.
+
+\begin{figure}[h!]
+\begin{minipage}{7cm}
+  \centering
+  \includegraphics[height=50mm]{steps.png}
+  \caption{Estados posibles del bot}
+  \label{fig:Estados posibles del bot}
+\end{minipage}
+\end{figure}
+
 
 % Código de un on_close?
-%Mencionar las imagenes en el texto?¿
-% Hablar aquí de los steps? Si, deberíamos
+% Mencionar las imagenes en el texto?¿
 
 \newpage
 \mychapter{6}{Cap\'itulo 6: Tercera versi\'on - Opciones y Heatmaps}
