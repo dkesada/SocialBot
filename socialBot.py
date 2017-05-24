@@ -309,7 +309,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		rad=math.pi/180
 		dlat=lat2-lat1
 		dlng=lng2-lng1
-		R=6371 #mean radius
+		R=6.367.45 #media geometrica
 		a=(math.sin(rad*dlat/2))**2 + math.cos(rad*lat1)*math.cos(rad*lat2)*(math.sin(rad*dlng/2))**2
 		distance=2*R*math.asin(math.sqrt(a))#kilometers
 		return distance*1000#meters
