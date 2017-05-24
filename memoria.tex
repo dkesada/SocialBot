@@ -1,0 +1,366 @@
+\documentclass[oneside]{memoir}
+
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,activeacute]{babel}
+\usepackage{mathtools}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage[document]{ragged2e}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+
+%Opciones para el formato de los listing
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+
+\title{YourPlacesBot - A Telegram Bot}
+\author{David Quesada L\'opez y Mateo Garc\'ia Fuentes}
+
+\setlength{\parskip}{1em}
+
+\newcommand{\romanpages}{
+\pagenumbering{roman}
+\thispagestyle{empty}
+\beforepartskip
+\centering
+
+\thetitle
+
+\theauthor
+
+GRADO EN INGENIER\'IA INFORM\'ATICA 
+
+FACULTAD DE INGENIER\'IA INFORM\'ATICA
+
+UNIVERSIDAD COMPLUTENSE DE MADRID
+
+\includegraphics{logo.jpg}
+
+TRABAJO DE FIN DE GRADO EN INGENIER\'IA INFORM\'ATICA
+
+Director: Carlos Gregorio Rodríguez
+
+\today
+\afterpartskip
+\newpage
+
+\thispagestyle{empty}
+%\beforepartskip
+\raggedright
+
+\begin{center}
+  \makebox{\includegraphics[width=\textwidth]{autoriz.png}}
+\end{center}
+
+\afterpartskip
+\newpage
+\thispagestyle{empty}
+\raggedright
+
+\textbf{Agradecimientos}
+
+Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un framework de Python para API de Telegram Bot y desarrollarlo bajo una licencia MIT.
+
+\afterpartskip
+\newpage
+}
+
+\newcommand{\indexpage}{
+\begin{KeepFromToc}
+ \frontmatter
+ \setcounter{page}{4}
+ \pagestyle{plain}
+
+ \tableofcontents
+
+ \newpage
+\end{KeepFromToc}
+}
+
+\newcommand{\mychapter}[2]{
+    \setcounter{chapter}{#1}
+    \setcounter{section}{0}
+    \chapter*{#2}
+    \addcontentsline{toc}{chapter}{#2}
+}
+
+
+\begin{document}
+
+\romanpages
+\indexpage
+\mainmatter
+\pagenumbering{roman}
+\pagestyle{plain}
+\raggedright
+\newpage
+\setcounter{page}{5}
+\mychapter{0}{\'Indice de figuras}
+
+\newpage
+\mychapter{0}{\'Indice de abreviaturas}
+
+\newpage
+\mychapter{0}{Resumen}
+Una de los principales atractivos de Telegram es su plataforma para bots. Los usuarios pueden crear sus propios bots y ponerlos en funcionamiento para que sean accesibles a todos los clientes de Telegram sin coste alguno para el desarrollador o para el consumidor. Estos bots proporcionan en su mayoría información, juegos o utilidades dentro de un chat, y aumentan en gran medida la funcionalidad de Telegram.
+
+A la hora de que un usuario interactúe con un bot, es especialmente interesante que el servicio que se le preste pueda depender de su ubicación geográfica y pueda tener un componente social. Por ello, este proyecto tiene como objetivo informar al usuario sobre qué establecimientos cercanos hay en base a su localización, ofreciendo la posibilidad de encontrarlos fácilmente y de ver datos proporcionados por otros usuarios sobre estos.
+
+Palabras clave: bot, Telegram, geolocalización, noSQL, mapas de calor.
+
+\newpage
+\mychapter{0}{Abstract}
+One of the main features of Telegram is its bot support. Users can create their own bots and launch them to be available for everyone in Telegram without cost for neither the developer nor the client. These bots mainly offer information, games or utilities inside the chat and they increase greatly Telegrams functionality.
+
+When an user interacts with a bot, it is of special interest that the response of the bot varies depending on the users location and on a social component. That's why this project aims to inform the user about what near by establishments there are depending on his location, offering the posibility to find them easily and to see information of them given by other users.
+
+Keywords: bot, Telegram, geolocation, noSQL, heatmaps.
+
+\newpage
+\pagenumbering{arabic}
+
+\mychapter{1}{Cap\'itulo 1: Introducci\'on}
+\section{Motivaci\'on}
+La motivación para crear este bot surgió a partir de unas conversaciones con amigos. Se quejaban de no disponer de una herramienta sencilla para poder ver qué locales hay cercanos a nosotros y así elegir a dónde ir si no conoces el lugar. 
+
+Al intentar buscar una solución a este problema lo primero en lo que pensamos fue la aplicación de Google Maps. Google Maps tiene la funcionalidad de encontrar establecimientos cercanos a ti en base a tu localización y a qué buscas, pero el resultado fue que la aplicación es demasiado grande y no es práctico tener que abrirla, navegar entre todas las opciones y funcionalidades que ofrece y ponerte a buscar un local que te guste. %En la práctica, Google Maps lo usas en la mayoría de casos embebido en otras aplicaciones que luego te redirigen a él para una funcionalidad en concreto, como la ubicación de Telegram.
+
+En esta situación, pensamos que un bot de Telegram encajaría bien como solución. Por un lado, Telegram es una aplicación que usamos día a día y un bot resultaría fácil de manejar. Por otro lado, la función de compartir la ubicación de Telegram se adecúa perfectamente a la API de Google Maps para realizar consultas de búsqueda de establecimientos cercanos.
+
+\section{Objetivos}
+Al empezar este proyecto, la idea principal era aprender a hacer un bot de Telegram partiendo de los conocimientos previos adquiridos durante la carrera. Para esto, también teníamos como objetivo mejorar nuestra habilidad con Python, que no es un lenguaje que se use ampliamente durante el grado, y con bases de datos no SQL, en este caso MongoDB que se usa en alguna asignatura. Otro punto importante era ser capaces de buscar e integrar APIs que nos resultasen útiles para nuestro bot. Finalmente, también queríamos coger soltura escribiendo memorias de esta extensión utilizando LateX, que no es algo que se practique antes del trabajo de fin de grado.
+
+El objetivo final de este proyecto será la implementación de un bot de Telegram que valiéndose de la ubicación que se le envíe devuelva locales con las características indicadas. Para esto, vamos a establecer una serie de objetivos funcionales que el bot debe cumplir:
+
+\begin{itemize}
+  \item Ser capaz de \textbf{recibir una localización y devolver una lista de locales cercanos a ella}. Estos locales deberán estar dentro de un cierto radio de distancia variable y por defecto se buscará que estén abiertos en el instante de la búsqueda.
+  \item Cuando se seleccione un establecimiento, \textbf{se devolverá su ubicación} y la información de la que disponga el bot sobre él.
+  \item Poderle dar una puntuación a los establecimientos y ser capaz de enviar fotografías al bot.
+  \item Poder mostrar un \textbf{mapa de calor} en torno a tu localización reflejando las ubicaciones más concurridas por otros usuarios
+\end{itemize}
+
+
+\section{Estructura del documento}
+Vamos a estructurar este documento conforme al orden en el que fuímos desarrollando el bot. Para cada versión con nuevas funcionalidades, documentaremos qué hemos cambiado, cómo lo hemos hecho y a qué problemas nos hemos enfrentado.
+
+A continuación mostramos sobre qué va a tratar cada capítulo:
+
+\begin{itemize}
+  \item \textbf{Capítulo 2: Infraestructura para bots - Telepot}. En este capítulo introduciremos al lector al desarrollo de bots en Telegram contando cómo es la infraestructura que tienen y la API que ofrece Telegram a los desarrolladores. También hablaremos de qué es y por qué hemos usado el framework de Telepot para nuestro bot en vez de la API nativa de Telegram.
+  \item \textbf{Capítulo 3: Experimentación previa}. Esta parte tratará de nuestro primer acercamiento a la creación de bots. Hablamos de cómo empezamos a usar Telepot para codificar bots simples y lo que aprendimos para usar en un futuro en nuestro bot final.
+  \item \textbf{Capítulo 4: Primera versión - Establecimientos cercanos}. En este apartado hablamos sobre el desarrollo de la primera versión estable de YourPlacesBot. Esta versión ya cuenta con la funcionalidad y la interfaz básicas y sirve como base sobre la que poder ir implementando mejoras. % Versión que sólo devolvía la localización de los establecimientos. Hasta el "Here it is!" sin ninguna opción.
+  \item \textbf{Capítulo 5: Segunda versión - Base de datos e interacción}. Aquí tratamos el desarrollo de la versión que ya era capaz de realizar toda la interacción entre el bot y el usuario. Es la primera versión que pusimos a funcionar de manera continuada en Telegram.
+  
+  \item \textbf{Capítulo 6: Tercera versión - Opciones y Heatmaps}. Este apartado trata sobre la última versión del bot, donde se introducen opciones sobre el funcionamiento del bot que cada usuario puede variar y mapas de calor en base a tu ubicación.
+  
+  \item \textbf{Capítulo 7: Conclusiones y trabajo futuro}. En este último capítulo sacamos conclusiones sobre el desarrollo del bot en Telegram y exponemos las mejoras futuras a implementar en el bot.
+\end{itemize}
+
+\newpage
+\mychapter{2}{Cap\'itulo 2: Infraestructura para bots - Telepot}
+%En este capítulo introduciremos al lector al desarrollo de bots en Telegram contando cómo es la infraestructura que tienen y la API que ofrece Telegram a los desarrolladores. También hablaremos de qué es y por qué hemos usado el framework de Telepot para nuestro bot en vez de la API nativa de Telegram.
+\section{Plataforma de bots de Telegram}
+El servicio de mensajería Telegram Messenger ofrece una interfaz de programación para bots, llamada Telegram Bot API. Estos bots son aplicaciones de terceros que se ejecutan en Telegram. La forma de interactuar con estos bots es muy variada: mensajes, comandos, archivos, botones, etc. Las características usuales de estos bots son proporcionar notificaciones y noticias personalizadas, juegos o integración de servicios externos a Telegram.
+
+Los mensajes, comandos y peticiones enviados por los usuarios se envían al software que se ejecuta en los servidores. Los servidores de Telegram, que son intermediarios entre nuestro servidor y el usuario, manejan el cifrado y la comunicación. Esta comunicación se realiza a través de una interfaz HTTPS que ofrece una versión simplificada de la API de Telegram. 
+
+Los desarrolladores deben crear sus bots a través de @BotFather. Este bot es el padre de todos los bots y proporciona tokens únicos para cada uno. También es necesario para administrar los bots y gestionar sus configuraciones. Además de esto, el @BotFather avisa a los desarrolladores de bots populares (300 solicitudes por minuto o más) si detecta que la tasa de conversión de solicitud/respuesta es muy baja. Está alerta consta de 3 botones de respuesta: Arreglado, Silenciar y Apoyo. Esta última opción abrira un nuevo chat con el @BotSupport que ayudará al desarrollador a detectar el problema o averiguar si hay algún problema en los servidores de Telegram.
+
+\section{Telepot}
+Telepot es un framework desarrollado por Nick Lee (https://github.com/nickoala/telepot) que te ayuda a desarrollar bots de Telegram usando Python en vez de HTTPS. La funcionalidad básica de Telepot consiste en servir de wrapper de todas las funciones de la API de Telegram para así poder programar el código de los bots en Python.
+
+Además de esto, también ofrece funcionalidades para hacer más cómoda la gestión de servidor de tu bot. Cuando creas un bot, tienes que ir pidiendo a los servidores de Telegram \textit{updates} para que te envíen una lista con los mensajes que le han sido enviados. Telepot te proporciona métodos para que no tengas que preocuparte de montar toda una estructura que gestione su recepción. Telepot se encarga de crear hilos de ejecución por cada chat nuevo que se abre con el bot y de pararlos cuando estos llevan demasiado tiempo sin realizar ninguna tarea. 
+
+\newpage
+\mychapter{3}{Cap\'itulo 3: Experimentaci\'on previa}
+De cara a afrontar este proyecto, nos encontramos con que debíamos aprender a hacer un bot sin tener conocimientos previos ni de la API de Telegram ni de Python. Por tanto, para coger soltura con el lenguaje y con el funcionamiento de los bots dedicamos la primera parte del proyecto a crear bots que realizasen tareas sencillas. Para crear estos bots, fuímos guiándonos del tutorial a base de ejemplos de Telepot (\url{http://telepot.readthedocs.io/en/latest/}).
+
+\section{Creación de los bots}
+El primer paso básico para crear un bot es hablar con @BotFather para crear tu bot con un nombre y que te envíe el token de tu bot. Este token es necesario para poder pedirle al servidor de Telegram las updates de tu bot. 
+
+\begin{figure}[h!]
+\centering
+\includegraphics[height=75mm]{tokenBotFather.jpg}
+\caption{@BotFather provee los TOKEN}
+\label{fig:tokenBotFather}
+\end{figure}
+
+Una vez obtenido el token, hay que crear un objeto Bot con el framework de Telepot para obtener de manera periódica las updates de nuestro bot. Este proceso sería:
+
+\lstinputlisting[language=Python, firstline=58, lastline=61]{Samples/pairingBot.py}
+
+La clase Bot de Telepot es el wrapper principal de las funciones en HTTPS de la API de Telegram a Python. Llamando al método de message\_loop conseguimos que todos los updates nuevos los trate la función que le indiquemos por argumento, en este caso \textit{on\_chat\_message(msg)}.
+
+Todos los mensajes que maneja el bot tienen formato JSON. Estos mensajes se envían primero a los servidores de Telegram, y son ellos los que se encargan de redirigirlos a su destino. Cuando el bot recibe los mensajes, se puede emplear la función \textit{telepot.glance(msg)} para saber qué contiene (texto, imágenes, audio,...), en qué tipo de chat se ha enviado (grupo o privado) y el id de la persona que lo envió. También se puede acceder a esta información accediendo directamente al JSON del mensaje.
+\lstinputlisting[language=Python, firstline=44, lastline=53, title=Ejemplo de un on\_chat\_message]{Samples/pairingBot.py}
+
+\section{Teclados personalizados}
+En estos primeros bots también experimentamos con los distintos tipos de teclado que ofrece la API de Telegram, los ReplyKeyboardMarkups y los InlineKeyboardMarkups. La diferencia básica entre estos dos teclados es la posición que ocupan en la pantalla. El primero se sitúa fuera del propio chat sitúandose en el lugar que le correpondería al teclado QWERTY y el segundo está dentro de la propia conversación obligatoriamente acompañado de un mensaje de texto. Otra diferencia es la manera de procesar las pulsaciones, mientras las pulsaciones a los botones de los ReplyKeyboardMarkups se escriben automáticamente en el chat como mensaje del usuario, las pulsaciones de los botones de los InlineKeyboardMarkups se procesan internamente, cada vez que se pulsa uno de estos botones se crea una clase ButtonHandler. 
+
+\begin{figure}[h!]
+\centering
+\begin{minipage}{7cm}
+  \centering
+  \includegraphics[height=40mm]{replyKB.jpg}
+  \caption{ReplyKeyboardMarkup}
+  \label{fig:ReplyKeyboardMarkup}
+\end{minipage}%
+\begin{minipage}{7cm}
+  \centering
+  \includegraphics[height=40mm]{inlineKB.jpg}
+  \caption{InlineKeyboardMarkup}
+  \label{fig:InlineKeyboardMarkups}
+\end{minipage}
+\end{figure}
+
+\section{Gestión de mensajes - DelegatorBot y handlers}
+Lo último con lo que hicimos pruebas en esta primera fase fue con la gestión del servidor. En un principio, nuestros bots procesaban los updates que les llegaban de manera secuencial. Cuando ya empezaron a realizar tareas más complejas, tuvimos que crear servidores simples que lanzasen un hilo por cada nuevo \textit{chat\_id} que les llegase en un mensaje. Así, el bot disponía de un diccionario con los chat\_id y una cola, para que cada mensaje proveniente de un chat\_id ya conocido se encolase para su hilo correspondiente.
+\lstinputlisting[language=Python, firstline=82, lastline=87, title=Ejemplo de gestión de mensajes nuevos]{Samples/espiaBot.py}
+Tras crear algunos bots que utilizaban este sistema de servidor con hilos por paso de mensajes, nos dimos cuenta de que Telepot proporciona una clase para gestionar todo esto de manera cómoda: la clase \textbf{DelegatorBot} y los \textbf{handlers}. Esta clase tiene la particularidad de que el objeto bot que creas trata de manera diferente los updates que le llegan dependiendo del tipo que sean. Además, este objeto se encarga de lanzar hilos por cada nuevo chat\_id que le llega y los tiene todos registrados por debajo en un diccionario, para poder redirigirles los mensajes que les correspondan a cada uno y poder cerrarlos cuando sea necesario.
+\lstinputlisting[language=Python, firstline=323, lastline=330, title=Ejemplo de creación de un DelegatorBot]{../socialBot.py}
+Para gestionar cada mensaje de una forma u otra es necesario definir un handler del tipo que corresponda: para gestionar lo relacionado con mensajes en un chat se necesita un ChatHandler y para tratar las pulsaciones en teclados inline se necesita un CallbackQueryOriginHandler. Una vez creadas las clases de los handlers, debe ponerse un pave\_event\_space() por cada tipo de updates diferentes que vaya a tratarse. En los argumentos de esta función se especifica qué evento genera un nuevo hilo, en el caso de ejemplo serían \textit{per\_chat\_id()} para el ChatHandler y \textit{per\_callback\_query\_origin()} para las pulsaciones en los teclados inline. 
+
+El uso del DelegatorBot y los handlers facilita en gran medida la creación de bots más complejos. Una vez que te acomodas a los diferentes eventos de creación de hilos y de handlers que te ofrece Telepot, te ahorra el tener que gestionar tú los hilos y los mensajes, siempre y cuando comprendas bien la gestión interna de estos hilos por parte del DelegatorBot.
+
+\newpage
+\mychapter{4}{Cap\'itulo 4: Primera versi\'on - Establecimientos cercanos}
+
+La primera versión del bot que realizamos cumplía el objetivo básico del bot. Según la localización del usuario, el bot mostraba los establecimientos cercanos. Al iniciar el bot, el usuario recibía un mensaje que rezaba \textit{Share your location!} a la vez que se le ofrecía un ReplyKeyboardMarkup con un botón que al pulsarlo compartía la localización del usuario. Después de recibir la localización el bot continúa preguntando que tipo de establecimiento estaba buscando al usuario, dando varias opciones a través de un teclado inline. Cuando el usuario elegía que tipo de local que quería el bot le ofrecía una lista de los establecimientos de ese tipo a un radio de 500 metros. El usuario elegía entre alguno de los locales ofrecidos y el bot le mandaba la localización de este. 
+
+\begin{figure}[h!]
+\centering
+\begin{minipage}{7cm}
+  \centering
+  \includegraphics[height=40mm]{paso1v1.jpg}
+  \caption{Enviar localización}
+  \label{fig:Paso1v1}
+\end{minipage}%
+\begin{minipage}{7cm}
+  \centering
+  \includegraphics[height=40mm]{paso2v1.jpg}
+  \caption{Escoger tipo}
+  \label{fig:Paso2v1}
+\end{minipage}
+\end{figure}
+
+
+Para conseguir los establecimientos en un radio de una localización concreta decidimos utilizar el cliente que proporcionan los servicios de Google Maps para Python. Utilizamos la función \textit{places\_nearby} que al pasarle como parámetros distintos aspectos de la consulta como la localización, el radio, el tipo de local, etc. devolvía una lista en formato JSON con todos los establecimientos, y sus datos, que cumplían los parámetros establecidos. Al recibir estos datos nos encargamos de procesarlos para mostrarle parte de esta información a los usuarios. 
+\lstinputlisting[language=Python, firstline=148, lastline=148, title=Consulta a la API de Google Maps]{../socialBot.py}
+%Esto hay que cambiarlo al principio usabamamos places\_nearby
+Decidimos usar los servicios prestados por Google Maps por ser la mayor aplicación a nivel mundial que ofrece las geolocalizaciones (entre otros datos) de establecimientos de ocio. Para poder utilizar estos servicios, tuvimos que registrarnos en Google Developers para obtener una clave de la API del maps de manera gratuíta.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[height=40mm]{paso3v1.jpg}
+  \caption{Escoger local}
+  \label{fig:Paso3v1}
+\end{figure}
+
+%1000 consultas diarías y posible uso de una licencia de pago para aumentarlo
+
+En este punto nos dimos cuenta de una de las limitaciones del los handlers. Al definirlos en la llamada a DelegatorBot, también hay que poner qué tiempo de \textit{timeout} tienen. Una vez pasado este tiempo y si el thread de un handler no ha recibido ningún update, el DelegatorBot para ese hilo y destruye el objeto handler que hubiese. Si después de esto llegase un update en el mismo chat del hilo que se paró, se crearía un nuevo objeto handler y se lanzaría en un nuevo hilo. Esto supone que si se declaró algún atributo privado en el handler este se perdió durante el timeout, por lo que hay que tenerlo en cuenta y guardar todos los datos relevantes de los handlers en la función \textit{on\_time\_out()} definidas dentro de la clase del handler correspondiente, que es la que DelegatorBot llama antes de hacer el timeout.
+
+Para mantener el flujo de interacción con el bot por medio de botones inline utilizamos continuamente la función \textit{editMessageText()} proporcionada por Telepot. Esta función es un wrapper de la función de la API de Telegram que permite editar un mensaje enviado anteriormente y cambiar su texto y el teclado que proporciona.
+\lstinputlisting[language=Python, firstline=96, lastline=96, title=Edición de mensajes previos]{Samples/3rayaBot.py}
+Al hacer esto, se consigue que la interfaz del bot se desarrolle en un solo mensaje y así evitamos también que el usuario pueda pulsar botones de manera inesperada si se dejasen sin eliminar en el chat.
+%tal vez una imagen de un chat con botones sin eliminar frente a uno con ellos eliminados
+
+%no se si poner subsecciones
+
+\newpage
+\mychapter{5}{Cap\'itulo 5: Segunda versi\'on - Base de datos e interacci\'on}
+
+A medida que íbamos desarrollando el bot nos encontrabamos con los primeros problemas, observabamos la necesidad de almacenar los datos y además queríamos mejorar la interacción con el bot.
+
+\section{Base de datos}
+Como indicabamos en el capítulo anterior el uso del DelegatorBot tenía el inconveniente de perder los atributos privados si no hay actualizaciones en un período determinado. Además queríamos guardar datos como las localizaciones que nos enviaba el usuario para utilizarlos en funcionalidades posteriores. Ante esta coyuntura decidimos crear una base de datos para el bot, algo indispinsable en casi cualquier aplicación. La problemática con la que nos encontrábamos era si utilizar una base de datos relacional o no. Nuestra decisión final fue utilizar \textbf{MongoDB}, porque nos ofrecía la capacidad de almacenar nuestros datos que no tenían la misma estructura, pero si parecida, de una manera cómoda. Además nos permitía una futura escalabilidad de esas semi-estructuras que sabíamos que íbamos a necesitar con las futuras funcionalidades del bot. 
+
+Para gestionar la base de datos con el bot implementamos un nuevo módulo utilizando \textit{pymongo}. Dentro de la nueva base de datos establecimos dos colecciones, una de usuarios y otra de establecimientos. El bot cuando quiere guardar datos o extraerlos de la base de datos llama a una función específica del nuevo módulo, y este se encargará de conectar con la base de datos para extraer o persistir los datos. Para solucionar el problema del timeout, cuando este período de tiempo transcurre invocamos al método \textit{on\_close} que persiste los atributos que van a expirar en la base de datos.
+% Código de un on_close?
+\section{Interacción con el usuario}
+En esta segunda versión comenzamos a desarrollar funcionalidades para que hubiese una interacción entre el usuario el bot. En principio focalizamos esta interacción en que el usuario pudiera dar \textit{feedback} sobre los establecimientos. Aprovechando que la mayor parte de los clientes de Telegram lo utilizan desde su dispositivo móvil, a pesar de su versión de escritorio, implementamos la capacidad de poder enviar al bot fotografías de los locales para que así otros usuarios pudieran consultarlas antes de realizar su decisión. Además de estos también añadimos la capacidad de que el usuario pueda valorar, con una nota de 0 a 5, el local. Y así mostrar a todos los usuarios la puntuación media que nuestros clientes han dado a determinado local. 
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[height=40mm]{interaccionv2.jpg}
+  \caption{El usuario puede valorar y ver o envíar fotos}
+  \label{fig:interaccionv2}
+\end{figure}
+
+También para mejorar y dar más información sobre los locales a los usuarios, les proporcionamos la distancia a la que están respecto a su posición actual. Para calcularla utilizamos la fórmula del \textbf{haversine} que es una ecuación que calcula la distancia entre dos puntos de un globo sabiendo su longitud y su latitud. Esta función es sólo una aproximación, porque la Tierra no es una esfera perfecta, sino que su radio varía ascendentemente desde los polos hasta el ecuador debido a la forma geoidal del planeta. Como radio utilizamos la media geométrica, 6.367,45 kilómetros.
+
+\begin{figure}[h!]
+\centering
+  \centering
+  \includegraphics[width=80mm]{hav.png}
+  \caption{Fórmula de haversine desarrollada para calcular la distancia}
+  \label{fig:hav}
+\end{figure}
+
+
+Con el propósito de que el usuario pudiera navegar por el bot comódamente, creamos un nuevo módulo que se encarga de gestionar los pasos en los que esta cada usuario. Los diferentes pasos son las distintas etapas en las que puede estar la conversación con el bot, inicio, eligiendo tipo de establecimiento, envíando una foto, etc ... Así este módulo es invocado cuando el usuario avanza o retrocede y es el encargado de comunicar cúal es el siguiente paso a tomar. Estos pasos se guardan en local como un atributo, pero en el momento en el que el método \textit{on\_close} es invocado la etapa actual se guarda en la base de datos. 
+
+\section{Otros cambios}
+Tras diversas comprobaciones del funcionamiento del bot, observamos que los establecimientos que nos enviaba el método \textit{places\_nearby} no coincidía totalmente con los locales que mostraba Google Maps. Esta consulta no devolvía todos los locales cercanos, sino sólo algunos. Por lo que en su lugar comenzamos a usar el método \textit{places} de la misma API, que realiza una búsqueda más exhaustiva. Pasándole por parámetro campos como la localización actual, el radio de la consulta o el tipo de establecimiento que el usuario está buscando. 
+\lstinputlisting[language=Python, firstline=148, lastline=148, title=Consulta a la API de Google Maps]{../socialBot.py}
+
+%Mencionar las imagenes en el texto?¿
+% Hablar aquí de los steps? Si, deberíamos
+
+\newpage
+\mychapter{6}{Cap\'itulo 6: Tercera versi\'on - Opciones y Heatmaps}
+
+\newpage
+\mychapter{7}{Cap\'itulo 7: Conclusiones y trabajo futuro}
+
+\newpage
+\mychapter{0}{Ap\'endice}
+
+\newpage
+\begin{thebibliography}{}
+%Falta escribirlo en formato IEEE
+\bibitem
+*LaTex -> http://texdoc.net/texmf-dist/doc/latex/memoir/memman.pdf 
+\bibitem
+*Python -> https://docs.python.org/2.7/
+\bibitem
+*API Google Maps Docs -> http://googlemaps.github.io/google-maps-services-python/docs/2.4.5/
+\bibitem
+*Telegram Bots -> https://core.telegram.org/bots/api
+\bibitem
+*API Telepot -> http://telepot.readthedocs.io/en/latest/
+\end{thebibliography}
+
+\newpage
+\mychapter{0}{Anexo}
+
+\newpage
+\mychapter{0}{Glosario}
+
+\end{document}
