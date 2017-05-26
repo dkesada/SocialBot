@@ -275,12 +275,10 @@ Para conseguir los establecimientos en un radio de una localización concreta dec
 Decidimos usar los servicios prestados por Google Maps por ser la mayor aplicación a nivel mundial que ofrece las geolocalizaciones (entre otros datos) de establecimientos de ocio. Para poder utilizar estos servicios, tuvimos que registrarnos en Google Developers para obtener una clave de la API del maps de manera gratuíta.
 
 \begin{figure}[h!]
-\begin{minipage}{7cm}
   \centering
   \includegraphics[height=40mm]{paso3v1.jpg}
   \caption{Escoger local}
   \label{fig:Paso3v1}
-\end{minipage}
 \end{figure}
 
 %1000 consultas diarías y posible uso de una licencia de pago para aumentarlo
@@ -304,23 +302,41 @@ Como indicabamos en el capítulo anterior el uso del DelegatorBot tenía el inconv
 
 Para gestionar la base de datos con el bot implementamos un nuevo módulo utilizando \textit{pymongo}. Dentro de la nueva base de datos establecimos dos colecciones, una de usuarios y otra de establecimientos. Estas dos colecciones no implementan funciones \textit{join}, dado que en MongoDB y en NoSQL en general son muy lentas. El bot cuando quiere guardar datos o extraerlos de la base de datos llama a una función específica del nuevo módulo, y este se encargará de conectar con la base de datos para extraer o persistir los datos. Para solucionar el problema del timeout, cuando este período de tiempo transcurre invocamos al método \textit{on\_close} que persiste los atributos que van a expirar en la base de datos.
 
-\section{Puntuación e imágenes}
+\section{Interacción con el usuario}
 Llegados a este punto, aumentamos la funcionalidad del bot para que una vez que te enviase la localización de algún local también te diese más opciones a realizar con ella. Pusimos la posibilidad de darle una valoración al local que se haya seleccionado, de una a cinco estrellas, que también se muestra a la hora de enseñarte los locales cercanos a tí. Introducimos también la posibilidad de mandar imágenes de los locales, de forma que si un local tiene imágenes en la base de datos, damos la opción de ir viéndolas a través de la interfaz con botones.
 
+\begin{figure}[h!]
+  \centering
+  \includegraphics[height=40mm]{interaccionv2.jpg}
+  \caption{El usuario puede valorar y ver o envíar fotos}
+  \label{fig:interaccionv2}
+\end{figure}
+
 Cuando se le envía una imágen al bot, este recibe un JSON como si se tratase de un mensaje normal, pero una de las claves contiene el id que Telegram le da a la imagen. Es posible descargar el archivo de la imagen si se desea, pero con tener esta clave se puede reenviar y se recibirá como una imagen normal. De este modo, sólo es necesario guardar el id de las imágenes que se reciben en el documento de su local correspondiente. Usar MongoDB viene bien es este caso para poder guardar dentro de una misma colección documentos con distintas claves, ya que puede haber locales que no tengan puntuación o imágenes mientras que otros sí.
+
+También para mejorar y dar más información sobre los locales a los usuarios, les proporcionamos la distancia a la que están respecto a su posición actual. Para calcularla utilizamos la fórmula del \textbf{haversine} que es una ecuación que calcula la distancia entre dos puntos de un globo sabiendo su longitud y su latitud. Esta función es sólo una aproximación, porque la Tierra no es una esfera perfecta, sino que su radio varía ascendentemente desde los polos hasta el ecuador debido a la forma geoidal del planeta. Como radio utilizamos la media geométrica, 6.367,45 kilómetros.
+
+\begin{figure}[h!]
+\centering
+  \centering
+  \includegraphics[width=80mm]{hav.png}
+  \caption{Fórmula de haversine desarrollada para calcular la distancia}
+  \label{fig:hav}
+\end{figure} 
 
 \section{Steps}
 Como ahora el bot dispone de más opciones para interactuar con él, también debía disponer de un botón en su interfaz para volver atrás. Como el flujo del bot se desarrolla parecido a una máquina de estados, creamos un módulo \textit{steps} para definir los diferentes estados en los que puede encontrarse el bot, y así saber en cada momento a dónde debe ir en caso de recibir un update o de querer volver atrás. Estos estados ayudan también en el caso del timeout, ya que en la función on\_close() se puede guardar en la base de datos el estado en el que se quedó un usuario, y cuando vuelva puede continuar usando el bot desde el punto en el que lo dejó. Ahora que disponemos de base de datos, todas las variables locales que utiliza el handler también se pueden guardar en caso de timeout.
 
 \begin{figure}[h!]
-\begin{minipage}{7cm}
   \centering
   \includegraphics[height=50mm]{steps.png}
   \caption{Estados posibles del bot}
   \label{fig:Estados posibles del bot}
-\end{minipage}
 \end{figure}
 
+\section{Otros cambios}
+Tras diversas comprobaciones del funcionamiento del bot, observamos que los establecimientos que nos enviaba el método \textit{places\_nearby} no coincidía totalmente con los locales que mostraba Google Maps. Esta consulta no devolvía todos los locales cercanos, sino sólo algunos. Por lo que en su lugar comenzamos a usar el método \textit{places} de la misma API, que realiza una búsqueda más exhaustiva. Pasándole por parámetro campos como la localización actual, el radio de la consulta o el tipo de establecimiento que el usuario está buscando. 
+\lstinputlisting[language=Python, firstline=148, lastline=148, title=Consulta a la API de Google Maps]{../socialBot.py}
 
 % Código de un on_close?
 % Mencionar las imagenes en el texto?¿
@@ -329,6 +345,19 @@ Como ahora el bot dispone de más opciones para interactuar con él, también debía
 \newpage
 \mychapter{6}{Cap\'itulo 6: Tercera versi\'on - Opciones y Heatmaps}
 Durante un tiempo estuvimos preparando el bot para que tuviese varios parámetros ajustables en cuanto a su funcionalidad. La API de Google Maps permite cambiar opciones de búsqueda como el radio de distancia, buscar sólo establecimientos abiertos o buscar establecimientos dentro de un rango de precios. También podíamos poner el bot tanto en español como en inglés. Juntando todo esto, podíamos crear un nuevo menú el en bot donde cada usuario pudiese cambiar estas opciones si lo desea y después lo persistamos en la base de datos.
+
+%img del menu
+\section{Heatmaps}
+El cambio más grande de funcionalidad que introdujimos en esta versión fue la capacidad de envíar mapas de calor al usuario. Para recibirlo el usuario debe introducir el comando \textit{/heatmap}, y el bot generará y enviará una imagen con un mapa de calor, cuyo centro es la última localización guardada del usuario que hace la petición. En este mapa de calor se muestran las zonas con más concurrencia cerca del usuario, usando las localizaciones de todos los usuarios.
+
+Para realizar los mapas utilizamos el paquete de Python \textbf{Basemap}, que es una librería para trazar mapas 2D. Permite trazar contornos, imágenes, vectores, líneas o puntos en las coordenadas que se le proporcionen. Para construir el mapa es necesario proporcionarle a la librería los puntos geográficos que corresponden con la esquina inferior izquierda y la esquina superior derecha. Para calcular estos límites, teniendo en cuenta que conocemos el centro de la imagen, utilizamos la fórmula de haversine pero a la inversa. Si recapítulamos, recordamos que utilizabamos haversine para calcular la distancia entre dos puntos en un globo. Nosotros en este caso conocemos uno de los puntos, el ángulo y la distancia, por tanto si despejamos nuestra nueva incógnita tenemos como resultado, lo siguiente:
+ 
+\lstinputlisting[language=Python, firstline=56, lastline=57, title=Haversine inverso en Python]{../socialBot.py}
+
+%hablar del mapa satetile
+%img de heatmap
+
+
 \newpage
 \mychapter{7}{Cap\'itulo 7: Conclusiones y trabajo futuro}
 
