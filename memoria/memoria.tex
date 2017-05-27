@@ -346,7 +346,12 @@ Tras diversas comprobaciones del funcionamiento del bot, observamos que los esta
 \mychapter{6}{Cap\'itulo 6: Tercera versi\'on - Opciones y Heatmaps}
 Durante un tiempo estuvimos preparando el bot para que tuviese varios parámetros ajustables en cuanto a su funcionalidad. La API de Google Maps permite cambiar opciones de búsqueda como el radio de distancia, buscar sólo establecimientos abiertos o buscar establecimientos dentro de un rango de precios. También podíamos poner el bot tanto en español como en inglés. Juntando todo esto, podíamos crear un nuevo menú el en bot donde cada usuario pudiese cambiar estas opciones si lo desea y después lo persistamos en la base de datos.
 
-%img del menu
+\begin{figure}[h!]
+  \centering
+  \includegraphics[height=50mm]{settings.jpg}
+  \caption{Menú de ajustes}
+  \label{fig:settings}
+\end{figure}
 \section{Heatmaps}
 El cambio más grande de funcionalidad que introdujimos en esta versión fue la capacidad de envíar mapas de calor al usuario. Para recibirlo el usuario debe introducir el comando \textit{/heatmap}, y el bot generará y enviará una imagen con un mapa de calor, cuyo centro es la última localización guardada del usuario que hace la petición. En este mapa de calor se muestran las zonas con más concurrencia cerca del usuario, usando las localizaciones de todos los usuarios.
 
@@ -354,10 +359,12 @@ Para realizar los mapas utilizamos el paquete de Python \textbf{Basemap}, que es
  
 \lstinputlisting[language=Python, firstline=56, lastline=57, title=Haversine inverso en Python]{../socialBot.py}
 
-%hablar del mapa satetile
+La funcionalidad básica de Basemap sólo ofrece mapas dibujados, lo cúal no nos interesa porque queríamos mayor precisión a nivel ciudad o incluso barrio. Pero sí ofrece la posibilidad de sustituir estos dibujos por otras imagénes. Índicando un código EPSG, acrónimo de \textit{European Petroleum Survey Group}, que indican sistemas de referencia de coordenadas. En nuestro caso usamos el código 4326 
+que indica el sistema \textit{World Geodetic System 1984} en el que está proyectado todo el planeta. Este sistema es usado por los GPS y por sistemas militares desarrollados por la OTAN. Y para obtener las imágenes vía satélite utilizamos el servicio \textit{ArcGIS}, de ESRI, en concreto el \textit{World Imagery} que tiene 24 niveles de resolución y imágenes en alta definición de casi todo el planeta.
+
+\lstinputlisting[language=Python, firstline=79, lastline=80, title=Consultas a Basemap y a ArcGIS]{../socialBot.py}
+
 %img de heatmap
-
-
 \newpage
 \mychapter{7}{Cap\'itulo 7: Conclusiones y trabajo futuro}
 
