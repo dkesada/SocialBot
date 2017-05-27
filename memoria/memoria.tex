@@ -121,8 +121,7 @@ Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un fra
 \raggedright
 \newpage
 \setcounter{page}{5}
-\mychapter{0}{\'Indice de figuras}
-
+\listoffigures
 \newpage
 \mychapter{0}{\'Indice de abreviaturas}
 
@@ -340,7 +339,6 @@ Tras diversas comprobaciones del funcionamiento del bot, observamos que los esta
 
 % Código de un on_close?
 % Mencionar las imagenes en el texto?¿
-% Las imágenes se me van a Papúa, tengo que echarle un ojo para ponerlas bien
 
 \newpage
 \mychapter{6}{Cap\'itulo 6: Tercera versi\'on - Opciones y Heatmaps}
@@ -352,6 +350,40 @@ Durante un tiempo estuvimos preparando el bot para que tuviese varios parámetros
   \caption{Menú de ajustes}
   \label{fig:settings}
 \end{figure}
+
+\section{Idiomas}
+Para tener el texto del bot en varios idiomas creamos un nuevo módulo que contiene todos los mensajes de texto y botones que puede enviar el bot. A la hora de enviar un mensaje por el bot, para introducir el texto se hace una llamada a la función correspondiente de este módulo y se le pasa por parámetro una variable que determina si el texto se devolverá en inglés o en español. Por defecto, el bot enviará los mensajes en inglés y podrá cambiarse desde las opciones a español. Para añadir nuevos idiomas al bot, habría que traducir los métodos dentro del módulo \textit{translate.py} y añadir la opción con el nuevo idioma en las opciones del bot. De este modo resulta cómodo poder añadir nuevos idiomas al bot.
+
+\begin{figure}[h!]
+\centering
+\begin{minipage}{7cm}
+  \centering
+  \includegraphics[height=40mm]{elegirIdioma.png}
+  \caption{Elegir idioma}
+  \label{fig:elegIdiom}
+\end{minipage}%
+\begin{minipage}{7cm}
+  \centering
+  \includegraphics[height=40mm]{esp.png}
+  \caption{Tras cambiar a español}
+  \label{fig:esi}
+\end{minipage}
+\end{figure}
+
+\section{Opciones}
+De los parámetros variables de la función places, al final dejamos el radio de búsqueda, el número de establecimientos que se muestran en una búsqueda y buscar sólo establecimientos abiertos en el momento. 
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[height=50mm]{parametros.png}
+  \caption{Opciones variables del bot}
+  \label{fig:settings}
+\end{figure}
+
+La opción de buscar establecimientos según un rango de precios de 0 a 4 daba resultados inesperados cuando la estuvimos probando. Al usar esta opción a veces no mostraba casi ningún establecimiento a pesar de ponerle que buscase en todo el rango, de 0 a 4. Suponemos que esto se debe a que algunos establecimientos no tienen información acerca del rango de precios en el que están, y por tanto no aparecían en búsquedas que usasen ese parámetro. Por tanto, dado que resultó ser menos útil de lo esperado, decidimos no añadir esta opción al bot.
+
+
+
 \section{Heatmaps}
 El cambio más grande de funcionalidad que introdujimos en esta versión fue la capacidad de envíar mapas de calor al usuario. Para recibirlo el usuario debe introducir el comando \textit{/heatmap}, y el bot generará y enviará una imagen con un mapa de calor, cuyo centro es la última localización guardada del usuario que hace la petición. En este mapa de calor se muestran las zonas con más concurrencia cerca del usuario, usando las localizaciones de todos los usuarios.
 
