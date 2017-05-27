@@ -224,8 +224,8 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 					bot.answerCallbackQuery(query_id, translate.openChanged(self.language))
 					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged(self.language))
 				elif option[0] == "language":
-					language = option[1]
-					db.storeLanguage(from_id, language)
+					self.language = option[1]
+					db.storeLanguage(from_id, self.language)
 					bot.answerCallbackQuery(query_id, translate.languageChanged(self.language))
 					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged(self.language))
 				elif option[0] == "num":

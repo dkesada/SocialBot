@@ -21,7 +21,7 @@ def markupLocation(lang):
 
 #InlineKeyboards
 def settings(lang):
-	text = translate.settings(lang)
+	text = translate.settingsBoard(lang)
 	return InlineKeyboardMarkup(inline_keyboard=[
 					[InlineKeyboardButton(text=text[0], callback_data='language')],
 					[InlineKeyboardButton(text=text[1], callback_data='parameters')],
@@ -43,7 +43,7 @@ def inlineBack(lang):
 def languages(lang):
 	text = translate.back(lang)
 	return InlineKeyboardMarkup(inline_keyboard=[
-					[InlineKeyboardButton(text="English", callback_data='language English')]+[InlineKeyboardButton(text="English", callback_data='language Español')],
+					[InlineKeyboardButton(text="English", callback_data='language English')]+[InlineKeyboardButton(text="Español", callback_data='language Espanol')],
 					[InlineKeyboardButton(text=text, callback_data='sback')],	
                ])
 
