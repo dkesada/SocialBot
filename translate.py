@@ -92,7 +92,7 @@ def choooseParam(lang):
 		text = "Desde aquí puedes cambiar los ajustes del bot. En Escoge idioma puedes cambiar el idioma del bot. "
 		text += "En Escoge los parámetros puedes cambiar el radio de los locales a los que quieres ir. Si quieres "
 		text += "el bot puede mostrarte sólo los establecimientos abiertos."
-		return tex
+		return text
 	else:
 		text = "Here you can change the bot's settings. On Choose language you can change the bot's language. "
 		text += "On Choose parameters you can change the radius of the establishments you want to go to. If you want "
@@ -232,3 +232,17 @@ def takesFew(lang):
 		return "La imagen tarda unos segundos en enviarse"
 	else:
 		return "The image takes a few seconds to send"
+
+def help(lang):
+	if lang == "Español":
+		text = "La funcionalidad básica de @YourPlacesBot es ofrecerte todos los locales que tienes a tu alrededor. "
+		text += "Para verlos solo debes envíar tu localización. Y podrás ver las puntuaciones y fotos de otros usuarios. "
+		text += "Con el comando /settings puedes cambiar la configuración del bot, como el idioma, el radio de las consultas y más. "
+		text += "Con /heatmap el bot te ofrece un mapa de calor de las zonas cercanas a tu posición."
+	else:
+		text = "The basic functionality of @YourPlacesBot is to offer you all the locals that you have around you. "
+		text += "To see them you just have to send your location. And you'll can see the scores and photos of other users. "
+		text += "With the /settings command you can change the configuration of the bot, such as the language, the radius query and more. "
+		text += "With /heatmap the bot gives you a heat map of the areas close to your position. "
+		
+	return text

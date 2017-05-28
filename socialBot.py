@@ -49,7 +49,7 @@ class UserHandler(telepot.helper.ChatHandler):
 		super(UserHandler, self).__init__(*args, **kwargs)
 
 	def calculateBounds(self, kmeters, loc):
-		R=6371 #mean radius
+		R=6367.45 #media geometrica
 		bearing = math.radians(45) #45º
 		lat = math.radians(loc[0]) #lat of the user
 		lon = math.radians(loc[1]) #lng of the user
@@ -109,6 +109,10 @@ class UserHandler(telepot.helper.ChatHandler):
 				steps.saveStep(chat_id, steps.nextStep(state))
 				lang = db.getLanguage(chat_id)
 				bot.sendMessage(chat_id, translate.lookingFor(lang), reply_markup=keyboards.inlineEstablishment(lang))
+			elif msg['text'] == "/help":
+				steps.saveStep(chat_id, 8)	
+				lang = db.getLanguage(chat_id)			
+				bot.sendMessage(chat_id, translate.help(lang), reply_markup=keyboards.inlineBack(lang))
 
 		elif content_type == 'location':
 			db.storeLocation(chat_id, msg['location'], msg['date'])
