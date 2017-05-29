@@ -3,10 +3,15 @@
 
 def location(lang):
 	if lang == "Espanol":
-		return "¡Comparte tu localización! También puedes probar el bot con la localización por defecto."
+		text = "¡Comparte tu localización! También puedes probar el bot con la localización por defecto.\n"
+		text += "Si lo prefieres puedes escribir la dirección en la que te encuentras. O también la ciudad o el barrio "
+		text += "en el que estás buscando los locales."
 	else:
-		return "Share your location! You can also try our bot with the default location."
+		text = "Share your location! You can also try our bot with the default location.\n"
+		text += "If you prefer you can write the address you are in. Or also the city or the neighborhood "
+		text += "where are you looking for the locals."
 
+	return text
 
 def settings(lang):
 	if lang == "Espanol":
@@ -246,3 +251,21 @@ def help(lang):
 		text += "With /heatmap the bot gives you a heat map of the areas close to your position. "
 		
 	return text
+	
+def textNoProcces(lang):
+	if lang == "Español":
+		return "Si quieres escribir una dirección primero introduce el comando /start, envíalo y luego escribe la dirección. "
+	else:
+		return "If you want to write an address first enter the command /start, send it and then write the address."
+
+def yourPosition(lang, pos):
+	if lang == "Español":
+		return "Tu posición es  " + pos
+	else:
+		return "Your position is " + pos
+		
+def prox(lang, pos):
+	if lang == "Español":
+		return "Los más cercanos son " + pos[0] + ", "+ pos[1] + " y " + pos[0] + ".\n"
+	else:
+		return "The closest ones are " + pos[0] + ", "+ pos[1] + " and " + pos[0] + ".\n"

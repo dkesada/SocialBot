@@ -41,7 +41,8 @@ http://qingkaikong.blogspot.com.es/2016/02/plot-earthquake-heatmap-on-basemap-an
 # Readying the google maps client
 
 mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api places key as the first argument when launching
-
+# AIzaSyC9kpWU3vzPLVIRFQtHCkp6uoIquXdHnYE 
+geoClient = googlemaps.Client(key='AIzaSyC9kpWU3vzPLVIRFQtHCkp6uoIquXdHnYE')
 # One UserHandler created per chat_id. May be useful for sorting out users
 # Handles chat messages depending on its tipe
 class UserHandler(telepot.helper.ChatHandler):
@@ -113,6 +114,18 @@ class UserHandler(telepot.helper.ChatHandler):
 				steps.saveStep(chat_id, 8)	
 				lang = db.getLanguage(chat_id)			
 				bot.sendMessage(chat_id, translate.help(lang), reply_markup=keyboards.inlineBack(lang))
+			elif steps.getStep(chat_id) == 1:
+				js = geoClient.geocode(address=msg['text'], components=None, bounds=None, region=None, language='es-ES')
+				lang = db.getLanguage(chat_id)
+				location = {u'latitude':js[0]['geometry']['location']['lat'], u'longitude':js[0]['geometry']['location']['lng']}
+				bot.sendMessage(chat_id, translate.yourPosition(lang, js[0]['formatted_address']), reply_markup=None)
+				db.storeLocation(chat_id, location, msg['date'])
+				state = 1
+				steps.saveStep(chat_id, steps.nextStep(state))				
+				bot.sendMessage(chat_id, translate.lookingFor(lang), reply_markup=keyboards.inlineEstablishment(lang))
+			else:
+				lang = db.getLanguage(chat_id)
+				bot.sendMessage(chat_id, translate.textNoProcces(lang), reply_markup=keyboards.markupLocation(lang))
 
 		elif content_type == 'location':
 			db.storeLocation(chat_id, msg['location'], msg['date'])
@@ -152,7 +165,63 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		js = mapclient.places(None, location=(latitude, longitude), radius=settings['radius'], language='es-ES', min_price=None, max_price=None, open_now=settings['openE'], type=establishmentType)
 		uLoc = db.getLocation(chat_id)
 		message = translate.chooseOne(self.language)
+		proxN = 0
+		proxDistance = -1
+		proxList = {}
+		distanceL = {}
 		if js["status"] != 'ZERO_RESULTS':
+			for j in js["results"]:
+				location = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
+				distance = "{0:.2f}".format(self.haversine(location, uLoc))
+				if proxN < 3:
+					if proxDistance == -1:
+						proxDistance = distance
+					elif proxDistance < distance:
+						proxDistance = distance
+					if proxN == 0:
+						proxList[0] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
+					elif proxN == 1:
+						if distanceL[0] > distance:
+							proxList[1] = proxList[0]
+							proxList[0] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
+						else:
+							proxList[1] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
+					elif proxN == 2:
+						if distanceL[0] > distance:
+							proxList[2] = proxList[1]
+							proxList[1] = proxList[0]
+							proxList[0] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
+						elif distanceL[1] > distance:
+							proxList[2] = proxList[1]
+							proxList[1] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
+						else:
+							proxList[2] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
+						
+					distanceL[proxN] = [distance]
+					sorted(distanceL, key=int)
+					proxN+=1
+				else:
+					if proxDistance > distance:
+						if distanceL[0] > distance:
+							distanceL[2] = distanceL[1]
+							distanceL[1] = distanceL[0]
+							distanceL[0] = distance		
+							proxList[2] = proxList[1]
+							proxList[1] = proxList[0]
+							proxList[0] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]					
+						elif distanceL[1] > distance:
+							distanceL[2] = distanceL[1]
+							distanceL[1] = distance
+							proxList[2] = proxList[1]
+							proxList[1] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
+						else:
+							distanceL[2] = distance
+							proxList[2] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
+						proxDistance = distanceL[2]		
+			
+			message	+= translate.prox(self.language, proxList)
+			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js, self.language))		
+			"""
 			for j in js["results"]:
 				location = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
 				distance = "{0:.2f}".format(self.haversine(location, uLoc))
@@ -164,6 +233,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 						message += translate.rate(self.language) + str(rate)
 				message += "\n"	
 			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js, self.language))
+			"""
 		else:
 			self.editor.editMessageText(translate.noEstablish(self.language), reply_markup=keyboards.inlineBack(self.language))
 		    
