@@ -166,80 +166,25 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		uLoc = db.getLocation(chat_id)
 		message = translate.chooseOne(self.language)
 		distanceL = {}
+		rateL = {}
 		if js["status"] != 'ZERO_RESULTS':
 			for j in js["results"]:
 				location = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
 				#distance = "{0:.2f}".format(self.haversine(location, uLoc))
 				distance = int((self.haversine(location, uLoc)))
-				distanceL[int(distance)] = j['name']
+				distanceL[distance] = j['name']
+				rate = db.avgRatePlace([str(j["geometry"]["location"]["lng"]), str(j["geometry"]["location"]["lat"])])
+				#print nRate
+				if rate != None:
+					rateL[rate] = j['name']
+			rates = sorted(rateL, reverse=True)
 			pos = sorted(distanceL, key=int)
 			message	+= translate.prox(self.language, distanceL, pos)
+			if rateL != {}:
+				message	+= "\n"
+				message	+= translate.rated(self.language, rateL, rates)
 			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js, self.language))
-			"""
-			for j in js["results"]:
-				location = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
-				distance = "{0:.2f}".format(self.haversine(location, uLoc))
-				if proxN < 3:
-					if proxDistance == -1:
-						proxDistance = distance
-					elif proxDistance < distance:
-						proxDistance = distance
-					if proxN == 0:
-						proxList[0] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
-					elif proxN == 1:
-						if distanceL[0] > distance:
-							proxList[1] = proxList[0]
-							proxList[0] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
-						else:
-							proxList[1] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
-					elif proxN == 2:
-						if distanceL[0] > distance:
-							proxList[2] = proxList[1]
-							proxList[1] = proxList[0]
-							proxList[0] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
-						elif distanceL[1] > distance:
-							proxList[2] = proxList[1]
-							proxList[1] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
-						else:
-							proxList[2] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
-						
-					distanceL[proxN] = [distance]
-					sorted(distanceL, key=int)
-					proxN+=1
-				else:
-					if proxDistance > distance:
-						if distanceL[0] > distance:
-							distanceL[2] = distanceL[1]
-							distanceL[1] = distanceL[0]
-							distanceL[0] = distance		
-							proxList[2] = proxList[1]
-							proxList[1] = proxList[0]
-							proxList[0] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]					
-						elif distanceL[1] > distance:
-							distanceL[2] = distanceL[1]
-							distanceL[1] = distance
-							proxList[2] = proxList[1]
-							proxList[1] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
-						else:
-							distanceL[2] = distance
-							proxList[2] = [j['name'] + "(" + str(distance) + translate.meters(self.language) + ")"]
-						proxDistance = distanceL[2]		
 			
-			message	+= translate.prox(self.language, proxList)
-			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js, self.language))		"""
-			"""
-			for j in js["results"]:
-				location = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
-				distance = "{0:.2f}".format(self.haversine(location, uLoc))
-				message += j['name'] + translate.isv(self.language) + str(distance) + translate.meters(self.language)
-				datos = db.getPlaceData(location)
-				if datos != None:
-					if 'ratings' in datos:
-						rate = "{0:.1f}".format(datos['ratings']['rate']/datos['ratings']['numRate'])
-						message += translate.rate(self.language) + str(rate)
-				message += "\n"	
-			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js, self.language))
-			"""
 		else:
 			self.editor.editMessageText(translate.noEstablish(self.language), reply_markup=keyboards.inlineBack(self.language))
 		    

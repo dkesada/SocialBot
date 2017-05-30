@@ -42,8 +42,7 @@ def getPlaceData(loc):
 def storeRating(loc, chat_id, rate):
 	"""Stores an user rating of a stablishment."""
 	previousRate = places.find_one({'loc.coordinates':loc}, {'_id':0, 'ratings':{'$elemMatch':{'user':chat_id}}})
-	incr = 1
-	if previousRate != {}:
+	if previousRate != {} and previousRate != None:
 		pRate = previousRate['ratings'][0]['rate']
 		places.update_one({'loc.coordinates':loc, 'ratings.user':chat_id}, {'$inc': {'rate':rate-pRate}, '$set':{'ratings.$.rate':rate}})	
 	else:
@@ -52,7 +51,14 @@ def storeRating(loc, chat_id, rate):
 def storePlacePhoto(loc, photo):
 	"""Stores a file_id from a photo of a stablishment sent by an user."""
 	places.update_one({'loc':{'type':'Point','coordinates':loc}},{'$push':{'photos':photo}},upsert=True) # Slice limits the photo array
-	
+
+def avgRatePlace(loc):
+	previousRate = places.find_one({'loc.coordinates':loc}, {'_id':0, 'numRate':1, 'rate':1})
+	print previousRate
+	if previousRate != {} and previousRate != None:
+		rate =  previousRate['rate']/previousRate['numRate']
+		return rate
+
 def preparePhotoSending(chat_id, message_id, loc):
 	"""Prepares de user for a photo sending. This stores the message_id to modify the markup, the location that is receiving a photo and a flag."""
 	users.update_one({'_id':chat_id},{'$set':{'sending':{'type':'photo', 'msg_id':message_id, 'location':loc}}},upsert=True)

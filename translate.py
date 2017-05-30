@@ -272,3 +272,22 @@ def prox(lang, prlist, pos):
 		return "Los más cercanos son " + first + ", "+ second + " y " + third + ".\n"
 	else:
 		return "The closest ones are " + first + ", "+ second + " and " + third + ".\n"
+		
+def rated(lang, prlist, pos):
+	star = u'\u2b50\ufe0f'
+	first = prlist[pos[0]] + " (" + str(pos[0]) + " " + star + ")"
+	if lang == "Español":
+		msg = "Los mejor valorados son " + first
+	else:
+		msg = "The best rated are " + first
+	
+	if len(prlist) > 1:
+		msg += + ", "+ prlist[pos[1]] + " (" + str(pos[1]) + " " + star + ")"
+	if len(prlist) > 2:
+		third = prlist[pos[2]] + " (" + str(pos[2])+ " " + star + ")"
+		if lang == "Español":
+			msg += " y " + third + ".\n"
+		else:
+			msg =" and " + third + ".\n"	
+		
+	return msg	
