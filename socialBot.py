@@ -41,8 +41,8 @@ http://qingkaikong.blogspot.com.es/2016/02/plot-earthquake-heatmap-on-basemap-an
 # Readying the google maps client
 
 mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api places key as the first argument when launching
-# AIzaSyC9kpWU3vzPLVIRFQtHCkp6uoIquXdHnYE 
-geoClient = googlemaps.Client(key='AIzaSyC9kpWU3vzPLVIRFQtHCkp6uoIquXdHnYE')
+geoClient = googlemaps.Client(key=sys.argv[2]) #Input the api geocode key as the first argument when launching
+
 # One UserHandler created per chat_id. May be useful for sorting out users
 # Handles chat messages depending on its tipe
 class UserHandler(telepot.helper.ChatHandler):
@@ -165,11 +165,17 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		js = mapclient.places(None, location=(latitude, longitude), radius=settings['radius'], language='es-ES', min_price=None, max_price=None, open_now=settings['openE'], type=establishmentType)
 		uLoc = db.getLocation(chat_id)
 		message = translate.chooseOne(self.language)
-		proxN = 0
-		proxDistance = -1
-		proxList = {}
 		distanceL = {}
 		if js["status"] != 'ZERO_RESULTS':
+			for j in js["results"]:
+				location = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
+				#distance = "{0:.2f}".format(self.haversine(location, uLoc))
+				distance = int((self.haversine(location, uLoc)))
+				distanceL[int(distance)] = j['name']
+			pos = sorted(distanceL, key=int)
+			message	+= translate.prox(self.language, distanceL, pos)
+			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js, self.language))
+			"""
 			for j in js["results"]:
 				location = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
 				distance = "{0:.2f}".format(self.haversine(location, uLoc))
@@ -220,7 +226,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 						proxDistance = distanceL[2]		
 			
 			message	+= translate.prox(self.language, proxList)
-			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js, self.language))		
+			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js, self.language))		"""
 			"""
 			for j in js["results"]:
 				location = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])

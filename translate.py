@@ -51,9 +51,9 @@ def isv(lang):
 
 def meters(lang):
 	if lang == "Espanol":
-		return " metros de ti. "
+		return " metros "
 	else:
-		return " meters from you. "
+		return " meters "
 
 def rate(lang):
 	if lang == "Espanol":
@@ -264,8 +264,11 @@ def yourPosition(lang, pos):
 	else:
 		return "Your position is " + pos
 		
-def prox(lang, pos):
+def prox(lang, prlist, pos):
+	first = prlist[pos[0]] + " (" + str(pos[0]) + " m)"
+	second = prlist[pos[1]] + " (" + str(pos[1]) + " m)"
+	third = prlist[pos[2]] + " (" + str(pos[2])+ " m)"
 	if lang == "Español":
-		return "Los más cercanos son " + pos[0] + ", "+ pos[1] + " y " + pos[0] + ".\n"
+		return "Los más cercanos son " + first + ", "+ second + " y " + third + ".\n"
 	else:
-		return "The closest ones are " + pos[0] + ", "+ pos[1] + " and " + pos[0] + ".\n"
+		return "The closest ones are " + first + ", "+ second + " and " + third + ".\n"
