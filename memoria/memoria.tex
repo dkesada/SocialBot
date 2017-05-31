@@ -56,7 +56,7 @@
 
 GRADO EN INGENIER\'IA INFORM\'ATICA 
 
-FACULTAD DE INGENIER\'IA INFORM\'ATICA
+FACULTAD DE INFORM\'ATICA
 
 UNIVERSIDAD COMPLUTENSE DE MADRID
 
@@ -127,7 +127,11 @@ Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un fra
 
 \newpage
 \mychapter{0}{Resumen}
-Una de los principales atractivos de Telegram es su plataforma para bots. Los usuarios pueden crear sus propios bots y ponerlos en funcionamiento para que sean accesibles a todos los clientes de Telegram sin coste alguno para el desarrollador o para el consumidor. Estos bots proporcionan en su mayoría información, juegos o utilidades dentro de un chat, y aumentan en gran medida la funcionalidad de Telegram.
+Telegram es una aplicación de mensajería instantánea móvil y de escritorio basada en la nube. Esta aplicación, como la mayor parte de las aplicaciones de mensajería instantánea, permite intercambiar mensajes y archivos de todo tipo. En 2016 conseguía llegar a los 100 millones de usuarios y sus servidores procesaban 15 billones de mensajes al día.
+
+Una de los principales atractivos de Telegram es su plataforma para bots. Los usuarios pueden crear sus propios bots y ponerlos en funcionamiento para que sean accesibles a todos los clientes de Telegram sin coste alguno para el desarrollador o para el consumidor. Estos bots proporcionan en su mayoría información, juegos o utilidades dentro de un chat, y aumentan en gran medida la funcionalidad de Telegram. 
+
+%Poner algo aquí de los asistentes virtuales?
 
 A la hora de que un usuario interactúe con un bot, es especialmente interesante que el servicio que se le preste pueda depender de su ubicación geográfica y pueda tener un componente social. Por ello, este proyecto tiene como objetivo informar al usuario sobre qué establecimientos cercanos hay en base a su localización, ofreciendo la posibilidad de encontrarlos fácilmente y de ver datos proporcionados por otros usuarios sobre estos.
 
@@ -135,6 +139,8 @@ Palabras clave: bot, Telegram, geolocalización, noSQL, mapas de calor.
 
 \newpage
 \mychapter{0}{Abstract}
+Telegram is a cloud-based mobile and desktop instant messaging application. This application, like most instant messaging applications, allows you to exchange messages and files of all kinds. By 2016 managed to reach the 100 million users and their servers processed 15 billion messages a day.
+
 One of the main features of Telegram is its bot support. Users can create their own bots and launch them to be available for everyone in Telegram without cost for neither the developer nor the client. These bots mainly offer information, games or utilities inside the chat and they increase greatly Telegrams functionality.
 
 When an user interacts with a bot, it is of special interest that the response of the bot varies depending on the users location and on a social component. That's why this project aims to inform the user about what near by establishments there are depending on his location, offering the posibility to find them easily and to see information of them given by other users.
@@ -146,11 +152,17 @@ Keywords: bot, Telegram, geolocation, noSQL, heatmaps.
 
 \mychapter{1}{Cap\'itulo 1: Introducci\'on}
 \section{Motivaci\'on}
-La motivación para crear este bot surgió a partir de unas conversaciones con amigos. Se quejaban de no disponer de una herramienta sencilla para poder ver qué locales hay cercanos a nosotros y así elegir a dónde ir si no conoces el lugar. 
+Si hacemos un análisis de la sociedad actual es fácil observar que el uso de dispositivos móviles es una constante en el día a día de cada persona. Y que la funcionalidad que ofrecen estos aumenta a una gran velocidad. Estos dispositivos son ya una parte esencial de nuestras vidas, y como consecuencia sus aplicaciones también.
 
-Al intentar buscar una solución a este problema lo primero en lo que pensamos fue la aplicación de Google Maps. Google Maps tiene la funcionalidad de encontrar establecimientos cercanos a ti en base a tu localización y a qué buscas, pero el resultado fue que la aplicación es demasiado grande y no es práctico tener que abrirla, navegar entre todas las opciones y funcionalidades que ofrece y ponerte a buscar un local que te guste. %En la práctica, Google Maps lo usas en la mayoría de casos embebido en otras aplicaciones que luego te redirigen a él para una funcionalidad en concreto, como la ubicación de Telegram.
+Una de las fortalezas de estos dispositivos es la ayuda que nos ofrecen para procesar toda la información que hay en la red. Las aplicaciones con toda esa información nos ayudan a ampliar nuestra percepción del mundo y a tomar decisiones. Otra de las bazas importantes de las nuevas tecnologías son el carácter social que están adquiriendo, con recomendaciones, fotos, \textit{likes} ... Dentro de estas aplicaciones sociales las de mayor uso son las de mensajería instantánea que nos ponen en contacto con nuestros amigos y conocidos, y nos permiten compartir todo tipo de información.
 
-En esta situación, pensamos que un bot de Telegram encajaría bien como solución. Por un lado, Telegram es una aplicación que usamos día a día y un bot resultaría fácil de manejar. Por otro lado, la función de compartir la ubicación de Telegram se adecúa perfectamente a la API de Google Maps para realizar consultas de búsqueda de establecimientos cercanos.
+En algunas de las conversaciones con nuestros amigos había quejas de no disponer de una herramienta sencilla y amigable para encontrar bares, restaurantes y otros tipos de locales de ocio cercanos. En lo primero que piensas para buscar una solución a este problema es en la aplicación de Google Maps. Pero esta aplicación no es cómoda sino está embebida en otra aplicación debido a la enorme cantidad de información que ofrece.
+
+En esta situación, pensamos que un bot de Telegram encajaría bien como solución. Por un lado, Telegram es una aplicación que usamos día a día y un bot resultaría fácil de manejar. Por otro lado, su carácter social nos permite tener un \textit{feedback} con los usuarios que nos permita establecer cuales son las mejores opciones que nos ofrece Google Maps.
+
+%Por otro lado, la función de compartir la ubicación de Telegram se adecúa perfectamente a la API de Google Maps para realizar consultas de búsqueda de establecimientos cercanos.
+
+%Google Maps tiene la funcionalidad de encontrar establecimientos cercanos a ti en base a tu localización y a qué buscas, pero el resultado fue que la aplicación es demasiado grande y no es práctico tener que abrirla, navegar entre todas las opciones y funcionalidades que ofrece y ponerte a buscar un local que te guste. %En la práctica, Google Maps lo usas en la mayoría de casos embebido en otras aplicaciones que luego te redirigen a él para una funcionalidad en concreto, como la ubicación de Telegram.
 
 \section{Objetivos}
 Al empezar este proyecto, la idea principal era aprender a hacer un bot de Telegram partiendo de los conocimientos previos adquiridos durante la carrera. Para esto, también teníamos como objetivo mejorar nuestra habilidad con Python, que no es un lenguaje que se use ampliamente durante el grado, y con bases de datos no SQL, en este caso MongoDB que se usa en alguna asignatura. Otro punto importante era ser capaces de buscar e integrar APIs que nos resultasen útiles para nuestro bot. Finalmente, también queríamos coger soltura escribiendo memorias de esta extensión utilizando LateX, que no es algo que se practique antes del trabajo de fin de grado.
@@ -377,7 +389,7 @@ De los parámetros variables de la función places, al final dejamos el radio de b
   \centering
   \includegraphics[height=50mm]{parametros.png}
   \caption{Opciones variables del bot}
-  \label{fig:settings}
+  \label{fig:parametros}
 \end{figure}
 
 La opción de buscar establecimientos según un rango de precios de 0 a 4 daba resultados inesperados cuando la estuvimos probando. Al usar esta opción a veces no mostraba casi ningún establecimiento a pesar de ponerle que buscase en todo el rango, de 0 a 4. Suponemos que esto se debe a que algunos establecimientos no tienen información acerca del rango de precios en el que están, y por tanto no aparecían en búsquedas que usasen ese parámetro. Por tanto, dado que resultó ser menos útil de lo esperado, decidimos no añadir esta opción al bot.
