@@ -1,7 +1,7 @@
 #-*. coding: utf-8 -*-
 #authors: David Quesada López y Mateo García Fuentes
 import db
-listSteps = ["Settings", "Init","Choose Type", "Choose Establish", "Info Establish", "Rating", "Viewing Photos", "Come Back", "Help"]
+listSteps = ["Settings", "Init","Choose Type", "Choose Establish", "Info Establish", "Rating", "Viewing Photos", "Come Back", "Help", "Stats"]
 
 # Mechanism that allows the "back" function by storing the state of the user
 
@@ -22,7 +22,7 @@ def stepBack(state):
 	elif state > 0 and state < len(listSteps):
 		if state == 6:
 			return listSteps[4]
-		if state == 8: #Help
+		if state == 8 or state == 9: #Help
 			return listSteps[1]
 		state -= 1
 		return listSteps[state]

@@ -35,6 +35,13 @@ def getEType(chat_id):
 	eType = users.find_one({'_id':chat_id},{'_id':0, 'eType': 1})
 	return eType['eType']
 
+def getRole(chat_id):
+	eType = users.find_one({'_id':chat_id},{'_id':0, 'role': 1})
+	if eType == {} or eType == None:
+		return "nosuperuser"
+	else:
+		return eType['role']
+
 def getPlaceData(loc):
 	"""Returns all the data stored of a place."""
 	return places.find_one({'loc.coordinates':loc},{'_id':0})
@@ -54,7 +61,6 @@ def storePlacePhoto(loc, photo):
 
 def avgRatePlace(loc):
 	previousRate = places.find_one({'loc.coordinates':loc}, {'_id':0, 'numRate':1, 'rate':1})
-	print previousRate
 	if previousRate != {} and previousRate != None:
 		rate =  previousRate['rate']/previousRate['numRate']
 		return rate
@@ -114,3 +120,20 @@ def getLanguage(chat_id):
 def getAllLocations():
 	allLoc = users.find({},{'_id':0,'location':1})
 	return allLoc
+	
+def getStats():
+	stats = {}
+	stats['totalUsers'] = users.count()
+	#stats['newUsers'] = users.count()
+	import time
+	#from datetime import datetime, date
+	import datetime
+	now = datetime.datetime.utcnow()
+	then = now - datetime.timedelta(days=7)
+	print now
+	td = now - datetime.datetime(1970,1,1)
+	timest  = (td.microseconds+(td.seconds+td.days*86400)*10**6)/10**6
+	print timest
+	#Paso de datetime hasta timestamp
+	print time.time()
+	return stats

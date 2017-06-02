@@ -3,13 +3,13 @@
 
 def location(lang):
 	if lang == "Espanol":
-		text = "¡Comparte tu localización! También puedes probar el bot con la localización por defecto.\n"
+		text = "¡Comparte tu localización! \n"
 		text += "Si lo prefieres puedes escribir la dirección en la que te encuentras. O también la ciudad o el barrio "
-		text += "en el que estás buscando los locales."
+		text += "en el que estás buscando los locales. \nTambién puedes probar el bot con la localización por defecto."
 	else:
-		text = "Share your location! You can also try our bot with the default location.\n"
+		text = "Share your location!\n "
 		text += "If you prefer you can write the address you are in. Or also the city or the neighborhood "
-		text += "where are you looking for the locals."
+		text += "where are you looking for the locals.\nYou can also try our bot with the default location."
 
 	return text
 
@@ -291,3 +291,15 @@ def rated(lang, prlist, pos):
 			msg =" and " + third + ".\n"	
 		
 	return msg	
+	
+def noSuperuser(lang):
+	if lang == "Español":
+		return "Lo siento, no estás autorizado para ver esto. "
+	else:
+		return "Sorry, you aren't allowed to see this."
+		
+def stats(lang, stats):
+	if lang == "Español":
+		return "¡Bienvenido!\nEl total de usuarios son " + str(stats['totalUsers'])
+	else:
+		return "Welcome!\nTotal users are " + str(stats['totalUsers'])

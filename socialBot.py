@@ -114,6 +114,15 @@ class UserHandler(telepot.helper.ChatHandler):
 				steps.saveStep(chat_id, 8)	
 				lang = db.getLanguage(chat_id)			
 				bot.sendMessage(chat_id, translate.help(lang), reply_markup=keyboards.inlineBack(lang))
+			elif msg['text'] == "/stats":
+				steps.saveStep(chat_id, 9)	
+				lang = db.getLanguage(chat_id)
+				user = db.getRole(chat_id)
+				if user == "superuser":
+					stats = db.getStats()
+					bot.sendMessage(chat_id, translate.stats(lang, stats), reply_markup=keyboards.inlineBack(lang))
+				else:					
+					bot.sendMessage(chat_id, translate.noSuperuser(lang), reply_markup=keyboards.inlineBack(lang))
 			elif steps.getStep(chat_id) == 1:
 				js = geoClient.geocode(address=msg['text'], components=None, bounds=None, region=None, language='es-ES')
 				lang = db.getLanguage(chat_id)
@@ -174,7 +183,6 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				distance = int((self.haversine(location, uLoc)))
 				distanceL[distance] = j['name']
 				rate = db.avgRatePlace([str(j["geometry"]["location"]["lng"]), str(j["geometry"]["location"]["lat"])])
-				#print nRate
 				if rate != None:
 					rateL[rate] = j['name']
 			rates = sorted(rateL, reverse=True)
@@ -183,8 +191,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			if rateL != {}:
 				message	+= "\n"
 				message	+= translate.rated(self.language, rateL, rates)
-			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js, self.language))
-			
+			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js, self.language))			
 		else:
 			self.editor.editMessageText(translate.noEstablish(self.language), reply_markup=keyboards.inlineBack(self.language))
 		    
