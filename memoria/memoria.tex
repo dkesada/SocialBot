@@ -123,7 +123,14 @@ Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un fra
 \setcounter{page}{5}
 \listoffigures
 \newpage
-\mychapter{0}{\'Indice de abreviaturas}
+\mychapter{0}{\'Indice de abreviaturas}{
+\begin{itemize}
+\item \textbf{API: } del inglés \textit{Application Programming Interface}, es una interfaz de programación de aplicaciones. Es una definición de los servicios (funciones/funcionalidades) que un determinado módulo software provee a otros módulos.
+\item \textbf{HTTPS: } del inglés \textit{Hypertext Transfer Protocol Secure}, es un protocolo seguro de transferencia de hipertexto. Consiste en la comunicación a través de HTTP (Hypertext Transfer Protocol) dentro de una conexión cifrada que asegura la autenticación del sitio web visitado y la protección de la privacidad e integridad de los datos intercambiados.
+\item \textbf{JSON: } del inglés \textit{JavaScript Object Notation}, es un formato de archivo que utiliza texto legible para humanos para transmitir objetos de datos.
+\item \textbf{SQL: } del inglés \textit{Structured Query Language}, es un lenguaje de consulta estructurada. Es un lenguaje diseñado para gestionar datos contenidos en un sistema de gestión de bases de datos relacionales.
+\end{itemize}
+}
 
 \newpage
 \mychapter{0}{Resumen}
@@ -183,14 +190,18 @@ Vamos a estructurar este documento conforme al orden en el que fuímos desarrolla
 A continuación mostramos sobre qué va a tratar cada capítulo:
 
 \begin{itemize}
-  \item \textbf{Capítulo 2: Infraestructura para bots - Telepot}. En este capítulo introduciremos al lector al desarrollo de bots en Telegram contando cómo es la infraestructura que tienen y la API que ofrece Telegram a los desarrolladores. También hablaremos de qué es y por qué hemos usado el framework de Telepot para nuestro bot en vez de la API nativa de Telegram.
-  \item \textbf{Capítulo 3: Experimentación previa}. Esta parte tratará de nuestro primer acercamiento a la creación de bots. Hablamos de cómo empezamos a usar Telepot para codificar bots simples y lo que aprendimos para usar en un futuro en nuestro bot final.
-  \item \textbf{Capítulo 4: Primera versión - Establecimientos cercanos}. En este apartado hablamos sobre el desarrollo de la primera versión estable de YourPlacesBot. Esta versión ya cuenta con la funcionalidad y la interfaz básicas y sirve como base sobre la que poder ir implementando mejoras. % Versión que sólo devolvía la localización de los establecimientos. Hasta el "Here it is!" sin ninguna opción.
+  \item \textbf{Capítulo 2: Infraestructura para bots - Telepot}. En este capítulo introduciremos al lector al desarrollo de bots en Telegram contando cómo es la infraestructura que tienen y la API que ofrece Telegram a los desarrolladores. También hablaremos de qué es y por qué hemos usado el framework de \texttt{Telepot} para nuestro bot en vez de la API nativa de Telegram.
+	
+  \item \textbf{Capítulo 3: Experimentación previa}. Esta parte tratará de nuestro primer acercamiento a la creación de bots. Hablamos de cómo empezamos a usar \texttt{Telepot} para codificar bots simples y lo que aprendimos para usar en un futuro en nuestro bot final.
+	
+  \item \textbf{Capítulo 4: Primera versión - Establecimientos cercanos}. En este apartado hablamos sobre el desarrollo de la primera versión estable de \textbf{YourPlacesBot}. Esta versión cumple con nuestro primer objetivo que era ofrecer los establecimientos cercanos al usuario. % Versión que sólo devolvía la localización de los establecimientos. Hasta el "Here it is!" sin ninguna opción.
   \item \textbf{Capítulo 5: Segunda versión - Base de datos e interacción}. Aquí tratamos el desarrollo de la versión que ya era capaz de realizar toda la interacción entre el bot y el usuario. Es la primera versión que pusimos a funcionar de manera continuada en Telegram.
   
-  \item \textbf{Capítulo 6: Tercera versión - Opciones y Heatmaps}. Este apartado trata sobre la última versión del bot, donde se introducen opciones sobre el funcionamiento del bot que cada usuario puede variar y mapas de calor en base a tu ubicación.
+  \item \textbf{Capítulo 6: Tercera versión - Opciones y heatmaps}. Este capítulo trata sobre la tercera versión, donde se introducen opciones sobre el funcionamiento del bot que cada usuario puede variar y mapas de calor en base a tu ubicación.
+	
+	\item \textbf{Capítulo 7: Cuarta versión - Escribir direcciones y estadísticas}. Este apartado trata sobre la última versión del bot, en la cúal nuestro objetivo era mejorar y facilitar el uso del bot. Permitiendo al usuario escribir su ciudad, barrio, dirección en vez de tener que mandar la ubicación o comprobar las estadísticas de uso del bot a nivel global.
   
-  \item \textbf{Capítulo 7: Conclusiones y trabajo futuro}. En este último capítulo sacamos conclusiones sobre el desarrollo del bot en Telegram y exponemos las mejoras futuras a implementar en el bot.
+  \item \textbf{Capítulo 8: Conclusiones y trabajo futuro}. En este último capítulo sacamos conclusiones sobre el desarrollo del bot en Telegram y exponemos las mejoras futuras a implementar en el bot.
 \end{itemize}
 
 \newpage
@@ -201,10 +212,10 @@ El servicio de mensajería Telegram Messenger ofrece una interfaz de programación
 
 Los mensajes, comandos y peticiones enviados por los usuarios se envían al software que se ejecuta en los servidores. Los servidores de Telegram, que son intermediarios entre nuestro servidor y el usuario, manejan el cifrado y la comunicación. Esta comunicación se realiza a través de una interfaz HTTPS que ofrece una versión simplificada de la API de Telegram. 
 
-Los desarrolladores deben crear sus bots a través de @BotFather. Este bot es el padre de todos los bots y proporciona tokens únicos para cada uno. También es necesario para administrar los bots y gestionar sus configuraciones. Además de esto, el @BotFather avisa a los desarrolladores de bots populares (300 solicitudes por minuto o más) si detecta que la tasa de conversión de solicitud/respuesta es muy baja. Está alerta consta de 3 botones de respuesta: Arreglado, Silenciar y Apoyo. Esta última opción abrira un nuevo chat con el @BotSupport que ayudará al desarrollador a detectar el problema o averiguar si hay algún problema en los servidores de Telegram.
+Los desarrolladores deben crear sus bots a través de \texttt{@BotFather}. Este bot es el padre de todos los bots y proporciona tokens únicos para cada uno. También es necesario para administrar los bots y gestionar sus configuraciones. Además de esto, el \texttt{@BotFather} avisa a los desarrolladores de bots populares (300 solicitudes por minuto o más) si detecta que la tasa de conversión de solicitud/respuesta es muy baja. Está alerta consta de 3 botones de respuesta: Arreglado, Silenciar y Apoyo. Esta última opción abrira un nuevo chat con el \texttt{@BotSupport} que ayudará al desarrollador a detectar el problema o averiguar si hay algún problema en los servidores de Telegram.
 
 \section{Telepot}
-Telepot es un framework desarrollado por Nick Lee (https://github.com/nickoala/telepot) que te ayuda a desarrollar bots de Telegram usando Python en vez de HTTPS. La funcionalidad básica de Telepot consiste en servir de wrapper de todas las funciones de la API de Telegram para así poder programar el código de los bots en Python.
+\texttt{Telepot} es un framework desarrollado por Nick Lee (https://github.com/nickoala/telepot) que te ayuda a desarrollar bots de Telegram usando Python. La funcionalidad básica de Telepot consiste en servir de wrapper de todas las funciones de la API de Telegram para así poder programar el código de los bots en Python. Como comentábamos en la sección anterior el uso de Telegram Bot API se realiza mediante solicitudes HTTPS a este servicio.
 
 Además de esto, también ofrece funcionalidades para hacer más cómoda la gestión de servidor de tu bot. Cuando creas un bot, tienes que ir pidiendo a los servidores de Telegram \textit{updates} para que te envíen una lista con los mensajes que le han sido enviados. Telepot te proporciona métodos para que no tengas que preocuparte de montar toda una estructura que gestione su recepción. Telepot se encarga de crear hilos de ejecución por cada chat nuevo que se abre con el bot y de pararlos cuando estos llevan demasiado tiempo sin realizar ninguna tarea. 
 
@@ -232,7 +243,7 @@ Todos los mensajes que maneja el bot tienen formato JSON. Estos mensajes se enví
 \lstinputlisting[language=Python, firstline=44, lastline=53, title=Ejemplo de un on\_chat\_message]{Samples/pairingBot.py}
 
 \section{Teclados personalizados}
-En estos primeros bots también experimentamos con los distintos tipos de teclado que ofrece la API de Telegram, los ReplyKeyboardMarkups y los InlineKeyboardMarkups. La diferencia básica entre estos dos teclados es la posición que ocupan en la pantalla. El primero se sitúa fuera del propio chat sitúandose en el lugar que le correpondería al teclado QWERTY y el segundo está dentro de la propia conversación obligatoriamente acompañado de un mensaje de texto. Otra diferencia es la manera de procesar las pulsaciones, mientras las pulsaciones a los botones de los ReplyKeyboardMarkups se escriben automáticamente en el chat como mensaje del usuario, las pulsaciones de los botones de los InlineKeyboardMarkups se procesan internamente, cada vez que se pulsa uno de estos botones se crea una clase ButtonHandler. Estos botones se procesan como inline queries al ser pulsados, de manera que al llegar al bot se diferencian del resto de los mensajes del chat.
+En estos primeros bots también experimentamos con los distintos tipos de teclado que ofrece la API de Telegram, los \texttt{ReplyKeyboardMarkups} y los \texttt{InlineKeyboardMarkups}. La diferencia básica entre estos dos teclados es la posición que ocupan en la pantalla. El primero se sitúa fuera del propio chat sitúandose en el lugar que le correpondería al teclado QWERTY y el segundo está dentro de la propia conversación obligatoriamente acompañado de un mensaje de texto. Otra diferencia es la manera de procesar las pulsaciones, mientras las pulsaciones a los botones de los ReplyKeyboardMarkups se escriben automáticamente en el chat como mensaje del usuario, las pulsaciones de los botones de los InlineKeyboardMarkups se procesan internamente, cada vez que se pulsa uno de estos botones se crea una clase ButtonHandler. Estos botones se procesan como inline queries al ser pulsados, de manera que al llegar al bot se diferencian del resto de los mensajes del chat.
 
 \begin{figure}[h!]
 \centering
