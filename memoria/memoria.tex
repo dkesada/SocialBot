@@ -118,7 +118,8 @@ Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un fra
 \mainmatter
 \pagenumbering{roman}
 \pagestyle{plain}
-\raggedright
+\justify
+\setlength{\parindent}{0pt} %Le he quitado la sangría al documento, ¿ponía que o líneas de separación entre párrafos o sangría, pero las 2 no, no?
 \newpage
 \setcounter{page}{5}
 \listoffigures
@@ -134,25 +135,29 @@ Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un fra
 
 \newpage
 \mychapter{0}{Resumen}
-Telegram es una aplicación de mensajería instantánea móvil y de escritorio basada en la nube. Esta aplicación, como la mayor parte de las aplicaciones de mensajería instantánea, permite intercambiar mensajes y archivos de todo tipo. En 2016 conseguía llegar a los 100 millones de usuarios y sus servidores procesaban 15 billones de mensajes al día.
+Telegram es una aplicación de mensajería instantánea móvil y de escritorio basada en la nube. Esta aplicación, como la mayor parte de las aplicaciones de mensajería instantánea, permite intercambiar mensajes y archivos de todo tipo. En 2016 conseguía llegar a los 100 millones de usuarios y sus servidores procesaban 15 mil millones de mensajes al día.
 
 Una de los principales atractivos de Telegram es su plataforma para bots. Los usuarios pueden crear sus propios bots y ponerlos en funcionamiento para que sean accesibles a todos los clientes de Telegram sin coste alguno para el desarrollador o para el consumidor. Estos bots proporcionan en su mayoría información, juegos o utilidades dentro de un chat, y aumentan en gran medida la funcionalidad de Telegram. 
 
-%Poner algo aquí de los asistentes virtuales?
+%Puesto algo sobre asistentes virtuales. No creo que haya que poner mucho más en el resumen, va a pasar de una página si no.
+Gracias a esto, hoy en día Telegram no se limita sólo a la mensajería instantánea, sino que también actúa como un asistente personal virtual. Los asistentes virtuales son una característica fundamental en dispositivos móviles, facilitando el día a día de los usuarios y ofreciéndoles información que les es relevante en cualquier momento que lo necesiten. Los bots de Telegram le hacen especialmente potente en este ámbito, ya que continuamente aparecen bots que dotan a Telegram de nuevas capacidades como asistente personal.
 
 A la hora de que un usuario interactúe con un bot, es especialmente interesante que el servicio que se le preste pueda depender de su ubicación geográfica y pueda tener un componente social. Por ello, este proyecto tiene como objetivo informar al usuario sobre qué establecimientos cercanos hay en base a su localización, ofreciendo la posibilidad de encontrarlos fácilmente y de ver datos proporcionados por otros usuarios sobre estos.
-
-Palabras clave: bot, Telegram, geolocalización, noSQL, mapas de calor.
+\bigbreak
+{\Large\textbf{Palabras clave:} bot, Telegram, geolocalización, noSQL, mapas de calor.}
 
 \newpage
 \mychapter{0}{Abstract}
-Telegram is a cloud-based mobile and desktop instant messaging application. This application, like most instant messaging applications, allows you to exchange messages and files of all kinds. By 2016 managed to reach the 100 million users and their servers processed 15 billion messages a day.
+Telegram is a cloud-based mobile and desktop instant messaging application. This application, like most instant messaging applications, allows you to exchange messages and files of all kinds. By 2016 it managed to reach 100 million users and their servers processed 15 billion messages a day. %los billones ingleses no van como los billones españoles, 1 billon inglés = 1000 millones españoles
 
 One of the main features of Telegram is its bot support. Users can create their own bots and launch them to be available for everyone in Telegram without cost for neither the developer nor the client. These bots mainly offer information, games or utilities inside the chat and they increase greatly Telegrams functionality.
 
+This opens the path for Telegram to act not only as an instant messaging application, but also as a virtual personal assistant. Virtual assistants are a vital feature of mobile dispositives, making the user's everyday life easier and offering them relevant information at any time they need it. Telegram bots make it especially powerful in this ambit, given that there are bots constantly being created that offer new personal assistant capabilities.
+
 When an user interacts with a bot, it is of special interest that the response of the bot varies depending on the users location and on a social component. That's why this project aims to inform the user about what near by establishments there are depending on his location, offering the posibility to find them easily and to see information of them given by other users.
 
-Keywords: bot, Telegram, geolocation, noSQL, heatmaps.
+\bigbreak
+{\Large\textbf{Keywords:} bot, Telegram, geolocation, noSQL, heatmaps.}
 
 \newpage
 \pagenumbering{arabic}
@@ -207,24 +212,13 @@ A continuación mostramos sobre qué va a tratar cada capítulo:
 \newpage
 \mychapter{2}{Cap\'itulo 2: Infraestructura para bots - Telepot}
 %En este capítulo introduciremos al lector al desarrollo de bots en Telegram contando cómo es la infraestructura que tienen y la API que ofrece Telegram a los desarrolladores. También hablaremos de qué es y por qué hemos usado el framework de Telepot para nuestro bot en vez de la API nativa de Telegram.
+Para comenzar a desarrollar un bot, hay que familiarizarse con las herramientas que ofrece Telegram para ello. Una vez entendido el funcionamiento de la plataforma de Telegram, de su API y de Telepot, estaremos listos para empezar a codificar nuestros bots.
 \section{Plataforma de bots de Telegram}
 El servicio de mensajería Telegram Messenger ofrece una interfaz de programación para bots, llamada Telegram Bot API. Estos bots son aplicaciones de terceros que se ejecutan en Telegram. La forma de interactuar con estos bots es muy variada: mensajes, comandos, archivos, botones, etc. Las características usuales de estos bots son proporcionar notificaciones y noticias personalizadas, juegos o integración de servicios externos a Telegram.
 
 Los mensajes, comandos y peticiones enviados por los usuarios se envían al software que se ejecuta en los servidores. Los servidores de Telegram, que son intermediarios entre nuestro servidor y el usuario, manejan el cifrado y la comunicación. Esta comunicación se realiza a través de una interfaz HTTPS que ofrece una versión simplificada de la API de Telegram. 
 
 Los desarrolladores deben crear sus bots a través de \texttt{@BotFather}. Este bot es el padre de todos los bots y proporciona tokens únicos para cada uno. También es necesario para administrar los bots y gestionar sus configuraciones. Además de esto, el \texttt{@BotFather} avisa a los desarrolladores de bots populares (300 solicitudes por minuto o más) si detecta que la tasa de conversión de solicitud/respuesta es muy baja. Está alerta consta de 3 botones de respuesta: Arreglado, Silenciar y Apoyo. Esta última opción abrira un nuevo chat con el \texttt{@BotSupport} que ayudará al desarrollador a detectar el problema o averiguar si hay algún problema en los servidores de Telegram.
-
-\section{Telepot}
-\texttt{Telepot} es un framework desarrollado por Nick Lee (https://github.com/nickoala/telepot) que te ayuda a desarrollar bots de Telegram usando Python. La funcionalidad básica de Telepot consiste en servir de wrapper de todas las funciones de la API de Telegram para así poder programar el código de los bots en Python. Como comentábamos en la sección anterior el uso de Telegram Bot API se realiza mediante solicitudes HTTPS a este servicio.
-
-Además de esto, también ofrece funcionalidades para hacer más cómoda la gestión de servidor de tu bot. Cuando creas un bot, tienes que ir pidiendo a los servidores de Telegram \textit{updates} para que te envíen una lista con los mensajes que le han sido enviados. Telepot te proporciona métodos para que no tengas que preocuparte de montar toda una estructura que gestione su recepción. Telepot se encarga de crear hilos de ejecución por cada chat nuevo que se abre con el bot y de pararlos cuando estos llevan demasiado tiempo sin realizar ninguna tarea. 
-
-\newpage
-\mychapter{3}{Cap\'itulo 3: Experimentaci\'on previa}
-De cara a afrontar este proyecto, nos encontramos con que debíamos aprender a hacer un bot sin tener conocimientos previos ni de la API de Telegram ni de Python. Por tanto, para coger soltura con el lenguaje y con el funcionamiento de los bots dedicamos la primera parte del proyecto a crear bots que realizasen tareas sencillas. Para crear estos bots, fuímos guiándonos del tutorial a base de ejemplos de Telepot (\url{http://telepot.readthedocs.io/en/latest/}).
-
-\section{Creación de los bots}
-El primer paso básico para crear un bot es hablar con @BotFather para crear tu bot con un nombre y que te envíe el token de tu bot. Este token es necesario para poder pedirle al servidor de Telegram las updates de tu bot. 
 
 \begin{figure}[h!]
 \centering
@@ -233,7 +227,17 @@ El primer paso básico para crear un bot es hablar con @BotFather para crear tu b
 \label{fig:tokenBotFather}
 \end{figure}
 
-Una vez obtenido el token, hay que crear un objeto Bot con el framework de Telepot para obtener de manera periódica las updates de nuestro bot. Este proceso sería:
+\section{Telepot}
+\texttt{Telepot} es un framework desarrollado por Nick Lee (\url{https://github.com/nickoala/telepot}) que te ayuda a desarrollar bots de Telegram usando Python. La funcionalidad básica de Telepot consiste en servir de wrapper de todas las funciones de la API de Telegram para así poder programar el código de los bots en Python. Como comentábamos en la sección anterior el uso de Telegram Bot API se realiza mediante solicitudes HTTPS a este servicio.
+
+Además de esto, también ofrece funcionalidades para hacer más cómoda la gestión de servidor de tu bot. Cuando creas un bot, tienes que ir pidiendo a los servidores de Telegram \textit{updates} para que te envíen una lista con los mensajes que le han sido enviados. Telepot te proporciona métodos para que no tengas que preocuparte de montar toda una estructura que gestione su recepción. Telepot se encarga de crear hilos de ejecución por cada chat nuevo que se abre con el bot y de pararlos cuando estos llevan demasiado tiempo sin realizar ninguna tarea. 
+
+\newpage
+\mychapter{3}{Cap\'itulo 3: Experimentaci\'on previa}
+De cara a afrontar este proyecto, nos encontramos con que debíamos aprender a hacer un bot sin tener conocimientos previos ni de la API de Telegram ni de Python. Por tanto, para coger soltura con el lenguaje y con el funcionamiento de los bots dedicamos la primera parte del proyecto a crear bots que realizasen tareas sencillas. Para crear estos bots, fuímos guiándonos del tutorial a base de ejemplos de Telepot (\url{http://telepot.readthedocs.io/en/latest/}).
+
+\section{Creación de los bots}
+El primer paso básico para crear un bot es hablar con @BotFather para crear tu bot con un nombre y que te envíe el token de tu bot. Este token es necesario para poder pedirle al servidor de Telegram las updates de tu bot. Una vez obtenido el token, hay que crear un objeto Bot con el framework de Telepot para obtener de manera periódica las updates de nuestro bot. Este proceso sería:
 
 \lstinputlisting[language=Python, firstline=58, lastline=61]{Samples/pairingBot.py}
 
