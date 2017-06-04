@@ -126,10 +126,14 @@ Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un fra
 \newpage
 \mychapter{0}{\'Indice de abreviaturas}{
 \begin{itemize}
-\item \textbf{API: } del inglés \textit{Application Programming Interface}, es una interfaz de programación de aplicaciones. Es una definición de los servicios (funciones/funcionalidades) que un determinado módulo software provee a otros módulos.
-\item \textbf{HTTPS: } del inglés \textit{Hypertext Transfer Protocol Secure}, es un protocolo seguro de transferencia de hipertexto. Consiste en la comunicación a través de HTTP (Hypertext Transfer Protocol) dentro de una conexión cifrada que asegura la autenticación del sitio web visitado y la protección de la privacidad e integridad de los datos intercambiados.
-\item \textbf{JSON: } del inglés \textit{JavaScript Object Notation}, es un formato de archivo que utiliza texto legible para humanos para transmitir objetos de datos.
-\item \textbf{SQL: } del inglés \textit{Structured Query Language}, es un lenguaje de consulta estructurada. Es un lenguaje diseñado para gestionar datos contenidos en un sistema de gestión de bases de datos relacionales.
+\item \textbf{API:} del inglés \textit{Application Programming Interface}, es una interfaz de programación de aplicaciones. Es una definición de los servicios (funciones/funcionalidades) que un determinado módulo software provee a otros módulos.
+\item \textbf{ESRI:} del inglés \textit{Environmental Systems Research Institute}, es un proveedor de software de sistemas de información geográfica (GIS), aplicaciones web de GIS y aplicaciones de gestión de bases de datos geográficas.
+\item \textbf{GPS:} del inglés \textit{Global Positioning System}, es un sistema de posicionamiento a nivel global que permite determinar la posición de un objeto en nuestro planeta.
+\item \textbf{HTTPS:} del inglés \textit{Hypertext Transfer Protocol Secure}, es un protocolo seguro de transferencia de hipertexto. Consiste en la comunicación a través de HTTP (Hypertext Transfer Protocol) dentro de una conexión cifrada que asegura la autenticación del sitio web visitado y la protección de la privacidad e integridad de los datos intercambiados.
+\item \textbf{JSON:} del inglés \textit{JavaScript Object Notation}, es un formato de archivo que utiliza texto legible para humanos para transmitir objetos de datos.
+\item \textbf{OTAN:} del francés \textit{Organisation du Traité de l'Atlantique Nord}, es una alianza militar entre 28 estados de Europa y Norteamérica.
+\item \textbf{QWERTY:} es una distribución de teclado. Su nombre proviene de las primeras seis letras de su fila superior de teclas. Es la distribución más común aunque en algunos países europeos tienen ligeras modificaciones.
+\item \textbf{SQL:} del inglés \textit{Structured Query Language}, es un lenguaje de consulta estructurada. Es un lenguaje diseñado para gestionar datos contenidos en un sistema de gestión de bases de datos relacionales.
 \end{itemize}
 }
 
@@ -247,7 +251,7 @@ Todos los mensajes que maneja el bot tienen formato JSON. Estos mensajes se enví
 \lstinputlisting[language=Python, firstline=44, lastline=53, title=Ejemplo de un on\_chat\_message]{Samples/pairingBot.py}
 
 \section{Teclados personalizados}
-En estos primeros bots también experimentamos con los distintos tipos de teclado que ofrece la API de Telegram, los \texttt{ReplyKeyboardMarkups} y los \texttt{InlineKeyboardMarkups}. La diferencia básica entre estos dos teclados es la posición que ocupan en la pantalla. El primero se sitúa fuera del propio chat sitúandose en el lugar que le correpondería al teclado QWERTY y el segundo está dentro de la propia conversación obligatoriamente acompañado de un mensaje de texto. Otra diferencia es la manera de procesar las pulsaciones, mientras las pulsaciones a los botones de los ReplyKeyboardMarkups se escriben automáticamente en el chat como mensaje del usuario, las pulsaciones de los botones de los InlineKeyboardMarkups se procesan internamente, cada vez que se pulsa uno de estos botones se crea una clase ButtonHandler. Estos botones se procesan como inline queries al ser pulsados, de manera que al llegar al bot se diferencian del resto de los mensajes del chat.
+En estos primeros bots también experimentamos con los distintos tipos de teclado que ofrece la API de Telegram, los \texttt{ReplyKeyboardMarkups} y los \texttt{InlineKeyboardMarkups}. La diferencia básica entre estos dos teclados es la posición que ocupan en la pantalla. El primero se sitúa fuera del propio chat sitúandose en el lugar que le correpondería al teclado QWERTY y el segundo está dentro de la propia conversación obligatoriamente acompañado de un mensaje de texto. Otra diferencia es la manera de procesar las pulsaciones, mientras las pulsaciones a los botones de los \texttt{ReplyKeyboardMarkups} se escriben automáticamente en el chat como mensaje del usuario, las pulsaciones de los botones de los \texttt{InlineKeyboardMarkups} se procesan internamente, cada vez que se pulsa uno de estos botones se crea una clase \texttt{ButtonHandler}. Estos botones se procesan como inline queries al ser pulsados, de manera que al llegar al bot se diferencian del resto de los mensajes del chat.
 
 \begin{figure}[h!]
 \centering
@@ -268,16 +272,18 @@ En estos primeros bots también experimentamos con los distintos tipos de teclado
 \section{Gestión de mensajes - DelegatorBot y handlers}
 Lo último con lo que hicimos pruebas en esta primera fase fue con la gestión del servidor. En un principio, nuestros bots procesaban los updates que les llegaban de manera secuencial. Cuando ya empezaron a realizar tareas más complejas, tuvimos que crear servidores simples que lanzasen un hilo por cada nuevo \textit{chat\_id} que les llegase en un mensaje. Así, el bot disponía de un diccionario con los chat\_id y una cola, para que cada mensaje proveniente de un chat\_id ya conocido se encolase para su hilo correspondiente.
 \lstinputlisting[language=Python, firstline=82, lastline=87, title=Ejemplo de gestión de mensajes nuevos]{Samples/espiaBot.py}
-Tras crear algunos bots que utilizaban este sistema de servidor con hilos por paso de mensajes, nos dimos cuenta de que Telepot proporciona una clase para gestionar todo esto de manera cómoda: la clase \textbf{DelegatorBot} y los \textbf{handlers}. Esta clase tiene la particularidad de que el objeto bot que creas trata de manera diferente los updates que le llegan dependiendo del tipo que sean. Además, este objeto se encarga de lanzar hilos por cada nuevo chat\_id que le llega y los tiene todos registrados por debajo en un diccionario, para poder redirigirles los mensajes que les correspondan a cada uno y poder cerrarlos cuando sea necesario.
+Tras crear algunos bots que utilizaban este sistema de servidor con hilos por paso de mensajes, nos dimos cuenta de que Telepot proporciona una clase para gestionar todo esto de manera cómoda: la clase \texttt{DelegatorBot} y los \textbf{handlers}. Esta clase tiene la particularidad de que el objeto bot que creas trata de manera diferente los updates que le llegan dependiendo del tipo que sean. Además, este objeto se encarga de lanzar hilos por cada nuevo chat\_id que le llega y los tiene todos registrados por debajo en un diccionario, para poder redirigirles los mensajes que les correspondan a cada uno y poder cerrarlos cuando sea necesario.
 \lstinputlisting[language=Python, firstline=323, lastline=330, title=Ejemplo de creación de un DelegatorBot]{../socialBot.py}
-Para gestionar cada mensaje de una forma u otra es necesario definir un handler del tipo que corresponda: para gestionar lo relacionado con mensajes en un chat se necesita un ChatHandler y para tratar las pulsaciones en teclados inline se necesita un CallbackQueryOriginHandler. Una vez creadas las clases de los handlers, debe ponerse un pave\_event\_space() por cada tipo de updates diferentes que vaya a tratarse. En los argumentos de esta función se especifica qué evento genera un nuevo hilo, en el caso de ejemplo serían \textit{per\_chat\_id()} para el ChatHandler y \textit{per\_callback\_query\_origin()} para las pulsaciones en los teclados inline. 
+Para gestionar cada mensaje de una forma u otra es necesario definir un handler del tipo que corresponda: para gestionar lo relacionado con mensajes en un chat se necesita un \texttt{ChatHandler} y para tratar las pulsaciones en teclados inline se necesita un \texttt{CallbackQueryOriginHandler}. Una vez creadas las clases de los handlers, debe ponerse un \texttt{pave\_event\_space()} por cada tipo de updates diferentes que vaya a tratarse. En los argumentos de esta función se especifica qué evento genera un nuevo hilo, en el caso de ejemplo serían \texttt{per\_chat\_id()} para el ChatHandler y \texttt{per\_callback\_query\_origin()} para las pulsaciones en los teclados inline. 
 
-El uso del DelegatorBot y los handlers facilita en gran medida la creación de bots más complejos. Una vez que te acomodas a los diferentes eventos de creación de hilos y de handlers que te ofrece Telepot, te ahorra el tener que gestionar tú los hilos y los mensajes, siempre y cuando comprendas bien la gestión interna de estos hilos por parte del DelegatorBot.
+El uso del \texttt{DelegatorBot} y los handlers facilita en gran medida la creación de bots más complejos. Una vez que te acomodas a los diferentes eventos de creación de hilos y de handlers que te ofrece Telepot, te ahorra el tener que gestionar tú los hilos y los mensajes, siempre y cuando comprendas bien la gestión interna de estos hilos por parte del DelegatorBot.
 
 \newpage
 \mychapter{4}{Cap\'itulo 4: Primera versi\'on - Establecimientos cercanos}
+Tras la experimentación previa con Telepot y el desarrollo de varios bots básicos, comenzamos a programar el bot. Nuestro principal objetivo en esta primera versión era ofrecer los locales cercanos según la localización que nos ofrecía el usuario.
 
-La primera versión del bot que realizamos cumplía el objetivo básico del bot. Según la localización del usuario, el bot mostraba los establecimientos cercanos. Al iniciar el bot, el usuario recibía un mensaje que rezaba \textit{Share your location!} a la vez que se le ofrecía un ReplyKeyboardMarkup con un botón que al pulsarlo compartía la localización del usuario. Después de recibir la localización el bot continúa preguntando que tipo de establecimiento estaba buscando al usuario, dando varias opciones a través de un teclado inline. Cuando el usuario elegía que tipo de local que quería el bot le ofrecía una lista de los establecimientos de ese tipo a un radio de 500 metros. El usuario elegía entre alguno de los locales ofrecidos y el bot le mandaba la localización de este. 
+\section{Funcionalidad básica}
+Al iniciar el bot, el usuario recibía un mensaje que rezaba \textit{Share your location!} a la vez que se le ofrecía un \texttt{ReplyKeyboardMarkup} con un botón que al pulsarlo compartía la localización del usuario. Después de recibir la localización, el bot continúa preguntando que tipo de establecimiento estaba buscando el usuario, dando varias opciones a través de un teclado inline. Cuando el usuario elegía que tipo de local que quería el bot le ofrecía una lista de los establecimientos de ese tipo a un radio de 500 metros. El usuario elegía entre alguno de los locales ofrecidos y el bot le mandaba la localización de este. 
 
 \begin{figure}[h!]
 \centering
@@ -295,10 +301,10 @@ La primera versión del bot que realizamos cumplía el objetivo básico del bot. Se
 \end{minipage}
 \end{figure}
 
-
-Para conseguir los establecimientos en un radio de una localización concreta decidimos utilizar el cliente que proporcionan los servicios de Google Maps para Python. Utilizamos la función \textit{places\_nearby} que al pasarle como parámetros distintos aspectos de la consulta como la localización, el radio, el tipo de local, etc. devolvía una lista en formato JSON con todos los establecimientos, y sus datos, que cumplían los parámetros establecidos. Al recibir estos datos nos encargamos de procesarlos para mostrarle parte de esta información a los usuarios. 
-\lstinputlisting[language=Python, firstline=148, lastline=148, title=Consulta a la API de Google Maps]{../socialBot.py}
-Decidimos usar los servicios prestados por Google Maps por ser la mayor aplicación a nivel mundial que ofrece las geolocalizaciones (entre otros datos) de establecimientos de ocio. Para poder utilizar estos servicios, tuvimos que registrarnos en Google Developers para obtener una clave de la API del maps de manera gratuíta.
+\section{Uso de la API de Google Maps}
+Para conseguir los establecimientos en un radio de una localización concreta decidimos utilizar el cliente que proporcionan los servicios de Google Maps para Python. Utilizamos la función \texttt{places\_nearby} que al pasarle como parámetros distintos aspectos de la consulta como la localización, el radio, el tipo de local, etc. devolvía una lista en formato JSON con todos los establecimientos, y sus datos, que cumplían los parámetros establecidos. Al recibir estos datos nos encargamos de procesarlos para mostrar parte de esta información a los usuarios. 
+\lstinputlisting[language=Python, firstline=148, lastline=148, title=Consulta a la API de Google Maps]{../socialBot.py}%Esta funcion es places no places_nearby
+Decidimos usar los servicios prestados por Google Maps por ser la mayor aplicación a nivel mundial que ofrece las geolocalizaciones (entre otros datos) de establecimientos de ocio. Para poder utilizar estos servicios, tuvimos que registrarnos en Google Developers para obtener una clave de la API del maps de manera gratuíta. Con un límite de 1000 consultas diarias.
 
 \begin{figure}[h!]
   \centering
@@ -308,28 +314,26 @@ Decidimos usar los servicios prestados por Google Maps por ser la mayor aplicaci
 \end{figure}
 
 %1000 consultas diarías y posible uso de una licencia de pago para aumentarlo
+\section{Limitaciones de Telepot}
+%Se puede buscar otro nombre de sección
+En este punto nos dimos cuenta de una de las limitaciones del los \texttt{handlers}. Al definirlos en la llamada a \texttt{DelegatorBot}, también hay que poner qué tiempo de \textit{timeout} tienen. Una vez pasado este tiempo y si el \textit{thread} de un \texttt{handler} no ha recibido ningún \textit{update}, el \texttt{DelegatorBot} para ese hilo y destruye el objeto \texttt{handler} que hubiese. Si después de esto llegase un textit{update} en el mismo chat del hilo que se paró, se crearía un nuevo objeto \texttt{handler} y se lanzaría en un nuevo hilo. Esto supone que si se declaró algún atributo privado en el \texttt{handler} este se perdió durante el \textit{timeout}, por lo que hay que tenerlo en cuenta y guardar todos los datos relevantes de los \texttt{handlers} en la función \texttt{on\_time\_out} definidas dentro de la clase del \texttt{handler} correspondiente, que es la que \texttt{DelegatorBot} llama antes de hacer el \textit{timeout}.
 
-En este punto nos dimos cuenta de una de las limitaciones del los handlers. Al definirlos en la llamada a DelegatorBot, también hay que poner qué tiempo de \textit{timeout} tienen. Una vez pasado este tiempo y si el thread de un handler no ha recibido ningún update, el DelegatorBot para ese hilo y destruye el objeto handler que hubiese. Si después de esto llegase un update en el mismo chat del hilo que se paró, se crearía un nuevo objeto handler y se lanzaría en un nuevo hilo. Esto supone que si se declaró algún atributo privado en el handler este se perdió durante el timeout, por lo que hay que tenerlo en cuenta y guardar todos los datos relevantes de los handlers en la función \textit{on\_time\_out()} definidas dentro de la clase del handler correspondiente, que es la que DelegatorBot llama antes de hacer el timeout.
-
-Para mantener el flujo de interacción con el bot por medio de botones inline utilizamos continuamente la función \textit{editMessageText()} proporcionada por Telepot. Esta función es un wrapper de la función de la API de Telegram que permite editar un mensaje enviado anteriormente y cambiar su texto y el teclado que proporciona.
+Otro problema que observamos era que el uso del bot iba llenando el chat de mensajes y botones. Pero queríamos conseguir que la interfaz del bot se desarrollase en un solo mensaje y así evitar también que el usuario pueda pulsar botones de manera inesperada. Para mantener el flujo de interacción con el bot por medio de botones inline utilizamos continuamente la función \texttt{editMessageText} proporcionada por Telepot. Esta función es un wrapper de la función de la API de Telegram que permite editar un mensaje enviado anteriormente y cambiar su texto y el teclado que proporciona.
 \lstinputlisting[language=Python, firstline=96, lastline=96, title=Edición de mensajes previos]{Samples/3rayaBot.py}
-Al hacer esto, se consigue que la interfaz del bot se desarrolle en un solo mensaje y así evitamos también que el usuario pueda pulsar botones de manera inesperada si se dejasen sin eliminar en el chat.
-%tal vez una imagen de un chat con botones sin eliminar frente a uno con ellos eliminados
 
-%no se si poner subsecciones
+%tal vez una imagen de un chat con botones sin eliminar frente a uno con ellos eliminados
 
 \newpage
 \mychapter{5}{Cap\'itulo 5: Segunda versi\'on - Base de datos e interacci\'on}
+A medida que íbamos desarrollando el bot nos encontrabamos con los primeros problemas, observabamos la necesidad de almacenar los datos y además queríamos mejorar la interacción con el bot para poder establecer un \textit{feedback} con los usuarios.
 
 \section{MongoDB}
-A medida que íbamos desarrollando el bot nos encontrabamos con los primeros problemas, observabamos la necesidad de almacenar los datos y además queríamos mejorar la interacción con el bot.
+Como indicabamos en el capítulo anterior el uso del \texttt{DelegatorBot} tenía el inconveniente de perder los atributos privados si no hay actualizaciones en un período determinado. Además queríamos guardar datos como las localizaciones que nos enviaba el usuario para utilizarlos en funcionalidades posteriores. Ante esta coyuntura decidimos crear una base de datos para el bot, algo indispensable en casi cualquier aplicación. La problemática con la que nos encontrábamos era si utilizar una base de datos relacional o no. Nuestra decisión final fue utilizar \textbf{MongoDB}, porque nos ofrecía la capacidad de almacenar nuestros datos que no tenían la misma estructura, pero si parecida, de una manera cómoda. Además nos permitía una futura escalabilidad de esas semi-estructuras que sabíamos que íbamos a necesitar con las futuras funcionalidades del bot. 
 
-Como indicabamos en el capítulo anterior el uso del DelegatorBot tenía el inconveniente de perder los atributos privados si no hay actualizaciones en un período determinado. Además queríamos guardar datos como las localizaciones que nos enviaba el usuario para utilizarlos en funcionalidades posteriores. Ante esta coyuntura decidimos crear una base de datos para el bot, algo indispensable en casi cualquier aplicación. La problemática con la que nos encontrábamos era si utilizar una base de datos relacional o no. Nuestra decisión final fue utilizar \textbf{MongoDB}, porque nos ofrecía la capacidad de almacenar nuestros datos que no tenían la misma estructura, pero si parecida, de una manera cómoda. Además nos permitía una futura escalabilidad de esas semi-estructuras que sabíamos que íbamos a necesitar con las futuras funcionalidades del bot. 
-
-Para gestionar la base de datos con el bot implementamos un nuevo módulo utilizando \textit{pymongo}. Dentro de la nueva base de datos establecimos dos colecciones, una de usuarios y otra de establecimientos. Estas dos colecciones no implementan funciones \textit{join}, dado que en MongoDB y en NoSQL en general son muy lentas. El bot cuando quiere guardar datos o extraerlos de la base de datos llama a una función específica del nuevo módulo, y este se encargará de conectar con la base de datos para extraer o persistir los datos. Para solucionar el problema del timeout, cuando este período de tiempo transcurre invocamos al método \textit{on\_close} que persiste los atributos que van a expirar en la base de datos.
+Para gestionar la base de datos con el bot implementamos un nuevo módulo utilizando \texttt{pymongo}, que es una librería de Python que ayuda a gestionar las bases de datos con \textbf{MongoDB}. Dentro de la nueva base de datos establecimos dos colecciones, una de usuarios y otra de establecimientos. Estas dos colecciones no implementan funciones \textit{join}, dado que en MongoDB y en NoSQL en general son muy lentas. El bot cuando quiere guardar datos o extraerlos de la base de datos llama a una función específica del nuevo módulo, y este se encargará de conectar con la base de datos para extraer o persistir los datos. Para solucionar el problema del timeout, cuando este período de tiempo transcurre invocamos al método \texttt{on\_close} que persiste los atributos que van a expirar en la base de datos.
 
 \section{Interacción con el usuario}
-Llegados a este punto, aumentamos la funcionalidad del bot para que una vez que te enviase la localización de algún local también te diese más opciones a realizar con ella. Pusimos la posibilidad de darle una valoración al local que se haya seleccionado, de una a cinco estrellas, que también se muestra a la hora de enseñarte los locales cercanos a tí. Introducimos también la posibilidad de mandar imágenes de los locales, de forma que si un local tiene imágenes en la base de datos, damos la opción de ir viéndolas a través de la interfaz con botones.
+Llegados a este punto, aumentamos la funcionalidad del bot para que una vez que te enviase la localización de algún local y también te diese más opciones a realizar con ella. Pusimos la posibilidad de darle una valoración al local que se haya seleccionado, de cero a cinco estrellas, que también se muestra a la hora de enseñarte los locales cercanos a tí. Introducimos también la posibilidad de mandar imágenes de los locales, de forma que si un local tiene imágenes en la base de datos damos la opción de ir viéndolas a través de la interfaz con botones.
 
 \begin{figure}[h!]
   \centering
@@ -351,7 +355,7 @@ También para mejorar y dar más información sobre los locales a los usuarios, les
 \end{figure} 
 
 \section{Steps}
-Como ahora el bot dispone de más opciones para interactuar con él, también debía disponer de un botón en su interfaz para volver atrás. Como el flujo del bot se desarrolla parecido a una máquina de estados, creamos un módulo \textit{steps} para definir los diferentes estados en los que puede encontrarse el bot, y así saber en cada momento a dónde debe ir en caso de recibir un update o de querer volver atrás. Estos estados ayudan también en el caso del timeout, ya que en la función on\_close() se puede guardar en la base de datos el estado en el que se quedó un usuario, y cuando vuelva puede continuar usando el bot desde el punto en el que lo dejó. Ahora que disponemos de base de datos, todas las variables locales que utiliza el handler también se pueden guardar en caso de timeout.
+Como ahora el bot dispone de más opciones para interactuar con él, también debía disponer de un botón en su interfaz para volver atrás. Como el flujo del bot se desarrolla parecido a una máquina de estados, creamos un módulo \textit{steps} para definir los diferentes estados en los que puede encontrarse el bot, y así saber en cada momento a dónde debe ir en caso de recibir un textit{update} o de querer volver atrás. Estos estados ayudan también en el caso del timeout, ya que en la función \texttt{on\_close} se puede guardar en la base de datos el estado en el que se quedó un usuario, y cuando vuelva pueda continuar usando el bot desde el punto en el que lo dejó. Ahora que disponemos de base de datos, todas las variables locales que utiliza el handler también se pueden guardar en caso de \textit{timeout}.
 
 \begin{figure}[h!]
   \centering
@@ -361,7 +365,7 @@ Como ahora el bot dispone de más opciones para interactuar con él, también debía
 \end{figure}
 
 \section{Otros cambios}
-Tras diversas comprobaciones del funcionamiento del bot, observamos que los establecimientos que nos enviaba el método \textit{places\_nearby} no coincidía totalmente con los locales que mostraba Google Maps. Esta consulta no devolvía todos los locales cercanos, sino sólo algunos. Por lo que en su lugar comenzamos a usar el método \textit{places} de la misma API, que realiza una búsqueda más exhaustiva. Pasándole por parámetro campos como la localización actual, el radio de la consulta o el tipo de establecimiento que el usuario está buscando. 
+Tras diversas comprobaciones del funcionamiento del bot, observamos que los establecimientos que nos enviaba el método \texttt{places\_nearby} no coincidía totalmente con los locales que mostraba Google Maps. Esta consulta no devolvía todos los locales cercanos, sino sólo algunos. Por lo que en su lugar comenzamos a usar el método \texttt{places} de la misma API, que realiza una búsqueda más exhaustiva. Pasándole por parámetro campos como la localización actual, el radio de la consulta o el tipo de establecimiento que el usuario está buscando. 
 \lstinputlisting[language=Python, firstline=148, lastline=148, title=Consulta a la API de Google Maps]{../socialBot.py}
 
 % Código de un on_close?
@@ -369,7 +373,7 @@ Tras diversas comprobaciones del funcionamiento del bot, observamos que los esta
 
 \newpage
 \mychapter{6}{Cap\'itulo 6: Tercera versi\'on - Opciones y Heatmaps}
-Durante un tiempo estuvimos preparando el bot para que tuviese varios parámetros ajustables en cuanto a su funcionalidad. La API de Google Maps permite cambiar opciones de búsqueda como el radio de distancia, buscar sólo establecimientos abiertos o buscar establecimientos dentro de un rango de precios. También podíamos poner el bot tanto en español como en inglés. Juntando todo esto, podíamos crear un nuevo menú el en bot donde cada usuario pudiese cambiar estas opciones si lo desea y después lo persistamos en la base de datos.
+Durante un tiempo estuvimos preparando el bot para que tuviese varios parámetros ajustables en cuanto a su funcionalidad. La API de Google Maps permite cambiar opciones de búsqueda como el radio de distancia, buscar sólo establecimientos abiertos o buscar establecimientos dentro de un rango de precios. También podíamos poner el bot tanto en español como en inglés. Juntando todo esto, podíamos crear un nuevo menú el en bot donde cada usuario pudiese cambiar estas opciones si lo desea y después lo persistimos en la base de datos.
 
 \begin{figure}[h!]
   \centering
@@ -398,7 +402,7 @@ Para tener el texto del bot en varios idiomas creamos un nuevo módulo que contie
 \end{figure}
 
 \section{Opciones}
-De los parámetros variables de la función places, al final dejamos el radio de búsqueda, el número de establecimientos que se muestran en una búsqueda y buscar sólo establecimientos abiertos en el momento. 
+De los parámetros variables de la función \texttt{places}, al final dejamos el radio de búsqueda, el número de establecimientos que se muestran en una búsqueda y buscar sólo establecimientos abiertos en el momento. 
 
 \begin{figure}[h!]
   \centering
@@ -410,22 +414,23 @@ De los parámetros variables de la función places, al final dejamos el radio de b
 La opción de buscar establecimientos según un rango de precios de 0 a 4 daba resultados inesperados cuando la estuvimos probando. Al usar esta opción a veces no mostraba casi ningún establecimiento a pesar de ponerle que buscase en todo el rango, de 0 a 4. Suponemos que esto se debe a que algunos establecimientos no tienen información acerca del rango de precios en el que están, y por tanto no aparecían en búsquedas que usasen ese parámetro. Por tanto, dado que resultó ser menos útil de lo esperado, decidimos no añadir esta opción al bot.
 
 
-
 \section{Heatmaps}
-El cambio más grande de funcionalidad que introdujimos en esta versión fue la capacidad de envíar mapas de calor al usuario. Para recibirlo el usuario debe introducir el comando \textit{/heatmap}, y el bot generará y enviará una imagen con un mapa de calor, cuyo centro es la última localización guardada del usuario que hace la petición. En este mapa de calor se muestran las zonas con más concurrencia cerca del usuario, usando las localizaciones de todos los usuarios.
+El cambio más grande de funcionalidad que introdujimos en esta versión fue la capacidad de envíar mapas de calor al usuario. Para recibirlo el usuario debe introducir el comando \texttt{/heatmap}, y el bot generará y enviará una imagen con un mapa de calor, cuyo centro es la última localización guardada del usuario que hace la petición. En este mapa de calor se muestran las zonas con más concurrencia cerca del usuario, usando las localizaciones de todos los usuarios.
 
-Para realizar los mapas utilizamos el paquete de Python \textbf{Basemap}, que es una librería para trazar mapas 2D. Permite trazar contornos, imágenes, vectores, líneas o puntos en las coordenadas que se le proporcionen. Para construir el mapa es necesario proporcionarle a la librería los puntos geográficos que corresponden con la esquina inferior izquierda y la esquina superior derecha. Para calcular estos límites, teniendo en cuenta que conocemos el centro de la imagen, utilizamos la fórmula de haversine pero a la inversa. Si recapítulamos, recordamos que utilizabamos haversine para calcular la distancia entre dos puntos en un globo. Nosotros en este caso conocemos uno de los puntos, el ángulo y la distancia, por tanto si despejamos nuestra nueva incógnita tenemos como resultado, lo siguiente:
+Para realizar los mapas utilizamos el paquete de Python \texttt{Basemap}, que es una librería para trazar mapas 2D. Permite trazar contornos, imágenes, vectores, líneas o puntos en las coordenadas que se le proporcionen. Para construir el mapa es necesario proporcionarle a la librería los puntos geográficos que corresponden con la esquina inferior izquierda y la esquina superior derecha. Para calcular estos límites, teniendo en cuenta que conocemos el centro de la imagen, utilizamos la fórmula de haversine pero a la inversa. Si recapítulamos, recordamos que utilizabamos haversine para calcular la distancia entre dos puntos en un globo. Nosotros en este caso conocemos uno de los puntos, el ángulo y la distancia, por tanto si despejamos nuestra nueva incógnita tenemos como resultado, lo siguiente:
  
 \lstinputlisting[language=Python, firstline=56, lastline=57, title=Haversine inverso en Python]{../socialBot.py}
 
-La funcionalidad básica de Basemap sólo ofrece mapas dibujados, lo cúal no nos interesa porque queríamos mayor precisión a nivel ciudad o incluso barrio. Pero sí ofrece la posibilidad de sustituir estos dibujos por otras imagénes. Índicando un código EPSG, acrónimo de \textit{European Petroleum Survey Group}, que indican sistemas de referencia de coordenadas. En nuestro caso usamos el código 4326 
+La funcionalidad básica de \texttt{Basemap} sólo ofrece mapas dibujados, lo cúal no nos interesa porque queríamos mayor precisión a nivel ciudad o incluso barrio. Pero sí ofrece la posibilidad de sustituir estos dibujos por otras imagénes. Índicando un código EPSG, acrónimo de \textit{European Petroleum Survey Group}, que indican sistemas de referencia de coordenadas. En nuestro caso usamos el código 4326 
 que indica el sistema \textit{World Geodetic System 1984} en el que está proyectado todo el planeta. Este sistema es usado por los GPS y por sistemas militares desarrollados por la OTAN. Y para obtener las imágenes vía satélite utilizamos el servicio \textit{ArcGIS}, de ESRI, en concreto el \textit{World Imagery} que tiene 24 niveles de resolución y imágenes en alta definición de casi todo el planeta.
 
 \lstinputlisting[language=Python, firstline=79, lastline=80, title=Consultas a Basemap y a ArcGIS]{../socialBot.py}
 
 %img de heatmap
 \newpage
-\mychapter{7}{Cap\'itulo 7: Conclusiones y trabajo futuro}
+\mychapter{7}{Cap\'itulo 7: Cuarta versión - Escribir direcciones y estadísticas}
+\newpage
+\mychapter{8}{Cap\'itulo 8: Conclusiones y trabajo futuro}
 
 \newpage
 \mychapter{0}{Ap\'endice}
