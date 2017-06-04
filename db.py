@@ -117,7 +117,10 @@ def getSettings(chat_id):
 
 def getLanguage(chat_id):
 	lang = settings.find_one({'_id':chat_id},{'_id':0,'language':1})
-	return lang['language']
+	if lang != None:
+		return lang['language']
+	else:
+		return "English"
 
 def getAllLocations():
 	allLoc = users.find({},{'_id':0,'location':1})
