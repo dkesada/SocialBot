@@ -2,6 +2,8 @@
 #authors: David Quesada López y Mateo García Fuentes
 import pymongo
 from pymongo import MongoClient
+import time
+import datetime
 
 connection = MongoClient('localhost', 27017)
 db = connection.bot
@@ -115,7 +117,7 @@ def getSettings(chat_id):
 
 def getLanguage(chat_id):
 	lang = settings.find_one({'_id':chat_id},{'_id':0,'language':1})
-	return lang
+	return lang['language']
 
 def getAllLocations():
 	allLoc = users.find({},{'_id':0,'location':1})
@@ -123,17 +125,14 @@ def getAllLocations():
 	
 def getStats():
 	stats = {}
-	stats['totalUsers'] = users.count()
-	#stats['newUsers'] = users.count()
-	import time
-	#from datetime import datetime, date
-	import datetime
+	stats['totalUsers'] = users.count()	
 	now = datetime.datetime.utcnow()
 	then = now - datetime.timedelta(days=7)
-	print now
-	td = now - datetime.datetime(1970,1,1)
-	timest  = (td.microseconds+(td.seconds+td.days*86400)*10**6)/10**6
-	print timest
-	#Paso de datetime hasta timestamp
-	print time.time()
+	date = then - datetime.datetime(1970,1,1)
+	timestamp  = (date.microseconds+(date.seconds+date.days*86400)*10**6)/10**6
+	stats['usersWeek'] = users.count({'date': {'$gt': timestamp}})
+	stats['placesRate'] = places.count({'numRate': {'$gte': 1}})
+	stats['placesPhotos'] = places.count({'photos': {'$exists': 'true'}})
+	stats['spanish'] = settings.count({'language': {'$exists': 'true'}, 'language': 'Espanol'})
+	stats['english'] = stats['totalUsers'] - stats['spanish']
 	return stats

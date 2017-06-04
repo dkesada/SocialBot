@@ -239,7 +239,7 @@ def takesFew(lang):
 		return "The image takes a few seconds to send"
 
 def help(lang):
-	if lang == "Español":
+	if lang == "Espanol":
 		text = "La funcionalidad básica de @YourPlacesBot es ofrecerte todos los locales que tienes a tu alrededor. "
 		text += "Para verlos solo debes envíar tu localización. Y podrás ver las puntuaciones y fotos de otros usuarios. "
 		text += "Con el comando /settings puedes cambiar la configuración del bot, como el idioma, el radio de las consultas y más. "
@@ -253,13 +253,13 @@ def help(lang):
 	return text
 	
 def textNoProcces(lang):
-	if lang == "Español":
+	if lang == "Espanol":
 		return "Si quieres escribir una dirección primero introduce el comando /start, envíalo y luego escribe la dirección. "
 	else:
 		return "If you want to write an address first enter the command /start, send it and then write the address."
 
 def yourPosition(lang, pos):
-	if lang == "Español":
+	if lang == "Espanol":
 		return "Tu posición es  " + pos
 	else:
 		return "Your position is " + pos
@@ -268,7 +268,7 @@ def prox(lang, prlist, pos):
 	first = prlist[pos[0]] + " (" + str(pos[0]) + " m)"
 	second = prlist[pos[1]] + " (" + str(pos[1]) + " m)"
 	third = prlist[pos[2]] + " (" + str(pos[2])+ " m)"
-	if lang == "Español":
+	if lang == "Espanol":
 		return "Los más cercanos son " + first + ", "+ second + " y " + third + ".\n"
 	else:
 		return "The closest ones are " + first + ", "+ second + " and " + third + ".\n"
@@ -276,7 +276,7 @@ def prox(lang, prlist, pos):
 def rated(lang, prlist, pos):
 	star = u'\u2b50\ufe0f'
 	first = prlist[pos[0]] + " (" + str(pos[0]) + " " + star + ")"
-	if lang == "Español":
+	if lang == "Espanol":
 		msg = "Los mejor valorados son " + first
 	else:
 		msg = "The best rated are " + first
@@ -285,7 +285,7 @@ def rated(lang, prlist, pos):
 		msg += + ", "+ prlist[pos[1]] + " (" + str(pos[1]) + " " + star + ")"
 	if len(prlist) > 2:
 		third = prlist[pos[2]] + " (" + str(pos[2])+ " " + star + ")"
-		if lang == "Español":
+		if lang == "Espanol":
 			msg += " y " + third + ".\n"
 		else:
 			msg =" and " + third + ".\n"	
@@ -293,13 +293,22 @@ def rated(lang, prlist, pos):
 	return msg	
 	
 def noSuperuser(lang):
-	if lang == "Español":
+	if lang == "Espanol":
 		return "Lo siento, no estás autorizado para ver esto. "
 	else:
 		return "Sorry, you aren't allowed to see this."
 		
 def stats(lang, stats):
-	if lang == "Español":
-		return "¡Bienvenido!\nEl total de usuarios son " + str(stats['totalUsers'])
+	if lang == "Espanol":
+		text = "¡Bienvenido!\nEl total de usuarios son " + str(stats['totalUsers'])
+		text += ".\nY " + str(stats['usersWeek']) + " usuarios han usado, al menos una vez, el bot durante los últimos siete días."
+		text += "\n" + str(stats['placesRate']) + " locales han sido puntuados. Y los usuarios han mandado fotos de "+ str(stats['placesPhotos'])
+		text += " establecimientos diferentes.\n" + str(stats['english']) + " personas usan el bot en inglés y " + str(stats['spanish'])
+		text += " en castellano.\n " 
 	else:
-		return "Welcome!\nTotal users are " + str(stats['totalUsers'])
+		text = "Welcome!\nTotal users are " + str(stats['totalUsers'])
+		text += ".\nAnd " + str(stats['usersWeek']) + " users have used the bot, at least once, during the last seven days."
+		text += "\n" + str(stats['placesRate']) + " locals have been rated. And users have sent photos of " + str(stats['placesPhotos'])
+		text += " different establishments.\n" + str(stats['english']) + " people use the bot in English and " + str(stats['spanish'])
+		text += " in Spanish.\n " 
+	return text
