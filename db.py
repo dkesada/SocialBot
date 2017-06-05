@@ -55,7 +55,7 @@ def storeRating(loc, chat_id, rate):
 		pRate = previousRate['ratings'][0]['rate']
 		places.update_one({'loc.coordinates':loc, 'ratings.user':chat_id}, {'$inc': {'rate':rate-pRate}, '$set':{'ratings.$.rate':rate}})	
 	else:
-		places.update_one({'loc':{'type':'Point','coordinates':loc}},{'$push':{'ratings':{'user':chat_id, 'rate':rate}}, '$inc':{'rate':rate, 'numRate':1}},upsert=True)
+		places.update_one({'loc':{'type':'Point','coordinates':loc}},{'$push':{'ratings':{'user':chat_id, 'rate':rate}}, '$inc':{'rate':rate}, '$inc':{'numRate':1}},upsert=True)
 		
 def storePlacePhoto(loc, photo):
 	"""Stores a file_id from a photo of a stablishment sent by an user."""
@@ -64,7 +64,7 @@ def storePlacePhoto(loc, photo):
 def avgRatePlace(loc):
 	previousRate = places.find_one({'loc.coordinates':loc}, {'_id':0, 'numRate':1, 'rate':1})
 	if previousRate != {} and previousRate != None:
-		rate =  previousRate['rate']/previousRate['numRate']
+		rate =  float(previousRate['rate'])/  float(previousRate['numRate'])
 		return rate
 
 def preparePhotoSending(chat_id, message_id, loc):
@@ -136,6 +136,7 @@ def getStats():
 	stats['usersWeek'] = users.count({'date': {'$gt': timestamp}})
 	stats['placesRate'] = places.count({'numRate': {'$gte': 1}})
 	stats['placesPhotos'] = places.count({'photos': {'$exists': 'true'}})
-	stats['spanish'] = settings.count({'language': {'$exists': 'true'}, 'language': 'Espanol'})
+	stats['spanish'] = settings.count({'language': {'$exists': 'true'}, 'language': 'Espanol'})[u'-3.69869', u'40.4062734']
+
 	stats['english'] = stats['totalUsers'] - stats['spanish']
 	return stats
