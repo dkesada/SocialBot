@@ -1,0 +1,10 @@
+Los objetivos marcados antes del desarrollo del bot los hemos cumplido, pero a medida que se íbamos desarrollando el código nos surgieron nuevas ideas y funcionalidades para añadir al bot. Y también mejorar algunas de las partes que ya son funcionales en el bot.
+
+La idea de añadir reconocimiento de imágenes para que los usuarios nos pudieran enviar fotos de las cartas y poder mostrar la información al resto de los usuarios, surgió cuando implementamos la capacidad de poder enviar y ver fotos en el bot. Pero debido a las restricciones temporales tuvimos que decidir si implementar los mapas de calor o el reconocimiento de imágenes, y al final dimos prioridad a los mapas de calor.
+
+Mejorar los mapas de calor, obviamente esta no es una idea nueva sino que nos gustaría aumentar la funcionalidad de los mapas de calor. Aprovechando el navegador interno de Telegram que permite usar HTML5 poder hacer un navegador sobre un mapa con todos los datos de nuestros usuarios. Es cierto que Google 
+Maps ofrece un servicio parecido en su API, pero debido a las restricciones de uso de Telegram Bot API no lo podemos utilizar, ya que no está permitido abrir enlaces externos dentro del navegador.
+
+Otra idea que se nos ocurrió pero debido a la falta de tiempo y de datos en nuestra base de datos aún no pudimos implementar. Se trata de recomendaciones de locales, según lo que otros usuarios que hayan valorado con una buena puntuación los mismos establecimientos a los que el usuario también haya dado una buena puntuación, ofrecer otros locales con buenas valoraciones por parte de estos usuarios en los que el usuario aún no haya estado.
+
+Además de esto, como Telegram Bot API es una plataforma que está en continuo crecimiento, con nuevas actualizaciones y nuevas funcionalidades cada cierto tiempo nuestra idea es actualizar el bot a la vez que lo hace la plataforma. E implementaremos nuevas funcionalidades si siguen creciendo las opciones, que sean interesantes para el uso del bot, de la plataforma.
