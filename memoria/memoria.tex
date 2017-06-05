@@ -54,15 +54,15 @@
 
 \theauthor
 
-GRADO EN INGENIER\'IA INFORM\'ATICA 
+{\Large GRADO EN INGENIER\'IA INFORM\'ATICA 
 
 FACULTAD DE INFORM\'ATICA
 
-UNIVERSIDAD COMPLUTENSE DE MADRID
+UNIVERSIDAD COMPLUTENSE DE MADRID}
 
 \includegraphics{logo.jpg}
 
-TRABAJO DE FIN DE GRADO EN INGENIER\'IA INFORM\'ATICA
+{\Large TRABAJO DE FIN DE GRADO EN INGENIER\'IA INFORM\'ATICA}
 
 Director: Carlos Gregorio Rodríguez
 
@@ -120,7 +120,6 @@ Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un fra
 \pagestyle{plain}
 \justify
 \setlength{\parindent}{0pt} %Le he quitado la sangría al documento, ¿ponía que o líneas de separación entre párrafos o sangría, pero las 2 no, no?
-\newpage
 \setcounter{page}{5}
 \listoffigures
 \newpage
@@ -518,19 +517,34 @@ Durante el grado, nunca nos habíamos enfrentado a la tarea de generar un documen
 A pesar de que al principio cuesta un poco comprender la sintaxis, después resulta bastante sencillo su uso, dando facilidades a la hora de insertar citas al código y a la hora de estructurar el documento.
 
 \section{Trabajo futuro}
-% Trabajo futuro
-%Al empezar este proyecto, la idea principal era aprender a hacer un bot de Telegram partiendo de los conocimientos previos adquiridos durante la carrera. Para esto, también teníamos como objetivo mejorar nuestra habilidad con Python, que no es un lenguaje que se use ampliamente durante el grado, y con bases de datos no SQL, en este caso MongoDB que se usa en alguna asignatura. Otro punto importante era ser capaces de buscar e integrar APIs que nos resultasen útiles para nuestro bot. Finalmente, también queríamos coger soltura escribiendo memorias de esta extensión utilizando LateX, que no es algo que se practique antes del trabajo de fin de grado.
+Los objetivos marcados antes del desarrollo del bot los hemos cumplido, pero a medida que se íbamos desarrollando el código nos surgieron nuevas ideas y funcionalidades para añadir al bot. Y también mejorar algunas de las partes que ya son funcionales en el bot.
 
+La idea de añadir reconocimiento de imágenes para que los usuarios nos pudieran enviar fotos de las cartas y poder mostrar la información al resto de los usuarios, surgió cuando implementamos la capacidad de poder enviar y ver fotos en el bot. Pero debido a las restricciones temporales tuvimos que decidir si implementar los mapas de calor o el reconocimiento de imágenes, y al final dimos prioridad a los mapas de calor.
+
+Mejorar los mapas de calor, obviamente esta no es una idea nueva sino que nos gustaría aumentar la funcionalidad de los mapas de calor. Aprovechando el navegador interno de Telegram que permite usar HTML5 poder hacer un navegador sobre un mapa con todos los datos de nuestros usuarios. Es cierto que Google 
+Maps ofrece un servicio parecido en su API, pero debido a las restricciones de uso de Telegram Bot API no lo podemos utilizar, ya que no está permitido abrir enlaces externos dentro del navegador.
+
+Otra idea que se nos ocurrió pero debido a la falta de tiempo y de datos en nuestra base de datos aún no pudimos implementar. Se trata de recomendaciones de locales, según lo que otros usuarios que hayan valorado con una buena puntuación los mismos establecimientos a los que el usuario también haya dado una buena puntuación, ofrecer otros locales con buenas valoraciones por parte de estos usuarios en los que el usuario aún no haya estado.
+
+Además de esto, como Telegram Bot API es una plataforma que está en continuo crecimiento, con nuevas actualizaciones y nuevas funcionalidades cada cierto tiempo nuestra idea es actualizar el bot a la vez que lo hace la plataforma. E implementaremos nuevas funcionalidades si siguen creciendo las opciones, que sean interesantes para el uso del bot, de la plataforma.
+
+\setcounter{secnumdepth}{0}% disables section numbering
 \newpage
 \mychapter{9}{Aportaciones individuales}
 En general ambos autores hemos participado en todos los aspectos del proyecto. La parte de la experimentación previa la realizamos de forma individual, aunque trabajando aspectos muy parecidos y utilizando \texttt{Telepot}.
 
-\section{David Quesada L\'opez}%dfg
+\section{David Quesada L\'opez}
+Al comenzar a codificar el bot, creé la estructura base del bot a partir de los bots que había desarrollado en la fase de experimentación. Me encargué también de preparar la API de Google Maps para poder usarla, registrándose y obteniendo la clave. Hice las primeras pruebas del método \texttt{places\_nearby}, aunque en este momento del desarrollo aún no nos dimos cuenta de que este método no funcionaba correctamente. 
+
+Implementé la base de datos en \texttt{MongoDB} con \texttt{Pymongo} en un nuevo módulo. Este nuevo módulo contendría todas las funciones relativas a la interacción con la base de datos. Monté la estructura de lo que empezaríamos guardando en la colección \textit{usuarios}, y dado que usamos MongoDB es fácil cambiarlo en un futuro para guardar nuevos datos o añadir colecciones. Monté también el \texttt{script} para lanzar la base de datos en el servidor. 
+Junté en otro módulo todos los teclados que utilizamos en el bot, para que fuese más sencillo encontrarlos y realizar cambios en ellos. De esta forma para introducir un teclado a un mensaje lo llamamos como a una función. De cara a la funcionalidad del bot, me encargué de hacer la parte de recibir fotos de cada local y guardarlas en la base de datos. Finalmente, cambié la forma de guardar localizaciones de establecimientos en la base de datos de cara a crear un índice geoespacial en un futuro.
+
+En cuanto a la memoria, comencé escribiendo el resumen y el capítulo 1, montando la estructura que seguiríamos luego. Escribí el capítulo 2 y el capítulo 3, sobre los pasos previos a la creación de nuestro bot. El capítulo de la segunda versión lo escribimos a medias, encargándome yo de las secciones de MongoDB y de los \texttt{steps}. En la tercera versión hice las dos primeras secciones. Finalmente, escribí el último capítulo excepto el trabajo futuro. 
 
 \section{Mateo Garc\'ia Fuentes}
 En la primera versión, me encargué de procesar los datos que devolvía el método \texttt{places\_nearby} de manera que guardaba el nombre y las coordenadas de los locales para así mostrar los restaurantes en botones y al pulsar estos mandar la localización del establecimiento pulsado. Después también me encargué de filtrar los establecimientos por tipo, es decir, el método \texttt{places\_nearby} acepta como parámetro unos determinados tipos de locales de los cuales mostramos cinco al usuario y una vez pulsado se le muestran al usuario los establecimientos de ese tipo. 
 
-En la segunda versión, me encargué de iniciar el primer esqueleto de \texttt{steps}, aún en el archivo principal, que pasaría a ser un módulo que controla los pasos de cada usuario en el bot. También me encargue de implementar la opción que permite ir hacia atrás a los usuarios, en el módulo \texttt{steps}ya separado que se invoca desde un \texttt{InlineKeyboardMarkup}. Después de que observamos que el  método \texttt{places\_nearby} no ofrecía todos los establecimientos posibles me encargué de cambiar este método por el nuevo \texttt{places} que ofrece el mismo servicio de Google Maps. De la nueva parte de la interacción con el usuario me encargué de implementar que el usuario pudiera realizar las puntuaciones del local que haya elegido y que mostrase la puntuación de todos los establecimientos en el paso de elegir local. También me encargué de investigar e implementar la fórmula de haversine para calcular la distancia entre la ubicación del usuario y el establecimiento. También implementé  la funcionalidad de mostrar las fotos de los locales que las tuvieran.
+En la segunda versión, me encargué de iniciar el primer esqueleto de \texttt{steps}, aún en el archivo principal, que pasaría a ser un módulo que controla los pasos de cada usuario en el bot. También me encargue de implementar la opción que permite ir hacia atrás a los usuarios, en el módulo \texttt{steps} ya separado que se invoca desde un \texttt{InlineKeyboardMarkup}. Después de que observamos que el  método \texttt{places\_nearby} no ofrecía todos los establecimientos posibles me encargué de cambiar este método por el nuevo \texttt{places} que ofrece el mismo servicio de Google Maps. De la nueva parte de la interacción con el usuario me encargué de implementar que el usuario pudiera realizar las puntuaciones del local que haya elegido y que mostrase la puntuación de todos los establecimientos en el paso de elegir local. También me encargué de investigar e implementar la fórmula de haversine para calcular la distancia entre la ubicación del usuario y el establecimiento. También implementé  la funcionalidad de mostrar las fotos de los locales que las tuvieran.
 
 En la tercera versión, implementé la funcionalidad de \texttt{settings} que son los ajustes que el usuario puede cambiar como el idioma, el radio de las consultas o si solo quiere ver los establecimientos abiertos. También me encargué de que estos ajustes se tuvieran en cuenta en la consulta que hacemos a la API de Google Maps donde le introducimo por parámetro los ajuste que tenga seleccionados el cliente. Programé el nuevo módulo de esta versión que era el encargado de traducir el bot, como explicamos anteriormente el bot recibe el idioma del usuario y devuelve la frase correspondiente en el idioma indicado. La mayor parte de la implementación de los heatmaps lo hicimos en conjunto, excepto la función \texttt{calculateBounds} que se encarga de calcular la esquina inferior izquierda y la superior derecha de la imagen del mapa de calor utilizando la fórmula del haversine, como explicamos en un capítulo anterior.
 
