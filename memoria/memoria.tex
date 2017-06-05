@@ -85,7 +85,7 @@ Director: Carlos Gregorio Rodríguez
 
 \textbf{Agradecimientos}
 
-Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un framework de Python para API de Telegram Bot y desarrollarlo bajo una licencia MIT.
+Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un framework de Python para la API de Telegram Bot y ofrecerlo bajo una licencia MIT.
 
 \afterpartskip
 \newpage
@@ -134,6 +134,7 @@ Gracias a Nick Lee (https://github.com/nickoala) por desarrollar telepot, un fra
 \item \textbf{OTAN:} del francés \textit{Organisation du Traité de l'Atlantique Nord}, es una alianza militar entre 28 estados de Europa y Norteamérica.
 \item \textbf{QWERTY:} es una distribución de teclado. Su nombre proviene de las primeras seis letras de su fila superior de teclas. Es la distribución más común aunque en algunos países europeos tienen ligeras modificaciones.
 \item \textbf{SQL:} del inglés \textit{Structured Query Language}, es un lenguaje de consulta estructurada. Es un lenguaje diseñado para gestionar datos contenidos en un sistema de gestión de bases de datos relacionales.
+\item \textbf{PC:} del inglés \textit{personal computer}, son las siglas que denominan un ordenador personal.
 \end{itemize}
 }
 
@@ -181,15 +182,16 @@ En esta situación, pensamos que un bot de Telegram encajaría bien como solución.
 %Google Maps tiene la funcionalidad de encontrar establecimientos cercanos a ti en base a tu localización y a qué buscas, pero el resultado fue que la aplicación es demasiado grande y no es práctico tener que abrirla, navegar entre todas las opciones y funcionalidades que ofrece y ponerte a buscar un local que te guste. %En la práctica, Google Maps lo usas en la mayoría de casos embebido en otras aplicaciones que luego te redirigen a él para una funcionalidad en concreto, como la ubicación de Telegram.
 
 \section{Objetivos}
-Al empezar este proyecto, la idea principal era aprender a hacer un bot de Telegram partiendo de los conocimientos previos adquiridos durante la carrera. Para esto, también teníamos como objetivo mejorar nuestra habilidad con Python, que no es un lenguaje que se use ampliamente durante el grado, y con bases de datos no SQL, en este caso MongoDB que se usa en alguna asignatura. Otro punto importante era ser capaces de buscar e integrar APIs que nos resultasen útiles para nuestro bot. Finalmente, también queríamos coger soltura escribiendo memorias de esta extensión utilizando LateX, que no es algo que se practique antes del trabajo de fin de grado.
+Al empezar este proyecto, la idea principal era crear un bot que funcionase como asistente virtual de los usuarios a la hora de ayudarles a encontrar locales cercanos a ellos. Valiéndonos de la plataforma que nos ofrece Telegram, somos capaces de facilitar el uso de este asistente a millones de usuarios sin tener que preocuparnos de la plataforma en la que lo vayan a usar, ya sean \textit{smartphones}, \textit{tablets} o incluso \textit{pc's}. El bot estará en funcionamiento de manera ininterrumpida y mejorará sus prestaciones en medida del uso que le den otros usuarios, según le vayan aportando nueva información.
 
-El objetivo final de este proyecto será la implementación de un bot de Telegram que valiéndose de la ubicación que se le envíe devuelva locales con las características indicadas. Para esto, vamos a establecer una serie de objetivos funcionales que el bot debe cumplir:
+De cara a la implementación del bot, este se valdrá de la ubicación que se le envíe para mostrar locales cercanos. Para esto, vamos a establecer una serie de objetivos funcionales que el bot debe cumplir:
 
 \begin{itemize}
-  \item Ser capaz de \textbf{recibir una localización y devolver una lista de locales cercanos a ella}. Estos locales deberán estar dentro de un cierto radio de distancia variable y por defecto se buscará que estén abiertos en el instante de la búsqueda.
+  \item Ser capaz de \textbf{recibir una localización} y devolver una serie de locales cercanos a ella. Estos locales deberán estar dentro de un cierto radio de distancia variable y por defecto se buscará que estén abiertos en el instante de la búsqueda.
   \item Cuando se seleccione un establecimiento, \textbf{se devolverá su ubicación} y la información de la que disponga el bot sobre él.
-  \item Poderle dar una puntuación a los establecimientos y ser capaz de enviar fotografías al bot.
-  \item Poder mostrar un \textbf{mapa de calor} en torno a tu localización reflejando las ubicaciones más concurridas por otros usuarios
+  \item Poderle dar una \textbf{puntuación} a los establecimientos y ser capaz de enviar fotografías al bot.
+  \item Poder mostrar un \textbf{mapa de calor} en torno a tu localización reflejando las ubicaciones más concurridas por otros usuarios.
+  \item Mostrarnos \textbf{información} de uso del bot de cara a su posterior desarrollo.
 \end{itemize}
 
 
@@ -203,12 +205,13 @@ A continuación mostramos sobre qué va a tratar cada capítulo:
 	
   \item \textbf{Capítulo 3: Experimentación previa}. Esta parte tratará de nuestro primer acercamiento a la creación de bots. Hablamos de cómo empezamos a usar \texttt{Telepot} para codificar bots simples y lo que aprendimos para usar en un futuro en nuestro bot final.
 	
-  \item \textbf{Capítulo 4: Primera versión - Establecimientos cercanos}. En este apartado hablamos sobre el desarrollo de la primera versión estable de \textbf{YourPlacesBot}. Esta versión cumple con nuestro primer objetivo que era ofrecer los establecimientos cercanos al usuario. % Versión que sólo devolvía la localización de los establecimientos. Hasta el "Here it is!" sin ninguna opción.
+  \item \textbf{Capítulo 4: Primera versión - Establecimientos cercanos}. En este apartado hablamos sobre el desarrollo de la primera versión estable de \textbf{YourPlacesBot}. Esta versión cumple con nuestro primer objetivo que era ofrecer los establecimientos cercanos al usuario. 
+  
   \item \textbf{Capítulo 5: Segunda versión - Base de datos e interacción}. Aquí tratamos el desarrollo de la versión que ya era capaz de realizar toda la interacción entre el bot y el usuario. Es la primera versión que pusimos a funcionar de manera continuada en Telegram.
   
   \item \textbf{Capítulo 6: Tercera versión - Opciones y heatmaps}. Este capítulo trata sobre la tercera versión, donde se introducen opciones sobre el funcionamiento del bot que cada usuario puede variar y mapas de calor en base a tu ubicación.
 	
-	\item \textbf{Capítulo 7: Cuarta versión - Escribir direcciones y estadísticas}. Este apartado trata sobre la última versión del bot, en la cúal nuestro objetivo era mejorar y facilitar el uso del bot. Permitiendo al usuario escribir su ciudad, barrio, dirección en vez de tener que mandar la ubicación o comprobar las estadísticas de uso del bot a nivel global.
+  \item \textbf{Capítulo 7: Cuarta versión - Escribir direcciones y estadísticas}. Este apartado trata sobre la última versión del bot, en la cúal nuestro objetivo era mejorar y facilitar el uso del bot. Permitiendo al usuario escribir su ciudad, barrio, dirección en vez de tener que mandar la ubicación o comprobar las estadísticas de uso del bot a nivel global.
   
   \item \textbf{Capítulo 8: Conclusiones y trabajo futuro}. En este último capítulo sacamos conclusiones sobre el desarrollo del bot en Telegram y exponemos las mejoras futuras a implementar en el bot.
 \end{itemize}
@@ -232,9 +235,13 @@ Los desarrolladores deben crear sus bots a través de \texttt{@BotFather}. Este b
 \end{figure}
 
 \section{Telepot}
-\texttt{Telepot} es un framework desarrollado por Nick Lee (\url{https://github.com/nickoala/telepot}) que te ayuda a desarrollar bots de Telegram usando Python. La funcionalidad básica de Telepot consiste en servir de wrapper de todas las funciones de la API de Telegram para así poder programar el código de los bots en Python. Como comentábamos en la sección anterior el uso de Telegram Bot API se realiza mediante solicitudes HTTPS a este servicio.
+\texttt{Telepot} es un framework desarrollado por Nick Lee (\url{https://github.com/nickoala/telepot}) que te ayuda a desarrollar bots de Telegram usando Python. La funcionalidad básica de Telepot consiste en servir de \textit{wrapper} de todas las funciones de la API de Telegram para así poder programar el código de los bots en Python. Como comentábamos en la sección anterior el uso de Telegram Bot API se realiza mediante solicitudes HTTPS a este servicio.
 
-Además de esto, también ofrece funcionalidades para hacer más cómoda la gestión de servidor de tu bot. Cuando creas un bot, tienes que ir pidiendo a los servidores de Telegram \textit{updates} para que te envíen una lista con los mensajes que le han sido enviados. Telepot te proporciona métodos para que no tengas que preocuparte de montar toda una estructura que gestione su recepción. Telepot se encarga de crear hilos de ejecución por cada chat nuevo que se abre con el bot y de pararlos cuando estos llevan demasiado tiempo sin realizar ninguna tarea. 
+Además de esto, también ofrece funcionalidades para hacer más cómoda la gestión de servidor de tu bot. Cuando creas un bot, tienes que ir pidiendo a los servidores de Telegram \textit{updates} para que te envíen una lista con los mensajes que le han sido enviados. Telepot te proporciona métodos para que no tengas que preocuparte de montar toda una estructura que gestione su recepción. Telepot se encarga de crear hilos de ejecución por cada chat nuevo que se abre con el bot y de pararlos cuando estos llevan demasiado tiempo sin realizar ninguna tarea.
+
+Nick Lee ofrece también una guía de referencia de Telepot (\url{http://telepot.readthedocs.io/en/latest/reference.html}) en la que explica en detalle las funciones de las que dispone el framework. El uso conjunto del amplio repertorio de ejemplos de código del repositorio de GitHub junto con esta guía de referencia hacen que se agilice bastante el proceso de aprender a codificar bots.
+
+Cabe destacar también que el repositorio está siendo actualizado con frecuencia para adaptarse a las nuevas funcionalidades que va añadiendo Telegram.
 
 \newpage
 \mychapter{3}{Cap\'itulo 3: Experimentaci\'on previa}
@@ -431,7 +438,8 @@ que indica el sistema \textit{World Geodetic System 1984} en el que está proyect
 \mychapter{7}{Cap\'itulo 7: Cuarta versión - Escribir direcciones y estadísticas}
 \newpage
 \mychapter{8}{Cap\'itulo 8: Conclusiones y trabajo futuro}
-
+% Este párrafo supongo que irá en las conclusiones como dijo Carlos, estaba en los objetivos antes.
+Al empezar este proyecto, la idea principal era aprender a hacer un bot de Telegram partiendo de los conocimientos previos adquiridos durante la carrera. Para esto, también teníamos como objetivo mejorar nuestra habilidad con Python, que no es un lenguaje que se use ampliamente durante el grado, y con bases de datos no SQL, en este caso MongoDB que se usa en alguna asignatura. Otro punto importante era ser capaces de buscar e integrar APIs que nos resultasen útiles para nuestro bot. Finalmente, también queríamos coger soltura escribiendo memorias de esta extensión utilizando LateX, que no es algo que se practique antes del trabajo de fin de grado.
 \newpage
 \mychapter{0}{Ap\'endice}
 

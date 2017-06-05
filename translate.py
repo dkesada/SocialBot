@@ -7,7 +7,7 @@ def location(lang):
 		text += "Si lo prefieres puedes escribir la dirección en la que te encuentras. O también la ciudad o el barrio "
 		text += "en el que estás buscando los locales. \nTambién puedes probar el bot con la localización por defecto."
 	else:
-		text = "Share your location!\n "
+		text = "Share your location!\n"
 		text += "If you prefer you can write the address you are in. Or also the city or the neighborhood "
 		text += "where are you looking for the locals.\nYou can also try our bot with the default location."
 
@@ -282,13 +282,13 @@ def rated(lang, prlist, pos):
 		msg = "The best rated are " + first
 	
 	if len(prlist) > 1:
-		msg += + ", "+ prlist[pos[1]] + " (" + str(pos[1]) + " " + star + ")"
+		msg += ", "+ prlist[pos[1]] + " (" + str(pos[1]) + " " + star + ")"
 	if len(prlist) > 2:
 		third = prlist[pos[2]] + " (" + str(pos[2])+ " " + star + ")"
 		if lang == "Espanol":
 			msg += " y " + third + ".\n"
 		else:
-			msg =" and " + third + ".\n"	
+			msg +=" and " + third + ".\n"	
 		
 	return msg	
 	
