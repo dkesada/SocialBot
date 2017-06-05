@@ -519,8 +519,25 @@ A pesar de que al principio cuesta un poco comprender la sintaxis, después resul
 
 \section{Trabajo futuro}
 % Trabajo futuro
-
 %Al empezar este proyecto, la idea principal era aprender a hacer un bot de Telegram partiendo de los conocimientos previos adquiridos durante la carrera. Para esto, también teníamos como objetivo mejorar nuestra habilidad con Python, que no es un lenguaje que se use ampliamente durante el grado, y con bases de datos no SQL, en este caso MongoDB que se usa en alguna asignatura. Otro punto importante era ser capaces de buscar e integrar APIs que nos resultasen útiles para nuestro bot. Finalmente, también queríamos coger soltura escribiendo memorias de esta extensión utilizando LateX, que no es algo que se practique antes del trabajo de fin de grado.
+
+\newpage
+\mychapter{9}{Aportaciones individuales}
+En general ambos autores hemos participado en todos los aspectos del proyecto. La parte de la experimentación previa la realizamos de forma individual, aunque trabajando aspectos muy parecidos y utilizando \texttt{Telepot}.
+
+\section{David Quesada L\'opez}%dfg
+
+\section{Mateo Garc\'ia Fuentes}
+En la primera versión, me encargué de procesar los datos que devolvía el método \texttt{places\_nearby} de manera que guardaba el nombre y las coordenadas de los locales para así mostrar los restaurantes en botones y al pulsar estos mandar la localización del establecimiento pulsado. Después también me encargué de filtrar los establecimientos por tipo, es decir, el método \texttt{places\_nearby} acepta como parámetro unos determinados tipos de locales de los cuales mostramos cinco al usuario y una vez pulsado se le muestran al usuario los establecimientos de ese tipo. 
+
+En la segunda versión, me encargué de iniciar el primer esqueleto de \texttt{steps}, aún en el archivo principal, que pasaría a ser un módulo que controla los pasos de cada usuario en el bot. También me encargue de implementar la opción que permite ir hacia atrás a los usuarios, en el módulo \texttt{steps}ya separado que se invoca desde un \texttt{InlineKeyboardMarkup}. Después de que observamos que el  método \texttt{places\_nearby} no ofrecía todos los establecimientos posibles me encargué de cambiar este método por el nuevo \texttt{places} que ofrece el mismo servicio de Google Maps. De la nueva parte de la interacción con el usuario me encargué de implementar que el usuario pudiera realizar las puntuaciones del local que haya elegido y que mostrase la puntuación de todos los establecimientos en el paso de elegir local. También me encargué de investigar e implementar la fórmula de haversine para calcular la distancia entre la ubicación del usuario y el establecimiento. También implementé  la funcionalidad de mostrar las fotos de los locales que las tuvieran.
+
+En la tercera versión, implementé la funcionalidad de \texttt{settings} que son los ajustes que el usuario puede cambiar como el idioma, el radio de las consultas o si solo quiere ver los establecimientos abiertos. También me encargué de que estos ajustes se tuvieran en cuenta en la consulta que hacemos a la API de Google Maps donde le introducimo por parámetro los ajuste que tenga seleccionados el cliente. Programé el nuevo módulo de esta versión que era el encargado de traducir el bot, como explicamos anteriormente el bot recibe el idioma del usuario y devuelve la frase correspondiente en el idioma indicado. La mayor parte de la implementación de los heatmaps lo hicimos en conjunto, excepto la función \texttt{calculateBounds} que se encarga de calcular la esquina inferior izquierda y la superior derecha de la imagen del mapa de calor utilizando la fórmula del haversine, como explicamos en un capítulo anterior.
+
+En la cuarta versión, implementé la funcionalidad de ayuda, también añadí la nueva funcionalidad de escribir la dirección por texto con el nuevo método de \texttt{geocode}. Además me encargué de mejorar la manera de mostrarle la información de los establecimientos a los usuarios de forma que fuera más amigable para este.
+
+En la memoria, me encargué de explicar los tipos de teclados que ofrece Telegram Bot API y escribí el capítulo de la primera version. De la segunda version expliqué las secciones de interacción con el usuario (valoraciones, haversine, ...) y de otros cambios (el cambio al método \texttt{places}). En el capítulo de la tercera versión me encargué de explicar como implementamos los mapas de calor. Además también escribí el capítulo de la cuarta versión y el índice de abreviaturas. Tras enviar el primer borrador me encargué de corregir el resumen y la introducion además de los capítulos 2 y 4.
+
 \newpage
 \mychapter{0}{Ap\'endice}
 
