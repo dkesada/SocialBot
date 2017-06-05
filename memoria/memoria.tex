@@ -191,7 +191,7 @@ De cara a la implementación del bot, este se valdrá de la ubicación que se le en
   \item Cuando se seleccione un establecimiento, \textbf{se devolverá su ubicación} y la información de la que disponga el bot sobre él.
   \item Poderle dar una \textbf{puntuación} a los establecimientos y ser capaz de enviar fotografías al bot.
   \item Poder mostrar un \textbf{mapa de calor} en torno a tu localización reflejando las ubicaciones más concurridas por otros usuarios.
-  \item Mostrarnos \textbf{información} de uso del bot de cara a su posterior desarrollo.
+  \item Mostrar \textbf{información} de uso del bot de cara a su posterior desarrollo.
 \end{itemize}
 
 
@@ -436,6 +436,50 @@ que indica el sistema \textit{World Geodetic System 1984} en el que está proyect
 %img de heatmap
 \newpage
 \mychapter{7}{Cap\'itulo 7: Cuarta versión - Escribir direcciones y estadísticas}
+Con la tercera versión ya cumplíamos los objetivos que habíamos establecido antes de empezar con el desarrollo del bot. En esta nueva versión nos centramos en hacer más amigable el uso del bot, de manera que el uso sea más rápido y cómodo.
+
+\section{Direcciones}
+En anteriores versiones la única forma de que el bot supiera tu localización era compartiéndola o utilizando la que ofrecemos por defecto. En este versión añadimos la posibilidad de escribir la dirección en formato texto, es decir, en el momento en el que el bot te pide la localización el usuario puede escribir la calle, el barrio o la ciudad en la que está. Este texto lo procesamos con la ayuda de otro servicio que ofrece la API de Google Maps, \texttt{geocode}, para transformarlo en unas coordenadas geográficas. Mostramos la dirección formateada en la conversación por si hay algún error debido que en distintas ciudades pueden haber calles con el mismo nombre. Y a partir de aquí seguiría el proceso de selección de local de la misma manera que si hubiese compartido la localización.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[height=50mm]{direccion.jpg}
+  \caption{Envío de dirección escrita}
+  \label{fig:direccion}
+\end{figure}
+
+\section{Cambios al mostrar los locales}
+Anteriormente al mostrar los locales mostrábamos primero en el texto uno por uno todos los establecimientos con la distancia a la que se encontraba el usuario y la puntuación media que tenía y luego una lista de \texttt{InlineKeyboardMarkups} de cada uno de los locales. Pero esto en lugares donde hay muchos locales provoca un mensaje muy largo y correoso por lo que decidimos cambiarlo.Ya que además como indicabamos en la sección de Motivación uno de los problemas que nos encontramos en los servicios para buscar locales de ocio era la gran cantidad de información que nos ofrecían y que eramos incapaces de procesar.
+
+Por ello a partir de esta versión, después de elegir el tipo de establecimiento al que el usuarios quiera ir ofrecemos, por mensaje de texto, los tres locales más cercanos a su posición y los tres mejor valorados por el resto de usuarios en el radio que el cliente tenga establecido. Y también mostramos la lista  de \texttt{InlineKeyboardMarkups} de cada uno de los locales para que el usuario pueda seleccionar el que quiera.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[height=50mm]{muestraLocales.jpg}
+  \caption{Cambios al mostrar los locales}
+  \label{fig:muestraLocales}
+\end{figure}
+
+\section{Estadísticas}
+Esta nueva opción solo está disponible para los desarrolladores, se trata de un comando \texttt{/stats}, que ofrece las estadísticas de uso del bot. Tras introducir el comando, que no mostramos en la lista de comandos, comprueba si el cliente que introdujo el comando es un superusuario. Los dos únicos superusuarios somos los dos desarrolladores. Si un usuario no autorizado introduce el comando se le enviará un mensaje que le advierte que no tiene permiso para ver ese contenido y se le ofrece la única opción de volver hacia atrás. En el caso de que sí sea un superusuario se muestra el total de usuarios, los usuarios activos durante los últimos siete días, el total de local valorados y los que tienen fotos, y también las estadísticas en cuanto al idioma utilizado.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[height=50mm]{stats.jpg}
+  \caption{Estadísticas}
+  \label{fig:stats}
+\end{figure}
+
+\section{Ayuda}
+Implementamos un nuevo comando en el bot, \texttt{/help}, este comando está presente es casi todos los bots de Telegram. Y su única utilidad es la de resumir como funciona el bot, como utilizarlo y cuales son sus opciones.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[height=50mm]{ayuda.jpg}
+  \caption{Ayuda}
+  \label{fig:ayuda}
+\end{figure}
+
 \newpage
 \mychapter{8}{Cap\'itulo 8: Conclusiones y trabajo futuro}
 % Este párrafo supongo que irá en las conclusiones como dijo Carlos, estaba en los objetivos antes.
