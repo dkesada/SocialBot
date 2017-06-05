@@ -495,11 +495,12 @@ Una vez asumida y comprendida la interfaz, el hecho de estar desarrollando un bo
 
 En definitiva, los bots de Telegram son una muy buena posibilidad a la hora de decidir una plataforma para aplicaciones en dispositivos móviles, dadas las facilidades que ofrecen y la gran visibilidad que puedes llegar a lograr sin coste alguno.
 
-\section{Python}
+\section{Python y Telepot}
 En primer lugar, el lenguaje elegido fue Python para poder aprovechar el uso de Telepot. Python no es un lenguaje ampliamente utilizado durante el grado, por lo que no partimos con conocimientos sobre él. Sin embargo, sí que habíamos usado antes lenguajes orientados a objetos y lenguajes interpretados, por lo que pudimos adaptarnos a él tras el periodo de experimentación previa.
 
-\section{Telepot}
-% Uso de Telepot
+La sencillez al la hora de escribir código en Python hace bastante fácil su aprendizaje y uso, pero su mejor característica es la amplia gama de librerías de las que dispone.
+
+En un principio, el uso de Telepot sólo sirve para codificar los bots en Python, pero una vez comprendido el uso de los \textit{handlers} y de \textit{DelegatorBot}, la carga de trabajo se ve reducida notablemente. 
 
 \section{Base de datos}
 Para la base de datos, estamos en un entorno adecuado para NoSQL. Dada la diversidad de los datos y el formato \textit{JSON} que utiliza Telegram para hacer llegar los mensajes enviados al bot, resultó una buena opción MongoDB. Este lenguaje orientado a documentos funciona bien fuera del entorno cluster al que están dirigidos gran parte de los lenguajes NoSQL.
@@ -508,11 +509,13 @@ Además, es sencillo integrarlo con Python a través de Pymongo. Como este lenguaj
 
 Por ahora no tenemos pensado usar un cluster para la base de datos, ya que el tráfico y el tamaño no son suficientes. Aún así, si en un futuro queremos montarlo es posible crear un conjunto de réplica dado que ya partimos de usar MongoDB.
 
-\section{Uso de API's}
-% Uso de API's
+%\section{Uso de API's}
+% Una parte importante del proyecto fue añadir funcionalidades nuevas a nuestro bot, para lo que tuvimos que buscar API's en python que tuviesen las características que necesitábamos. 
 
 \section{Creación de la memoria}
-% Uso de Latex
+Durante el grado, nunca nos habíamos enfrentado a la tarea de generar un documento de estas dimensiones y características. Por tanto, de cara a afrontarlo, decidimos emplear LaTeX, un sistema de composición de textos orientado a tareas de este estilo. 
+
+A pesar de que al principio cuesta un poco comprender la sintaxis, después resulta bastante sencillo su uso, dando facilidades a la hora de insertar citas al código y a la hora de estructurar el documento.
 
 \section{Trabajo futuro}
 % Trabajo futuro
