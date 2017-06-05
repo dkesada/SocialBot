@@ -482,8 +482,42 @@ Implementamos un nuevo comando en el bot, \texttt{/help}, este comando está pres
 
 \newpage
 \mychapter{8}{Cap\'itulo 8: Conclusiones y trabajo futuro}
-% Este párrafo supongo que irá en las conclusiones como dijo Carlos, estaba en los objetivos antes.
-Al empezar este proyecto, la idea principal era aprender a hacer un bot de Telegram partiendo de los conocimientos previos adquiridos durante la carrera. Para esto, también teníamos como objetivo mejorar nuestra habilidad con Python, que no es un lenguaje que se use ampliamente durante el grado, y con bases de datos no SQL, en este caso MongoDB que se usa en alguna asignatura. Otro punto importante era ser capaces de buscar e integrar APIs que nos resultasen útiles para nuestro bot. Finalmente, también queríamos coger soltura escribiendo memorias de esta extensión utilizando LateX, que no es algo que se practique antes del trabajo de fin de grado.
+Finalmente, vamos a recapitular sobre lo que hemos conseguido durante este proyecto de cara a las capacidades adquiridas y a las tecnologías empleadas y sobre el trabajo que queda por realizar en el futuro.
+
+\section{Bots de Telegram}
+Al empezar este proyecto, conocíamos los bots de Telegram y habíamos usado alguno antes, pero no sabíamos nada acerca de su creación. De cara a afrontar la codificación del bot, tuvimos que apoyarnos en nuestros conocimientos previos y aprender sobre la marcha las capacidades necesarias. 
+
+Los bots son una herramienta definitivamente potente de Telegram. La capacidad de poder crear herramientas a disposición de millones de potenciales usuarios sin tener que realizar más que unos pocos pasos de creación a través de \textit{@BotFather}, junto con toda la plataforma que te ofrece Telegram ya montada pone a disposición de cualquiera la creación de bots. Esta plataforma ayuda en gran medida a la robustez de los bots, al sólo tener que encargarse de comunicarse con los servidores de Telegram para obtener \textit{updates} y enviar mensajes. 
+
+También es cierto que por ello los bots tienen que adaptarse a la estructura que ofrece Telegram, y hay que ceñirse a las posibilidades de interacción que permite un chat de una aplicación de mensajería. A cambio de poder utilizar la interfaz de Telegram, tienes que asumir las limitaciones que presenta. Aún así, compensa adaptarse a su interfaz, ya que ofrece bastantes posibilidades y se van ampliando sus capacidades con bastante frecuencia.
+
+Una vez asumida y comprendida la interfaz, el hecho de estar desarrollando un bot en Telegram se diluye y pasa a ser más un medio que un fin: estás realizando una aplicación que se sirve de la plataforma de Telegram para funcionar, simplemente ciñes la funcionalidad que quieres que tenga tu bot a las posibilidades de interacción que ofrece Telegram, pero por debajo sigue siendo una aplicación que podrías haber adaptado a otro medio distinto.
+
+En definitiva, los bots de Telegram son una muy buena posibilidad a la hora de decidir una plataforma para aplicaciones en dispositivos móviles, dadas las facilidades que ofrecen y la gran visibilidad que puedes llegar a lograr sin coste alguno.
+
+\section{Python}
+En primer lugar, el lenguaje elegido fue Python para poder aprovechar el uso de Telepot. Python no es un lenguaje ampliamente utilizado durante el grado, por lo que no partimos con conocimientos sobre él. Sin embargo, sí que habíamos usado antes lenguajes orientados a objetos y lenguajes interpretados, por lo que pudimos adaptarnos a él tras el periodo de experimentación previa.
+
+\section{Telepot}
+% Uso de Telepot
+
+\section{Base de datos}
+Para la base de datos, estamos en un entorno adecuado para NoSQL. Dada la diversidad de los datos y el formato \textit{JSON} que utiliza Telegram para hacer llegar los mensajes enviados al bot, resultó una buena opción MongoDB. Este lenguaje orientado a documentos funciona bien fuera del entorno cluster al que están dirigidos gran parte de los lenguajes NoSQL.
+
+Además, es sencillo integrarlo con Python a través de Pymongo. Como este lenguaje sí lo habíamos practicado antes, pudimos aplicar lo que ya sabíamos de su uso en terminal, dado que el funcionamiento es el mismo que con Pymongo. 
+
+Por ahora no tenemos pensado usar un cluster para la base de datos, ya que el tráfico y el tamaño no son suficientes. Aún así, si en un futuro queremos montarlo es posible crear un conjunto de réplica dado que ya partimos de usar MongoDB.
+
+\section{Uso de API's}
+% Uso de API's
+
+\section{Creación de la memoria}
+% Uso de Latex
+
+\section{Trabajo futuro}
+% Trabajo futuro
+
+%Al empezar este proyecto, la idea principal era aprender a hacer un bot de Telegram partiendo de los conocimientos previos adquiridos durante la carrera. Para esto, también teníamos como objetivo mejorar nuestra habilidad con Python, que no es un lenguaje que se use ampliamente durante el grado, y con bases de datos no SQL, en este caso MongoDB que se usa en alguna asignatura. Otro punto importante era ser capaces de buscar e integrar APIs que nos resultasen útiles para nuestro bot. Finalmente, también queríamos coger soltura escribiendo memorias de esta extensión utilizando LateX, que no es algo que se practique antes del trabajo de fin de grado.
 \newpage
 \mychapter{0}{Ap\'endice}
 
