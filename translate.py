@@ -282,7 +282,7 @@ def rated(lang, prlist, pos):
 		msg = "The best rated are " + first
 	
 	if len(prlist) > 1:
-		msg += + ", "+ prlist[pos[1]] + " (" + str(pos[1]) + " " + star + ")"
+		msg += ", "+ prlist[pos[1]] + " (" + str(pos[1]) + " " + star + ")"
 	if len(prlist) > 2:
 		third = prlist[pos[2]] + " (" + str(pos[2])+ " " + star + ")"
 		if lang == "Espanol":
