@@ -50,19 +50,19 @@
 \beforepartskip
 \centering
 
-\thetitle
+{\Large \thetitle}
 
 \theauthor
 
-{\Large GRADO EN INGENIER\'IA INFORM\'ATICA 
+GRADO EN INGENIER\'IA INFORM\'ATICA 
 
 FACULTAD DE INFORM\'ATICA
 
-UNIVERSIDAD COMPLUTENSE DE MADRID}
+UNIVERSIDAD COMPLUTENSE DE MADRID
 
 \includegraphics{logo.jpg}
 
-{\Large TRABAJO DE FIN DE GRADO EN INGENIER\'IA INFORM\'ATICA}
+TRABAJO DE FIN DE GRADO EN INGENIER\'IA INFORM\'ATICA
 
 Director: Carlos Gregorio Rodríguez
 
@@ -127,6 +127,7 @@ Gracias a Nick Lee (https://github.com/nickoala) por desarrollar \texttt{Telepot
 \begin{itemize}
 \item \textbf{API:} del inglés \textit{Application Programming Interface}, es una interfaz de programación de aplicaciones. Es una definición de los servicios (funciones/funcionalidades) que un determinado módulo \textit{software} provee a otros módulos.
 \item \textbf{ESRI:} del inglés \textit{Environmental Systems Research Institute}, es un proveedor de \textit{software} de sistemas de información geográfica (GIS), aplicaciones web de GIS y aplicaciones de gestión de bases de datos geográficas.
+\item \textbf{GPL:} del inglés \textit{General Public License}, es una licencia de derechos de autor de \textit{sofware} libre creada por la \textit{Free Software Foundation}.
 \item \textbf{GPS:} del inglés \textit{Global Positioning System}, es un sistema de posicionamiento a nivel global que permite determinar la posición de un objeto en nuestro planeta.
 \item \textbf{HTTPS:} del inglés \textit{Hypertext Transfer Protocol Secure}, es un protocolo seguro de transferencia de hipertexto. Consiste en la comunicación a través de HTTP (Hypertext Transfer Protocol) dentro de una conexión cifrada que asegura la autenticación del sitio web visitado y la protección de la privacidad e integridad de los datos intercambiados.
 \item \textbf{JSON:} del inglés \textit{JavaScript Object Notation}, es un formato de archivo que utiliza texto legible para humanos para transmitir objetos de datos.
@@ -234,7 +235,9 @@ Los desarrolladores deben crear sus bots a través de \textit{@BotFather}. Este b
 \end{figure}
 
 \section{\texttt{Telepot}}
-\texttt{Telepot} es un \textit{framework} desarrollado por Nick Lee (\url{https://github.com/nickoala/telepot}) que te ayuda a desarrollar bots de \texttt{Telegram} usando \texttt{Python}. La funcionalidad básica de \texttt{Telepot} consiste en servir de \textit{wrapper} de todas las funciones de la \textit{API} de \texttt{Telegram} para así poder programar el código de los bots en \texttt{Python}. Como comentábamos en la sección anterior el uso de \texttt{Telegram Bot API} se realiza mediante solicitudes \texttt{HTTPS} a este servicio.
+\texttt{Telegram} está desarrollado bajo una licencia GPL, es decir, es \textit{software} libre. Por lo que todo el mundo puede ver su código. Esto ha permitido que programadores de todo el mundo hayan creado diversos \textit{frameworks} para la plataforma de bots de \texttt{Telegram} adaptándose a diferentes lenguajes u otras necesidades. 
+
+\texttt{Telepot} es uno de estos \textit{frameworks}, desarrollado por Nick Lee (\url{https://github.com/nickoala/telepot}) te ayuda a desarrollar bots de \texttt{Telegram} usando \texttt{Python}. La funcionalidad básica de \texttt{Telepot} consiste en servir de \textit{wrapper} de todas las funciones de la \textit{API} de \texttt{Telegram} para así poder programar el código de los bots en \texttt{Python}. Como comentábamos en la sección anterior el uso de \texttt{Telegram Bot API} se realiza mediante solicitudes \texttt{HTTPS} a este servicio.
 
 Además de esto, también ofrece funcionalidades para hacer más cómoda la gestión de servidor de tu bot. Cuando creas un bot, tienes que ir pidiendo a los servidores de \texttt{Telegram} \textit{updates} para que te envíen una lista con los mensajes que le han sido enviados. \texttt{Telepot} te proporciona métodos para que no tengas que preocuparte de montar toda una estructura que gestione su recepción. \texttt{Telepot} se encarga de crear hilos de ejecución por cada \textit{chat} nuevo que se abre con el bot y de pararlos cuando estos llevan demasiado tiempo sin realizar ninguna tarea.
 
@@ -261,13 +264,13 @@ En estos primeros bots también experimentamos con los distintos tipos de teclado
 
 \begin{figure}[h!]
 \centering
-\begin{minipage}{7cm}
+\begin{minipage}{6cm}
   \centering
   \includegraphics[height=40mm]{replyKB.jpg}
   \caption{ReplyKeyboardMarkup}
   \label{fig:ReplyKeyboardMarkup}
 \end{minipage}%
-\begin{minipage}{7cm}
+\begin{minipage}{6cm}
   \centering
   \includegraphics[height=40mm]{inlineKB.jpg}
   \caption{\textit{InlineKeyboardMarkup}}
@@ -293,13 +296,13 @@ Al iniciar el bot, el usuario recibía un mensaje que rezaba \textit{Share your l
 
 \begin{figure}[h!]
 \centering
-\begin{minipage}{7cm}
+\begin{minipage}{6cm}
   \centering
   \includegraphics[height=40mm]{paso1v1.jpg}
   \caption{Enviar localización}
   \label{fig:Paso1v1}
 \end{minipage}%
-\begin{minipage}{7cm}
+\begin{minipage}{6cm}
   \centering
   \includegraphics[height=40mm]{paso2v1.jpg}
   \caption{Escoger tipo}
@@ -393,13 +396,13 @@ Para tener el texto del bot en varios idiomas creamos un nuevo módulo que contie
 
 \begin{figure}[h!]
 \centering
-\begin{minipage}{7cm}
+\begin{minipage}{6cm}
   \centering
   \includegraphics[height=40mm]{elegirIdioma.png}
   \caption{Elegir idioma}
   \label{fig:elegIdiom}
 \end{minipage}%
-\begin{minipage}{7cm}
+\begin{minipage}{6cm}
   \centering
   \includegraphics[height=40mm]{esp.png}
   \caption{Tras cambiar a español}
@@ -482,7 +485,7 @@ Implementamos un nuevo comando en el bot, \textit{/help}, este comando está pres
 \mychapter{8}{Cap\'itulo 8: Conclusiones y trabajo futuro}
 Finalmente, vamos a recapitular sobre lo que hemos conseguido durante este proyecto de cara a las capacidades adquiridas y a las tecnologías empleadas y sobre el trabajo que queda por realizar en el futuro.
 
-\section{bots de \texttt{Telegram}}
+\section{Bots de \texttt{Telegram}}
 Al empezar este proyecto, conocíamos los bots de \texttt{Telegram} y habíamos usado alguno antes, pero no sabíamos nada acerca de su creación. De cara a afrontar la codificación del bot, tuvimos que apoyarnos en nuestros conocimientos previos y aprender sobre la marcha las capacidades necesarias. 
 
 Los bots son una herramienta definitivamente potente de \texttt{Telegram}. La capacidad de poder crear herramientas a disposición de millones de potenciales usuarios sin tener que realizar más que unos pocos pasos de creación a través de \textit{@BotFather}, junto con toda la plataforma que te ofrece \texttt{Telegram} ya montada pone a disposición de cualquiera la creación de bots. Esta plataforma ayuda en gran medida a la robustez de los bots, al sólo tener que encargarse de comunicarse con los servidores de \texttt{Telegram} para obtener \textit{updates} y enviar mensajes. 
@@ -520,7 +523,7 @@ Los objetivos marcados antes del desarrollo del bot los hemos cumplido, pero a m
 
 La idea de añadir reconocimiento de imágenes para que los usuarios nos pudieran enviar fotos de las cartas de comida o bebidas y poder mostrar la información al resto de los usuarios, surgió cuando implementamos la capacidad de poder enviar y ver fotos en el bot. Pero debido a las restricciones temporales tuvimos que decidir si implementar los mapas de calor o el reconocimiento de imágenes, y al final dimos prioridad a los mapas de calor.
 
-Nos gustaría aumentar la funcionalidad de los mapas de calor. Aprovechando el navegador interno de \texttt{Telegram} que permite usar \texttt{HTML5} poder hacer un navegador sobre un mapa con todos los datos de nuestros usuarios. Es cierto que \texttt{Google Maps} ofrece un servicio parecido en su \textit{API}, pero debido a las restricciones de uso de \texttt{Telegram Bot API} no lo podemos utilizar, ya que no está permitido abrir enlaces externos dentro del navegador.
+Nos gustaría aumentar la funcionalidad de los mapas de calor. Aprovechando el navegador interno de \texttt{Telegram} que permite usar \texttt{HTML5} poder hacer un navegador sobre un mapa con todos los datos de nuestros usuarios. Es cierto que \texttt{Google Maps} ofrece un servicio parecido en su \textit{API}, pero debido a las restricciones de uso de \texttt{Telegram Bot API} no lo podemos utilizar, ya que no está permitido abrir enlaces externos dentro del navegador. Además nos gustaría ampliar la funcionalidad temporal de los \textit{heatmaps}, es decir, que se pudieran mostrar los mapas de calor según el día elegido o la hora. Para esto también tendríamos que añadir nuevos campos o incluso una nueva colección a nuestra base de datos.
 
 Otra idea que se nos ocurrió pero debido a la falta de tiempo y de datos en nuestra base de datos aún no pudimos implementar. Se trata de recomendaciones de locales, según lo que otros usuarios que hayan valorado con una buena puntuación los mismos establecimientos a los que el usuario también haya dado una buena puntuación, ofrecer otros locales con buenas valoraciones por parte de estos usuarios en los que el usuario aún no haya estado.
 
