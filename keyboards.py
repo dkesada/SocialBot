@@ -149,3 +149,10 @@ def photos(info, pos, lang):
 	markupPhotos = InlineKeyboardMarkup(inline_keyboard = kboard)
 	return markupPhotos
 	
+def afterMap(lang):
+	text = translate.optionChanged(lang)   
+	return InlineKeyboardMarkup(inline_keyboard=[
+					[InlineKeyboardButton(text=text[0], callback_data='settings')],
+					[InlineKeyboardButton(text=text[2], callback_data='start')],	
+               ])
+

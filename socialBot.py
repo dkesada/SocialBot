@@ -20,6 +20,8 @@ import steps
 import keyboards
 import translate
 
+import matplotlib
+matplotlib.use('Cairo')#Use this backend to plot and create a png file
 import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
 
@@ -41,7 +43,7 @@ http://qingkaikong.blogspot.com.es/2016/02/plot-earthquake-heatmap-on-basemap-an
 # Readying the google maps client
 
 mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api places key as the first argument when launching
-geoClient = googlemaps.Client(key=sys.argv[2]) #Input the api geocode key as the first argument when launching
+geoClient = googlemaps.Client(key=sys.argv[2])
 
 # One UserHandler created per chat_id. May be useful for sorting out users
 # Handles chat messages depending on its tipe
@@ -76,11 +78,10 @@ class UserHandler(telepot.helper.ChatHandler):
 				lt.append(geo['location']['latitude'])
 		loc = db.getLocation(chat_id)
 		llcrnrlon, llcrnrlat, urcrnrlon, urcrnrlat= self.calculateBounds(2., loc)
-		#3857 o 4326
 		map = Basemap(llcrnrlon=llcrnrlon,llcrnrlat=llcrnrlat,urcrnrlon=urcrnrlon,urcrnrlat=urcrnrlat, epsg=4326)
 		map.arcgisimage(service='World_Imagery', xpixels = 1500, verbose= True)
-		x,y = map(ln, lt)		
-		map.plot(x, y, 'ro', markersize=5,markeredgecolor="none", alpha=0.33)
+		x,y = map(ln, lt)	
+		map.plot(x, y, 'ro', markersize=5,markeredgecolor="none", alpha=0.5)
 		x0, y0 = map(loc[1], loc[0])
 		x1, y1 = map(loc[1]-0.001, loc[0]+0.0017)	
 		plt.imshow(plt.imread('loc.png'),  extent = (x0, x1, y0, y1))
@@ -99,11 +100,11 @@ class UserHandler(telepot.helper.ChatHandler):
 				bot.sendMessage(chat_id, translate.settings(lang), reply_markup=keyboards.settings(lang))
 			elif msg['text'] == "/heatmap":
 				locs = db.getAllLocations()
-				self.heatmap(locs, chat_id)
 				lang = db.getLanguage(chat_id)
 				bot.sendMessage(chat_id, translate.takesFew(lang), reply_markup=None)
+				self.heatmap(locs, chat_id)				
 				bot.sendPhoto(chat_id, open('out.png', 'rb'))
-				bot.sendMessage(chat_id, translate.location(lang), reply_markup=keyboards.markupLocation(lang))
+				bot.sendMessage(chat_id, translate.afterMap(lang), reply_markup=afterMap(lang))
 			elif msg['text'] == "Default" or msg['text'] == "Por defecto":
 				db.storeLocation(chat_id, {u'latitude': 40.411085, u'longitude': -3.685014}, msg['date'])
 				state = 1
@@ -207,12 +208,17 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			if sending != None and 'sending' in sending:
 				self.loc = sending['sending']['location']
 				
+		if query_data == "start":
+			self.state = 1
+		elif query_data == "settings":
+			self.state = 0
+				
 		if query_data == "back":
 			stp = steps.stepBack(self.state)	
 			if stp != False:
 				self.state -= 1;
 				if stp == "Init":
-					self.state = 1;
+					self.state = 1
 					self.editor.editMessageText(translate.location(self.language), reply_markup=None)
 				elif stp == "Choose Type":
 					self.editor.editMessageText(translate.lookingFor(self.language), reply_markup=keyboards.inlineEstablishment(self.language))
@@ -220,7 +226,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 					eType = db.getEType(from_id)			
 					self.placesNearBy(eType, from_id)
 				elif stp == "Info Establish":
-					self.state -= 1;
+					self.state -= 1
 					steps.saveStep(from_id, self.state)
 					self.editor.editMessageReplyMarkup(reply_markup=None)
 					bot.sendMessage(self.chat_id, translate.whatWant(self.language), reply_markup=keyboards.optionsKeyboard(self.loc, self.language))
@@ -258,7 +264,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				elif option[0] == "language":
 					self.language = option[1]
 					db.storeLanguage(from_id, self.language)
-					bot.answerCallbackQuery(query_id, translate.languageChanged(self.language))
+					bot.answerCallbackQuery(query_id, translate.langChanged(self.language))
 					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged(self.language))
 				elif option[0] == "num":
 					num = option[1]
@@ -350,7 +356,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		steps.saveStep(self.chat_id, self.state)
 		self.close()
 
-TOKEN = '255866015:AAFvI3sUR1sOFbeDrUceVyAs44KlfKgx-UE'
+TOKEN = '366092875:AAFQUuXo7qz-oK1xdmGWQQEoporpGPunNSA'
 
 bot = telepot.DelegatorBot(TOKEN, [
     pave_event_space()(

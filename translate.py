@@ -8,8 +8,8 @@ def location(lang):
 		text += "en el que estás buscando los locales. \nTambién puedes probar el bot con la localización por defecto."
 	else:
 		text = "Share your location!\n"
-		text += "If you prefer you can write the address you are in. Or also the city or the neighborhood "
-		text += "where are you looking for the locals.\nYou can also try our bot with the default location."
+		text += "If you prefer you can write the address you are in. Or also the city or neighborhood "
+		text += "in which you are looking for the locals. \nYou can also test the bot with the default location."
 
 	return text
 
@@ -19,9 +19,9 @@ def settings(lang):
 		text += "En Escoge parámetros puedes cambiar el radio de los establecimientos que quieres ir, si quieres "
 		text += "el bot solo mostrará los locales que estén abiertos en el momento de la consulta."
 	else:
-		text = "From here you can change the bot's settings. On Choose language you can change the bot's language. "
-		text += "On Choose parameters you can change the radius of the establishments you want to go to, if you want "
-		text += "the bot will show you only locals that are open at the moment of the query."
+		text = "From here you can change the settings of your bot. In Choose language you can change the language of the bot. "
+		text += "In Choose parameters you can change the radius of the establishments you want to go, if you want "
+		text += "the bot will only show the premises that are open at the time of the query."
 		
 	return text
 
@@ -35,7 +35,7 @@ def photoRec(lang):
 	if lang == "Espanol":
 		return "¡Foto recibida, gracias! ¿Qué más quieres hacer?"
 	else:
-		return "Photo received, thanks! What else would you like to do?"
+		return "Photo received, thank you! What more do you want to do?"
 
 def chooseOne(lang):
 	if lang == "Espanol":
@@ -59,20 +59,13 @@ def rate(lang):
 	if lang == "Espanol":
 		return "Y la puntuación de los usuarios es "
 	else:
-		return "And the rate of our users is "
+		return "And the rate of the users is "
 
 def noEstablish(lang):
 	if lang == "Espanol":
 		return "No hay establecimientos con esos parámetros"
 	else:
-		return "There aren't any establishments with those parameters."
-
-def langChanged(lang):
-	if lang == "Espanol":
-		return "Idioma cambiado"
-	else:
-		return "Language changed"
-
+		return "There aren't any establishments with these parameters."
 
 def whatWant(lang):
 	if lang == "Espanol":
@@ -90,31 +83,19 @@ def choooseParam(lang):
 	if lang == "Espanol":
 		return "Escoge los parámetros de tu consulta (radio, abierto ahora, etc.):"
 	else:
-		return "Choose the parameters for your query (radius, open now, etc.)."
-
-def choooseParam(lang):
-	if lang == "Espanol":
-		text = "Desde aquí puedes cambiar los ajustes del bot. En Escoge idioma puedes cambiar el idioma del bot. "
-		text += "En Escoge los parámetros puedes cambiar el radio de los locales a los que quieres ir. Si quieres "
-		text += "el bot puede mostrarte sólo los establecimientos abiertos."
-		return text
-	else:
-		text = "Here you can change the bot's settings. On Choose language you can change the bot's language. "
-		text += "On Choose parameters you can change the radius of the establishments you want to go to. If you want "
-		text += "the bot can show only open locals."
-		return text
+		return "Choose the parameters of your query (radio, open now, etc.):"
 
 def choooseDistance(lang):
 	if lang == "Espanol":
-		return "Escoge una de las distancias que quieres establecer como radio de los locales que estás buscando. La distancias está en metros"
+		return "Escoge una de las distancias que quieres establecer como radio de los locales que estás buscando. Las distancias están en metros."
 	else:
-		return "Choose one of the distances which you want to set as radius of the establishments that you are looking for. The distance is in meters"
+		return "Choose one of the distances that you want to establish as a radio of the premises you are looking for. Distances are in meters."
 
 def onlyOpen(lang):
 	if lang == "Espanol":
 		return "¿Sólo quieres ver establecimientos abiertos en el momento de la consulta?"
 	else:
-		return "Do you want to see only open establishments at the moment of the query?"
+		return "Do you want to see only open establishments at the time of the query?"
 
 def howLocals(lang):
 	if lang == "Espanol":
@@ -134,17 +115,17 @@ def openChanged(lang):
 	else:
 		return "Only open option changed"
 
-def languageChanged(lang):
+def langChanged(lang):
 	if lang == "Espanol":
 		return "Idioma cambiado"
 	else:
 		return "Language changed"
-
+		
 def numberChanged(lang):
 	if lang == "Espanol":
 		return "Número de locales cambiado"
 	else:
-		return "Number of establishment changed"
+		return "Number of locals changed"
 
 def hereIts(lang):
 	if lang == "Espanol":
@@ -156,7 +137,7 @@ def yourRate(lang):
 	if lang == "Espanol":
 		return "Entonces ... ¿Cúal es tu puntuación?"
 	else:
-		return "So... What's your rating?"
+		return "So... What's your rate?"
 
 def sendPhoto(lang):
 	if lang == "Espanol":
@@ -205,7 +186,7 @@ def parameters(lang):
 	if lang == "Espanol":
 		text = ["Escoge el radio", "Escoge un número de locales", "Mostrar solo locales abiertos", "Atrás"]
 	else:
-		text = ["Choose a radius", "Choose a number of establishments", "Show only open establishments", "Back"]
+		text = ["Choose the radius", "Choose a number of establishments", "Show only open establishments", "Back"]
 	return text
 
 def openE(lang):
@@ -233,10 +214,10 @@ def photos(lang):
 	return text
 
 def takesFew(lang):
-	if lang == "Español":
-		return "La imagen tarda unos segundos en enviarse"
+	if lang == "Espanol":
+		return "La imagen tarda unos segundos en enviarse."
 	else:
-		return "The image takes a few seconds to send"
+		return "The image takes a few seconds to send."
 
 def help(lang):
 	if lang == "Espanol":
@@ -245,10 +226,10 @@ def help(lang):
 		text += "Con el comando /settings puedes cambiar la configuración del bot, como el idioma, el radio de las consultas y más. "
 		text += "Con /heatmap el bot te ofrece un mapa de calor de las zonas cercanas a tu posición."
 	else:
-		text = "The basic functionality of @YourPlacesBot is to offer you all the locals that you have around you. "
-		text += "To see them you just have to send your location. And you'll can see the scores and photos of other users. "
-		text += "With the /settings command you can change the configuration of the bot, such as the language, the radius query and more. "
-		text += "With /heatmap the bot gives you a heat map of the areas close to your position. "
+		text = "The basic functionality of @YourPlacesBot is to offer you all the premises that you have around you. "
+		text += "To see them you just have to send your location. And you can see the rates and photos of other users.  "
+		text += "With the command /settings you can change the configuration of the bot, such as the language, the radius of queries and more. "
+		text += "With /heatmap the bot gives you a heat map of the areas near your position. "
 		
 	return text
 	
@@ -311,4 +292,13 @@ def stats(lang, stats):
 		text += "\n" + str(stats['placesRate']) + " locals have been rated. And users have sent photos of " + str(stats['placesPhotos'])
 		text += " different establishments.\n" + str(stats['english']) + " people use the bot in English and " + str(stats['spanish'])
 		text += " in Spanish.\n " 
+	return text
+	
+def afterMap(lang):
+	if lang == "Espanol":
+		text = "¡Aquí lo tienes!\n"
+		text += "¿Qué quieres hacer ahora?" 
+	else:
+		text = "Here it is!\n"
+		text += "What do you want to do now?"
 	return text
