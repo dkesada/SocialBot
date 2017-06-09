@@ -154,6 +154,8 @@ class UserHandler(telepot.helper.ChatHandler):
 						
 	def on__idle(self, event):
 		self.close()
+	def on_close(self, event):
+		self.close()
         
 		
 # One ButtonHandler created per message that has a button pressed.
@@ -198,7 +200,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		    
 	def on_callback_query(self, msg):
 		query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
-		#bot.answerCallbackQuery(query_id)
+		answeredQuery = False
 
 		if self.state == None:
 			self.state = steps.getStep(from_id)
@@ -255,21 +257,25 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 					meters = option[1]
 					db.storeRadius(from_id, meters)
 					bot.answerCallbackQuery(query_id, translate.radiusChanged(self.language))
+					answeredQuery = True
 					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged(self.language))
 				elif option[0] == "bool":
 					openE = option[1]
 					db.storeOpen(from_id, openE)
 					bot.answerCallbackQuery(query_id, translate.openChanged(self.language))
+					answeredQuery = True
 					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged(self.language))
 				elif option[0] == "language":
 					self.language = option[1]
 					db.storeLanguage(from_id, self.language)
 					bot.answerCallbackQuery(query_id, translate.langChanged(self.language))
+					answeredQuery = True
 					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged(self.language))
 				elif option[0] == "num":
 					num = option[1]
 					db.storeNumberE(from_id, num)
 					bot.answerCallbackQuery(query_id, translate.whatWant(self.language))
+					answeredQuery = True
 					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged(self.language))
 						
 		elif steps.step(self.state) == "Choose Type":
@@ -317,6 +323,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			for i in range(int(query_data)):
 				text += star
 			bot.answerCallbackQuery(query_id, text)
+			answeredQuery = True
 			self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionsKeyboard(self.loc, self.language))
 				
 		elif steps.step(self.state) == "Viewing Photos":
@@ -337,6 +344,9 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				self.state = 3
 				eType = db.getEType(from_id)			
 				self.placesNearBy(eType, from_id)
+				
+		if answeredQuery == False:
+			bot.answerCallbackQuery(query_id)
 	
 	def haversine(self, locat, uLoc):
 		locat = locat.split(" ")
@@ -354,6 +364,9 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				
 	def on__idle(self, event):
 		steps.saveStep(self.chat_id, self.state)
+		self.close()
+		
+	def on_close(self, event):
 		self.close()
 
 TOKEN = '366092875:AAFQUuXo7qz-oK1xdmGWQQEoporpGPunNSA'
