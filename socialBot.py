@@ -42,8 +42,8 @@ http://qingkaikong.blogspot.com.es/2016/02/plot-earthquake-heatmap-on-basemap-an
 
 # Readying the google maps client
 
-mapclient = googlemaps.Client(key=sys.argv[1]) #Input the api places key as the first argument when launching
-geoClient = googlemaps.Client(key=sys.argv[2])
+mapclient = googlemaps.Client(key='AIzaSyBGP8h2WjF8NOC4Covro2kDV2Iv5jT_-7Q') #Input the api places key as the first argument when launching
+geoClient = googlemaps.Client(key='AIzaSyC9kpWU3vzPLVIRFQtHCkp6uoIquXdHnYE')
 
 # One UserHandler created per chat_id. May be useful for sorting out users
 # Handles chat messages depending on its tipe
@@ -104,7 +104,7 @@ class UserHandler(telepot.helper.ChatHandler):
 				bot.sendMessage(chat_id, translate.takesFew(lang), reply_markup=None)
 				self.heatmap(locs, chat_id)				
 				bot.sendPhoto(chat_id, open('out.png', 'rb'))
-				bot.sendMessage(chat_id, translate.afterMap(lang), reply_markup=afterMap(lang))
+				bot.sendMessage(chat_id, translate.afterMap(lang), reply_markup=keyboards.afterMap(lang))
 			elif msg['text'] == "Default" or msg['text'] == "Por defecto":
 				db.storeLocation(chat_id, {u'latitude': 40.411085, u'longitude': -3.685014}, msg['date'])
 				state = 1
@@ -207,11 +207,13 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			self.language = db.getLanguage(self.chat_id)
 			if sending != None and 'sending' in sending:
 				self.loc = sending['sending']['location']
-				
+			
 		if query_data == "start":
 			self.state = 1
+			self.editor.editMessageText(translate.location(self.language), reply_markup=None)
 		elif query_data == "settings":
 			self.state = 0
+			self.editor.editMessageText(translate.settings(self.language), reply_markup=keyboards.settings(self.language))
 				
 		if query_data == "back":
 			stp = steps.stepBack(self.state)	
@@ -219,6 +221,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				self.state -= 1;
 				if stp == "Init":
 					self.state = 1
+					steps.saveStep(from_id, self.state)
 					self.editor.editMessageText(translate.location(self.language), reply_markup=None)
 				elif stp == "Choose Type":
 					self.editor.editMessageText(translate.lookingFor(self.language), reply_markup=keyboards.inlineEstablishment(self.language))
@@ -284,9 +287,12 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			lat = data[0]
 			lng = data[1]
 			self.loc = [lng, lat]
-			bot.sendLocation(from_id,lat,lng)
+			bot.sendLocation(self.chat_id,lat,lng)
+			rate = db.avgRatePlace(self.loc)
+			locat = str(lat)+ " " +str(lng)
+			distance = self.haversine(locat, db.getLocation(self.chat_id))
 			self.editor.editMessageReplyMarkup(reply_markup=None)	
-			bot.sendMessage(from_id, translate.hereIts(self.language), reply_markup=keyboards.optionsKeyboard(self.loc, self.language))
+			bot.sendMessage(self.chat_id, translate.hereIts(self.language, rate, distance), reply_markup=keyboards.optionsKeyboard(self.loc, self.language))
 			
 		elif steps.step(self.state) == "Info Establish":
 			option = query_data.split(" ")

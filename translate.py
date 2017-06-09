@@ -127,11 +127,16 @@ def numberChanged(lang):
 	else:
 		return "Number of locals changed"
 
-def hereIts(lang):
+def hereIts(lang, rate, distance):
+	star = u'\u2b50\ufe0f'
 	if lang == "Espanol":
-		return "Aquí lo tienes"
+		text = "¡Aquí lo tienes!\nEstá a " + str(int(distance)) + " metros de ti "
+		if rate != None:
+			text += "y los usuarios lo han valorado con " + str(rate) + " " + star
 	else:
-		return "Here it is"
+		text = "Here it is!\nIt's " + str(int(distance)) + " meters away "
+		if rate != None:
+			text += "and users have rated it with " + str(rate) + " " + star
 
 def yourRate(lang):
 	if lang == "Espanol":

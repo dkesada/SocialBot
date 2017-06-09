@@ -136,7 +136,6 @@ def getStats():
 	stats['usersWeek'] = users.count({'date': {'$gt': timestamp}})
 	stats['placesRate'] = places.count({'numRate': {'$gte': 1}})
 	stats['placesPhotos'] = places.count({'photos': {'$exists': 'true'}})
-	stats['spanish'] = settings.count({'language': {'$exists': 'true'}, 'language': 'Espanol'})[u'-3.69869', u'40.4062734']
-
+	stats['spanish'] = settings.count({'language': {'$exists': 'true'}, 'language': 'Espanol'})
 	stats['english'] = stats['totalUsers'] - stats['spanish']
 	return stats
