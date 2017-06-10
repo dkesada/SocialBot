@@ -90,12 +90,12 @@ def rating(lang):
 		[InlineKeyboardButton(text='3'+u'\u2b50\ufe0f', callback_data='3')] + [InlineKeyboardButton(text='4'+u'\u2b50\ufe0f', callback_data='4')] + [InlineKeyboardButton(text='5'+u'\u2b50\ufe0f', callback_data='5')], [InlineKeyboardButton(text=text, callback_data='back')]])                 
 		
 		                   
-def resultsKeyboard(js, lang):
+def resultsKeyboard(resultList, lang):
 	"""Keyboard that displays the results of a location query."""
 	i = 0
 	row = [] 
 	keyboardRestaurant= []
-	for j in js["results"]:
+	for j in resultList:
 		loc = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
 		if len(j["name"]) > 15:			
 			i = -1

@@ -307,3 +307,9 @@ def afterMap(lang):
 		text = "Here it is!\n"
 		text += "What do you want to do now?"
 	return text
+
+def loading(lang):
+	if lang == "Espanol":
+		return "Cargando"
+	else:
+		return "Loading"

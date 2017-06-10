@@ -101,11 +101,16 @@ def getSettings(chat_id):
 	if query is None:
 		sett['radius'] = 500
 		sett['openE'] = True
+		sett['numberE'] = 20
 		return sett
 	if 'radius' in query:
 		sett['radius'] = int(query['radius'])
 	else:
 		sett['radius'] = 500
+	if 'numberE' in query:
+		sett['numberE'] = int(query['numberE'])
+	else:
+		sett['numberE'] = 20
 	if 'openE' in query:
 		if query['openE']:
 			sett['openE'] = True

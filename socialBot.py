@@ -179,10 +179,22 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		message = translate.chooseOne(self.language)
 		distanceL = {}
 		rateL = {}
+		resultList = {}
 		if js["status"] != 'ZERO_RESULTS':
-			for j in js["results"]:
+			#for j in list(range(settings['numberE'])):
+				#print js["results"]
+			resultList = js["results"]
+			msg = translate.loading(self.language)
+			while "next_page_token" in js:
+				msg += "."
+				self.editor.editMessageText(msg, reply_markup=None)
+				time.sleep(2)
+				page_token = js["next_page_token"]
+				js = mapclient.places(None, location=(latitude, longitude), radius=settings['radius'], language='es-ES', min_price=None, max_price=None, open_now=settings['openE'], type=establishmentType, page_token=page_token)
+				resultList += js["results"]
+
+			for j in resultList:
 				location = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
-				#distance = "{0:.2f}".format(self.haversine(location, uLoc))
 				distance = int((self.haversine(location, uLoc)))
 				distanceL[distance] = j['name']
 				rate = db.avgRatePlace([str(j["geometry"]["location"]["lng"]), str(j["geometry"]["location"]["lat"])])
@@ -194,7 +206,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			if rateL != {}:
 				message	+= "\n"
 				message	+= translate.rated(self.language, rateL, rates)
-			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(js, self.language))			
+			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(resultList, self.language))
 		else:
 			self.editor.editMessageText(translate.noEstablish(self.language), reply_markup=keyboards.inlineBack(self.language))
 		    
@@ -277,7 +289,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				elif option[0] == "num":
 					num = option[1]
 					db.storeNumberE(from_id, num)
-					bot.answerCallbackQuery(query_id, translate.whatWant(self.language))
+					bot.answerCallbackQuery(query_id, translate.numberChanged(self.language))
 					answeredQuery = True
 					self.editor.editMessageText(translate.whatWant(self.language), reply_markup=keyboards.optionChanged(self.language))
 						
