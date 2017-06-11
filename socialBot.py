@@ -181,8 +181,6 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		rateL = {}
 		resultList = {}
 		if js["status"] != 'ZERO_RESULTS':
-			#for j in list(range(settings['numberE'])):
-				#print js["results"]
 			resultList = js["results"]
 			msg = translate.loading(self.language)
 			while "next_page_token" in js:
@@ -193,6 +191,26 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				js = mapclient.places(None, location=(latitude, longitude), radius=settings['radius'], language='es-ES', min_price=None, max_price=None, open_now=settings['openE'], type=establishmentType, page_token=page_token)
 				resultList += js["results"]
 
+			lim = settings['numberE']
+			i = 0
+			while (i < lim) and (i < len(resultList)):
+				lat = resultList[i]["geometry"]["location"]["lat"]
+				lng = resultList[i]["geometry"]["location"]["lng"]
+				location = str(lat) + " " + str(lng)
+				distance = int((self.haversine(location, uLoc)))
+				distanceL[distance] = resultList[i]['name']
+				rate = db.avgRatePlace([str(lat), str(lng)])
+				if rate != None:
+					rateL[rate] = resultList[i]['name']
+				i += 1
+			rates = sorted(rateL, reverse=True)
+			pos = sorted(distanceL, key=int)
+			message	+= translate.prox(self.language, distanceL, pos)
+			if rateL != {}:
+				message	+= "\n"
+				message	+= translate.rated(self.language, rateL, rates)
+			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(resultList, self.language, i, lim))
+			"""
 			for j in resultList:
 				location = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
 				distance = int((self.haversine(location, uLoc)))
@@ -206,7 +224,7 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			if rateL != {}:
 				message	+= "\n"
 				message	+= translate.rated(self.language, rateL, rates)
-			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(resultList, self.language))
+			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(resultList, self.language))"""
 		else:
 			self.editor.editMessageText(translate.noEstablish(self.language), reply_markup=keyboards.inlineBack(self.language))
 		    

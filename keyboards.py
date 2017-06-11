@@ -90,7 +90,7 @@ def rating(lang):
 		[InlineKeyboardButton(text='3'+u'\u2b50\ufe0f', callback_data='3')] + [InlineKeyboardButton(text='4'+u'\u2b50\ufe0f', callback_data='4')] + [InlineKeyboardButton(text='5'+u'\u2b50\ufe0f', callback_data='5')], [InlineKeyboardButton(text=text, callback_data='back')]])                 
 		
 		                   
-def resultsKeyboard(resultList, lang):
+def resultsKeyboard(resultList, lang, pos, lim):
 	"""Keyboard that displays the results of a location query."""
 	i = 0
 	row = [] 
@@ -111,8 +111,15 @@ def resultsKeyboard(resultList, lang):
 			row = row + [InlineKeyboardButton(text=j["name"], callback_data=loc)]
 		i += 1
 	keyboardRestaurant.append(row)
-	text = translate.back(lang)
-	row = [InlineKeyboardButton(text=text, callback_data='back')]
+	text = translate.rkeyboard(lang)
+	row = []
+	if pos >= lim:
+		row = [InlineKeyboardButton(text=text[0], callback_data='previous')]
+	if pos < len(resultList):
+		row += [InlineKeyboardButton(text=text[1], callback_data='more')]
+	if row != []:
+		keyboardRestaurant.append(row)	
+	row = [InlineKeyboardButton(text=text[2], callback_data='back')]
 	keyboardRestaurant.append(row)
 	markupRestaurant = InlineKeyboardMarkup(inline_keyboard = keyboardRestaurant)
 	

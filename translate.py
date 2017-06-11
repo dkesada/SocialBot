@@ -252,12 +252,21 @@ def yourPosition(lang, pos):
 		
 def prox(lang, prlist, pos):
 	first = prlist[pos[0]] + " (" + str(pos[0]) + " m)"
-	second = prlist[pos[1]] + " (" + str(pos[1]) + " m)"
-	third = prlist[pos[2]] + " (" + str(pos[2])+ " m)"
 	if lang == "Espanol":
-		return "Los más cercanos son " + first + ", "+ second + " y " + third + ".\n"
+		text =  "Los más cercanos son " + first
 	else:
-		return "The closest ones are " + first + ", "+ second + " and " + third + ".\n"
+		text = "The closest ones are " + first
+	
+	if len(prlist) > 1:
+		text += ", " + prlist[pos[1]] + " (" + str(pos[1]) + " m)"
+	if len(prlist) > 2:
+		third = prlist[pos[2]] + " (" + str(pos[2])+ " m)"
+		if lang == "Espanol":
+			text += " y " + third + ".\n"
+		else:
+			text += " and " + third + ".\n"	
+			
+	return text
 		
 def rated(lang, prlist, pos):
 	star = u'\u2b50\ufe0f'
@@ -313,3 +322,9 @@ def loading(lang):
 		return "Cargando"
 	else:
 		return "Loading"
+
+def rkeyboard(lang):
+	if lang == "Espanol":
+		return ["<< Anterior", "Más >>", "Atrás"]
+	else:
+		return ["<< Previous", "More >>", "Back"]
