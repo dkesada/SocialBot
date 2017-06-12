@@ -101,7 +101,7 @@ def getSettings(chat_id):
 	if query is None:
 		sett['radius'] = 500
 		sett['openE'] = True
-		sett['numberE'] = 20
+		sett['numberE'] = 10
 		return sett
 	if 'radius' in query:
 		sett['radius'] = int(query['radius'])
@@ -110,7 +110,7 @@ def getSettings(chat_id):
 	if 'numberE' in query:
 		sett['numberE'] = int(query['numberE'])
 	else:
-		sett['numberE'] = 20
+		sett['numberE'] = 10
 	if 'openE' in query:
 		if query['openE']:
 			sett['openE'] = True
@@ -144,3 +144,9 @@ def getStats():
 	stats['spanish'] = settings.count({'language': {'$exists': 'true'}, 'language': 'Espanol'})
 	stats['english'] = stats['totalUsers'] - stats['spanish']
 	return stats
+	
+def getPos(chat_id):
+	return users.find_one({'_id':chat_id},{'_id':0, 'pos': 1})['pos']
+
+def storePos(chat_id, pos):
+	users.update_one({'_id':chat_id},{'$set':{'pos': pos}},upsert=True)

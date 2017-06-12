@@ -137,6 +137,8 @@ def hereIts(lang, rate, distance):
 		text = "Here it is!\nIt's " + str(int(distance)) + " meters away "
 		if rate != None:
 			text += "and users have rated it with " + str(rate) + " " + star
+		
+	return text
 
 def yourRate(lang):
 	if lang == "Espanol":

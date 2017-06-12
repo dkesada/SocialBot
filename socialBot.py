@@ -168,7 +168,11 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 		self.chat_id = None
 		self.loc = None
 		self.language = None
-
+		self.msg = None
+		self.lim = None
+		self.pos = None
+		self.list = None
+		
 	def placesNearBy(self, establishmentType, chat_id):
 		data = db.getLocation(chat_id)
 		latitude = data[0]
@@ -201,30 +205,21 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				distanceL[distance] = resultList[i]['name']
 				rate = db.avgRatePlace([str(lat), str(lng)])
 				if rate != None:
-					rateL[rate] = resultList[i]['name']
+					rateL[rate] = c[i]['name']
 				i += 1
+			
+			self.lim = lim
+			self.pos = 0
+			self.list = resultList
 			rates = sorted(rateL, reverse=True)
 			pos = sorted(distanceL, key=int)
 			message	+= translate.prox(self.language, distanceL, pos)
 			if rateL != {}:
 				message	+= "\n"
 				message	+= translate.rated(self.language, rateL, rates)
-			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(resultList, self.language, i, lim))
-			"""
-			for j in resultList:
-				location = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
-				distance = int((self.haversine(location, uLoc)))
-				distanceL[distance] = j['name']
-				rate = db.avgRatePlace([str(j["geometry"]["location"]["lng"]), str(j["geometry"]["location"]["lat"])])
-				if rate != None:
-					rateL[rate] = j['name']
-			rates = sorted(rateL, reverse=True)
-			pos = sorted(distanceL, key=int)
-			message	+= translate.prox(self.language, distanceL, pos)
-			if rateL != {}:
-				message	+= "\n"
-				message	+= translate.rated(self.language, rateL, rates)
-			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(resultList, self.language))"""
+			self.msg = message
+			db.storePos(chat_id, self.pos)
+			self.editor.editMessageText(message, reply_markup=keyboards.resultsKeyboard(resultList, self.language, self.pos, lim))
 		else:
 			self.editor.editMessageText(translate.noEstablish(self.language), reply_markup=keyboards.inlineBack(self.language))
 		    
@@ -265,7 +260,19 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 					steps.saveStep(from_id, self.state)
 					self.editor.editMessageReplyMarkup(reply_markup=None)
 					bot.sendMessage(self.chat_id, translate.whatWant(self.language), reply_markup=keyboards.optionsKeyboard(self.loc, self.language))
-							
+			
+		elif query_data == "more":
+			self.lim = db.getSettings(self.chat_id)['numberE']
+			self.pos = db.getPos(self.chat_id)
+			self.pos += self.lim
+			db.storePos(self.chat_id, self.pos)
+			self.editor.editMessageText(self.msg, reply_markup=keyboards.resultsKeyboard(self.list, self.language, self.pos, self.lim))
+		elif query_data == "previous":
+			self.lim = db.getSettings(self.chat_id)['numberE']
+			self.pos = db.getPos(self.chat_id)
+			self.pos -= self.lim
+			db.storePos(self.chat_id, self.pos)
+			self.editor.editMessageText(self.msg, reply_markup=keyboards.resultsKeyboard(self.list, self.language, self.pos, self.lim))				
 		elif steps.step(self.state) == "Settings":
 			if query_data == "language":
 				self.editor.editMessageText(translate.chooseLang(self.language), reply_markup=keyboards.languages(self.language))
@@ -323,11 +330,11 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 			lat = data[0]
 			lng = data[1]
 			self.loc = [lng, lat]
+			self.editor.editMessageReplyMarkup(reply_markup=None)	
 			bot.sendLocation(self.chat_id,lat,lng)
 			rate = db.avgRatePlace(self.loc)
 			locat = str(lat)+ " " +str(lng)
 			distance = self.haversine(locat, db.getLocation(self.chat_id))
-			self.editor.editMessageReplyMarkup(reply_markup=None)	
 			bot.sendMessage(self.chat_id, translate.hereIts(self.language, rate, distance), reply_markup=keyboards.optionsKeyboard(self.loc, self.language))
 			
 		elif steps.step(self.state) == "Info Establish":

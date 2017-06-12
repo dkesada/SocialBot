@@ -93,27 +93,33 @@ def rating(lang):
 def resultsKeyboard(resultList, lang, pos, lim):
 	"""Keyboard that displays the results of a location query."""
 	i = 0
+	num = 0
 	row = [] 
 	keyboardRestaurant= []
-	for j in resultList:
-		loc = str(j["geometry"]["location"]["lat"]) + " " + str(j["geometry"]["location"]["lng"])
-		if len(j["name"]) > 15:			
+	while (num < lim) and (pos < len(resultList)):
+		lat = resultList[pos]["geometry"]["location"]["lat"]
+		lng = resultList[pos]["geometry"]["location"]["lng"]
+		loc = str(lat) + " " + str(lng)
+		name = resultList[pos]["name"]
+		if len(name) > 15:			
 			i = -1
 			keyboardRestaurant.append(row)
-			row = [InlineKeyboardButton(text=j["name"], callback_data=loc)]
+			row = [InlineKeyboardButton(text=name, callback_data=loc)]
 			keyboardRestaurant.append(row)
 			row = []
 		elif i == 2:
 			i = 0
 			keyboardRestaurant.append(row)
-			row = [InlineKeyboardButton(text=j["name"], callback_data=loc)]
+			row = [InlineKeyboardButton(text=name, callback_data=loc)]
 		else:
-			row = row + [InlineKeyboardButton(text=j["name"], callback_data=loc)]
+			row = row + [InlineKeyboardButton(text=name, callback_data=loc)]
 		i += 1
+		pos += 1
+		num += 1
 	keyboardRestaurant.append(row)
 	text = translate.rkeyboard(lang)
 	row = []
-	if pos >= lim:
+	if pos > lim:
 		row = [InlineKeyboardButton(text=text[0], callback_data='previous')]
 	if pos < len(resultList):
 		row += [InlineKeyboardButton(text=text[1], callback_data='more')]
