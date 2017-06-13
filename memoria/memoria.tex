@@ -216,6 +216,52 @@ A continuación mostramos sobre qué va a tratar cada capítulo:
   \item \textbf{Capítulo 8: Conclusiones y trabajo futuro}. En este último capítulo sacamos conclusiones sobre el desarrollo del bot en \texttt{Telegram} y exponemos las mejoras futuras a implementar en el bot.
 \end{itemize}
 
+\mychapter{1}{Chapter 1: Introduction}
+\section{Motivation}
+If we make an analysis of current society it's easy to observe that the use of mobile devices is a constant in the day to day of each person. And that the functionality they offer increases at a great speed. These devices are already an essential part of our lives, and as consequence their applications too.
+
+One of the strengths of these devices it's the help they give us to process all the information on the network. Applications with all that information help us broaden our perception of the world and to make decisions. Another important asset of the new technologies are the social character that they are acquiring, with recommendations, photos, likes ... Within these social applications the most used are instant messaging that put us in touch with our friends and acquaintances, and allow us to share all kind of information.
+
+In some of the conversations with our friends there were complaints of not having a simple and friendly tool to find bars, restaurants and other types of nearby leisure facilities. The first thing you think to look for a solution to this problem is in the \texttt{Google Maps} application. But this app it isn't comfortable but it's embedded in another applications due to the huge amount of information that it offers.
+
+In this situation, we thought that a \texttt{Telegram} bot would fit well as a solution. On the one hand, \texttt{Telegram} is an application that we use every day and a bot would be easy to handle. On the other hand, its social character allows us to have feedback with the users that allows us to establish which are the best options that \texttt{Google Maps} offers us.
+
+\section{Objetivos}
+Al empezar este proyecto, la idea principal era crear un bot que funcionase como asistente virtual de los usuarios a la hora de ayudarles a encontrar locales cercanos a ellos. Valiéndonos de la plataforma que nos ofrece \texttt{Telegram}, somos capaces de facilitar el uso de este asistente a millones de usuarios sin tener que preocuparnos de la plataforma en la que lo vayan a usar, ya sean \textit{smartphones}, \textit{tablets} o incluso \textit{pc's}. El bot estará en funcionamiento de manera ininterrumpida y mejorará sus prestaciones en medida del uso que le den otros usuarios, según le vayan aportando nueva información.
+
+De cara a la implementación del bot, este se valdrá de la ubicación que se le envíe para mostrar locales cercanos. Para esto, vamos a establecer una serie de objetivos funcionales que el bot debe cumplir:
+
+\begin{itemize}
+  \item Ser capaz de \textbf{recibir una localización} y devolver una serie de locales cercanos a ella. Estos locales deberán estar dentro de un cierto radio de distancia variable y por defecto se buscará que estén abiertos en el instante de la búsqueda.
+  \item Cuando se seleccione un establecimiento, \textbf{se devolverá su ubicación} y la información de la que disponga el bot sobre él.
+  \item Poderle dar una \textbf{puntuación} a los establecimientos y ser capaz de enviar fotografías al bot.
+  \item Poder mostrar un \textbf{mapa de calor} en torno a tu localización reflejando las ubicaciones más concurridas por otros usuarios.
+  \item Mostrar \textbf{información} de uso del bot de cara a su posterior desarrollo.
+\end{itemize}
+
+
+\section{Estructura del documento}
+Vamos a estructurar este documento conforme al orden en el que fuímos desarrollando el bot. Para cada versión con nuevas funcionalidades, documentaremos qué hemos cambiado, cómo lo hemos hecho y a qué problemas nos hemos enfrentado.
+
+A continuación mostramos sobre qué va a tratar cada capítulo:
+
+\begin{itemize}
+  \item \textbf{Capítulo 2: Infraestructura para bots - \texttt{Telepot}}. En este capítulo introduciremos al lector al desarrollo de bots en \texttt{Telegram} contando cómo es la infraestructura que tienen y la \textit{API} que ofrece \texttt{Telegram} a los desarrolladores. También hablaremos de qué es y por qué hemos usado el \textit{framework} de \texttt{Telepot} para nuestro bot en vez de la \textit{API} nativa de \texttt{Telegram}.
+	
+  \item \textbf{Capítulo 3: Experimentación previa}. Esta parte tratará de nuestro primer acercamiento a la creación de bots. Hablamos de cómo empezamos a usar \texttt{Telepot} para codificar bots simples y lo que aprendimos para usar en un futuro en nuestro bot final.
+	
+  \item \textbf{Capítulo 4: Primera versión - Establecimientos cercanos}. En este apartado hablamos sobre el desarrollo de la primera versión estable de \textbf{YourPlacesBot}. Esta versión cumple con nuestro primer objetivo que era ofrecer los establecimientos cercanos al usuario. 
+  
+  \item \textbf{Capítulo 5: Segunda versión - Base de datos e interacción}. Aquí tratamos el desarrollo de la versión que ya era capaz de realizar toda la interacción entre el bot y el usuario. Es la primera versión que pusimos a funcionar de manera continuada en \texttt{Telegram}.
+  
+  \item \textbf{Capítulo 6: Tercera versión - Opciones y \textit{Heatmaps}}. Este capítulo trata sobre la tercera versión, donde se introducen opciones sobre el funcionamiento del bot que cada usuario puede variar y mapas de calor en base a tu ubicación.
+	
+  \item \textbf{Capítulo 7: Cuarta versión - Escribir direcciones y estadísticas}. Este apartado trata sobre la última versión del bot, en la cual nuestro objetivo era mejorar y facilitar el uso del bot. Permitiendo al usuario escribir su ciudad, barrio, dirección en vez de tener que mandar la ubicación o comprobar las estadísticas de uso del bot a nivel global.
+  
+  \item \textbf{Capítulo 8: Conclusiones y trabajo futuro}. En este último capítulo sacamos conclusiones sobre el desarrollo del bot en \texttt{Telegram} y exponemos las mejoras futuras a implementar en el bot.
+\end{itemize}
+
+
 \newpage
 \mychapter{2}{Cap\'itulo 2: Infraestructura para bots - \texttt{Telepot}}
 %En este capítulo introduciremos al lector al desarrollo de bots en Telegram contando cómo es la infraestructura que tienen y la API que ofrece Telegram a los desarrolladores. También hablaremos de qué es y por qué hemos usado el framework de Telepot para nuestro bot en vez de la API nativa de Telegram.
