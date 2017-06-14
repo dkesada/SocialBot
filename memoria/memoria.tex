@@ -177,10 +177,6 @@ En algunas de las conversaciones con nuestros amigos había quejas de no disponer
 
 En esta situación, pensamos que un bot de \texttt{Telegram} encajaría bien como solución. Por un lado, \texttt{Telegram} es una aplicación que usamos día a día y un bot resultaría fácil de manejar. Por otro lado, su carácter social nos permite tener un \textit{feedback} con los usuarios que nos permita establecer cuales son las mejores opciones que nos ofrece \texttt{Google Maps}.
 
-%Por otro lado, la función de compartir la ubicación de Telegram se adecúa perfectamente a la API de Google Maps para realizar consultas de búsqueda de establecimientos cercanos.
-
-%Google Maps tiene la funcionalidad de encontrar establecimientos cercanos a ti en base a tu localización y a qué buscas, pero el resultado fue que la aplicación es demasiado grande y no es práctico tener que abrirla, navegar entre todas las opciones y funcionalidades que ofrece y ponerte a buscar un local que te guste. %En la práctica, Google Maps lo usas en la mayoría de casos embebido en otras aplicaciones que luego te redirigen a él para una funcionalidad en concreto, como la ubicación de Telegram.
-
 \section{Objetivos}
 Al empezar este proyecto, la idea principal era crear un bot que funcionase como asistente virtual de los usuarios a la hora de ayudarles a encontrar locales cercanos a ellos. Valiéndonos de la plataforma que nos ofrece \texttt{Telegram}, somos capaces de facilitar el uso de este asistente a millones de usuarios sin tener que preocuparnos de la plataforma en la que lo vayan a usar, ya sean \textit{smartphones}, \textit{tablets} o incluso \textit{pc's}. El bot estará en funcionamiento de manera ininterrumpida y mejorará sus prestaciones en medida del uso que le den otros usuarios, según le vayan aportando nueva información.
 
@@ -226,17 +222,17 @@ In some of the conversations with our friends there were complaints about not ha
 
 In this situation, we thought that a \texttt{Telegram} bot would fit well as a solution. On one hand, \texttt{Telegram} is an application that we use every day and a bot would be easy to handle. On the other hand, its social character allows us to have feedback with the users that helps us establish which are the best options that \texttt{Google Maps} offers us.
 
-\section{Objetivos}
-Al empezar este proyecto, la idea principal era crear un bot que funcionase como asistente virtual de los usuarios a la hora de ayudarles a encontrar locales cercanos a ellos. Valiéndonos de la plataforma que nos ofrece \texttt{Telegram}, somos capaces de facilitar el uso de este asistente a millones de usuarios sin tener que preocuparnos de la plataforma en la que lo vayan a usar, ya sean \textit{smartphones}, \textit{tablets} o incluso \textit{pc's}. El bot estará en funcionamiento de manera ininterrumpida y mejorará sus prestaciones en medida del uso que le den otros usuarios, según le vayan aportando nueva información.
+\section{Objectives}
+At the beginning of this project, the main idea was to create a bot that would work as a virtual assistant for users to help them to find places near them. Using the platform offered by \texttt{Telegram}, we are able to facilitate the use of these assistant to millions of users without having to worry about the platform that they'll use, whether they are smartphones, tablets or even pcs. The bot will be in operation in an uninterrupted way and will improve its performance in the measure of the use that other users give it, as they are contributing with new information.
 
-De cara a la implementación del bot, este se valdrá de la ubicación que se le envíe para mostrar locales cercanos. Para esto, vamos a establecer una serie de objetivos funcionales que el bot debe cumplir:
+In order to the implement of the bot, this will use the location that it's sent to show nearby establishments. For this, we will establish a series of functional objectives that the bot must comply:
 
 \begin{itemize}
-  \item Ser capaz de \textbf{recibir una localización} y devolver una serie de locales cercanos a ella. Estos locales deberán estar dentro de un cierto radio de distancia variable y por defecto se buscará que estén abiertos en el instante de la búsqueda.
-  \item Cuando se seleccione un establecimiento, \textbf{se devolverá su ubicación} y la información de la que disponga el bot sobre él.
-  \item Poderle dar una \textbf{puntuación} a los establecimientos y ser capaz de enviar fotografías al bot.
-  \item Poder mostrar un \textbf{mapa de calor} en torno a tu localización reflejando las ubicaciones más concurridas por otros usuarios.
-  \item Mostrar \textbf{información} de uso del bot de cara a su posterior desarrollo.
+  \item Be able \textbf{to receive a location} and return a series of nearby establishments. This premises must be within a certain radius of variable distance and will be searched by default at the time of the query.
+  \item When an establishment is selected , its location and the information that the bot has on it will be returned.
+  \item It can give a \textbf{rate} to the establishments and to be able to send photos to the bot.
+  \item To be able to show a \textbf{heat map} around your location reflecting the locations most crowded by other users.
+  \item To show \textbf{info} of use of the bot for its further development.
 \end{itemize}
 
 
