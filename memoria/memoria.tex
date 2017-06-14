@@ -571,15 +571,42 @@ Otra idea que se nos ocurrió pero debido a la falta de tiempo y de datos en nues
 
 Además de esto, como \texttt{Telegram Bot API} es una plataforma que está en continuo crecimiento, con nuevas actualizaciones y nuevas funcionalidades cada cierto tiempo nuestra idea es actualizar el bot a la vez que lo hace la plataforma. E implementaremos nuevas funcionalidades si siguen creciendo las opciones, que sean interesantes para el uso del bot, de la plataforma.
 
+\newpage
+\mychapter{8}{Chapter 8: Conclusions and future work}
+To conclude, we are going to over what we have acomplished during this project regarding the abilities we acquiered and the technologies we used. We will also talk about the future work that is left to be done.
+
+\section{\texttt{Telegram} bots}
+When we began this project, we knew about \texttt{Telegram} bots and we had used some of them before, but we didn't know anything about how they are created. When facing the coding of our bot, we had to rely on our previous knoledge and learn on the fly the necessary skills.
+
+Bots are a definitely powerful tool of \texttt{Telegram}. The ability of being able to create tools that are at the disposition of millions of potencial users by following a few steps through \textit{@BotFather}, along with the platform that \texttt{Telegram} makes it possible for anyone to create a bot. This platform also makes bots more robust, given that you only have to communicate with the \texttt{Telegram} servers to obtain updates and send messages.
+
+However, it's also true that because of this, all the bots have to adapt to the structure offered by \texttt{Telegram}, and you have to stick to the ways of interaction with the user that a \texttt{Telegram} chat offers. In exchange to being able to use the interface of \texttt{Telegram} you have to assume its limitations. Even so, all the posibilities offered by \texttt{Telegram}, which are also being extended with regularity, compensate this.
+
+Once you have comprenhended the interface, you stop thinking about developing a \texttt{Telegram} bot and begin thinking of \texttt{Telegram} as a medium and not as an end. You are developing an application that runs on \texttt{Telegram}'s platform, so you stick the funcionality of your bot to the possibilities of interaction offered by \texttt{Telegram}, but the application you are developing could have been adapted to a different platform.
+
+All in all, \texttt{Telegram} bots are a very good possibility when you think about developing an application for mobile devices, given the advantages they offer and all the visibility that you can achieve without any cost.
+
+\section{\texttt{Python} and \texttt{Telepot}}
+When we began this project, we decided to code it in \texttt{Python} in order to be able to benefit ourselves from \texttt{Telepot}. \texttt{Python} is not widely used during the degree, so we had no previous knowledge of it. However, we had used previously object oriented languages and interpreted languages, so we could adapt easily to it after some time.
+
+The easiness of writing code in \texttt{Python} makes learning it very comfortable, but its best characteristic is the wide array of libraries that it has.
+
+At first, using \texttt{Telepot} is only useful to be able to code your bots in \texttt{Python}, but when you comprehend how handlers and the \textit{DelegatorBot} works, it saves you a great amount of work.
+
 \setcounter{secnumdepth}{0}% Desabilita la numeración de las secciones
 \newpage
 \mychapter{9}{Aportaciones individuales}
 En general ambos autores hemos participado en todos los aspectos del proyecto. La parte de la experimentación previa la realizamos de forma individual, aunque trabajando aspectos muy parecidos y utilizando \texttt{Telepot}.
 
 \section{David Quesada L\'opez}
-Al comenzar a codificar el bot, creé la estructura base del bot a partir de los bots que había desarrollado en la fase de experimentación. Me encargué también de preparar la \textit{API} de \texttt{Google Maps} para poder usarla, registrándose y obteniendo la clave. Hice las primeras pruebas del método \textit{places\_nearby}, aunque en este momento del desarrollo aún no nos dimos cuenta de que este método no funcionaba correctamente. 
+Cuando comenzó el proyecto conjunto, monté el repositorio de git que hemos utilizado durante todo el proyecto. Decidí ponerle una licencia \texttt{MIT} como la usada por \texttt{Telepot}, para que si alguien se encuentra con el proyecto y le puede ser de utilidad pueda valerse de él libremente mencionándonos.
+
+Al comenzar a codificar el bot, creé la estructura base del bot a partir de los bots que había desarrollado en la fase de experimentación. Durante esta fase, me había centrado especialmente en el uso de los \textit{handlers}, los \textit{delegator} y los teclados \textit{inline}, por lo que la estructura inicial fue lo bastante robusta como para soportar el resto de la codificación del bot.
+
+Me encargué también de preparar la \textit{API} de \texttt{Google Maps} para poder usarla, registrándose y obteniendo la clave. Hice las primeras pruebas del método \textit{places\_nearby}, aunque en este momento del desarrollo aún no nos dimos cuenta de que este método no funcionaba correctamente. 
 
 Implementé la base de datos en \texttt{MongoDB} con \texttt{Pymongo} en un nuevo módulo. Este nuevo módulo contendría todas las funciones relativas a la interacción con la base de datos. Monté la estructura de lo que empezaríamos guardando en la colección \textit{usuarios}, y dado que usamos \texttt{MongoDB} es fácil cambiarlo en un futuro para guardar nuevos datos o añadir colecciones. Monté también el \textit{script} para lanzar la base de datos en el servidor. 
+
 Junté en otro módulo todos los teclados que utilizamos en el bot, para que fuese más sencillo encontrarlos y realizar cambios en ellos. De esta forma para introducir un teclado a un mensaje lo llamamos como a una función. De cara a la funcionalidad del bot, me encargué de hacer la parte de recibir fotos de cada local y guardarlas en la base de datos. Finalmente, cambié la forma de guardar localizaciones de establecimientos en la base de datos de cara a crear un índice geoespacial en un futuro.
 
 En cuanto a la memoria, comencé escribiendo el resumen y el capítulo 1, montando la estructura que seguiríamos luego. Escribí el capítulo 2 y el capítulo 3, sobre los pasos previos a la creación de nuestro bot. El capítulo de la segunda versión lo escribimos a medias, encargándome yo de las secciones de \texttt{MongoDB} y de los \textit{steps}. En la tercera versión hice las dos primeras secciones. Finalmente, escribí el último capítulo excepto el trabajo futuro. 
