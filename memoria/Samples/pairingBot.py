@@ -63,3 +63,6 @@ print ('Listening ...')
 
 while 1:
     time.sleep(10)
+
+
+js = mapclient.places_nearby(None, location=(latitude, longitude), radius=settings['radius'], language='es-ES', min_price=None, max_price=None, open_now=settings['openE'], type=establishmentType)
