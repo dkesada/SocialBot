@@ -248,23 +248,27 @@ def textNoProcces(lang):
 
 def yourPosition(lang, pos):
 	if lang == "Espanol":
-		return "Tu posición es  " + pos
+		return "Tu posición es  " + pos.encode('utf-8')
 	else:
-		return "Your position is " + pos
+		return "Your position is " + pos.encode('utf-8')
 		
 def prox(lang, prlist, pos):
 	first = prlist[pos[0]] + " (" + str(pos[0]) + " m)"
 	if lang == "Espanol":
-		text =  "Los más cercanos son " + first
+		text =  "Los más cercanos son " + first.encode('utf-8')
 	else:
 		text = "The closest ones are " + first
 	
 	if len(prlist) > 1:
-		text += ", " + prlist[pos[1]] + " (" + str(pos[1]) + " m)"
+		second = ", " + prlist[pos[1]] + " (" + str(pos[1]) + " m)"
+		if lang == "Espanol":
+			text += " y " + second.encode('utf-8') + ".\n"
+		else:
+			text += " and " + second + ".\n"	
 	if len(prlist) > 2:
 		third = prlist[pos[2]] + " (" + str(pos[2])+ " m)"
 		if lang == "Espanol":
-			text += " y " + third + ".\n"
+			text += " y " + third.encode('utf-8') + ".\n"
 		else:
 			text += " and " + third + ".\n"	
 			
@@ -274,16 +278,20 @@ def rated(lang, prlist, pos):
 	star = u'\u2b50\ufe0f'
 	first = prlist[pos[0]] + " (" + str(pos[0]) + " " + star + ")"
 	if lang == "Espanol":
-		msg = "Los mejor valorados son " + first
+		msg = "Los mejor valorados son " + first.encode('utf-8')
 	else:
 		msg = "The best rated are " + first
 	
 	if len(prlist) > 1:
-		msg += ", "+ prlist[pos[1]] + " (" + str(pos[1]) + " " + star + ")"
+		second = ", "+ prlist[pos[1]] + " (" + str(pos[1]) + " " + star + ")"
+		if lang == "Espanol":
+			msg += " y " + second.encode('utf-8') + ".\n"
+		else:
+			msg +=" and " + second + ".\n"	
 	if len(prlist) > 2:
 		third = prlist[pos[2]] + " (" + str(pos[2])+ " " + star + ")"
 		if lang == "Espanol":
-			msg += " y " + third + ".\n"
+			msg += " y " + third.encode('utf-8') + ".\n"
 		else:
 			msg +=" and " + third + ".\n"	
 		
