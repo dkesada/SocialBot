@@ -225,13 +225,13 @@ In this situation, we thought that a \texttt{Telegram} bot would fit well as a s
 \section{Objectives}
 At the beginning of this project, the main idea was to create a bot that would work as a virtual assistant for users to help them to find places near them. Using the platform offered by \texttt{Telegram}, we are able to facilitate the use of these assistant to millions of users without having to worry about the platform that they'll use, whether they are smartphones, tablets or even pcs. The bot will be in operation in an uninterrupted way and will improve its performance in the measure of the use that other users give it, as they are contributing with new information.
 
-Regarding the implementation of the bot, it will use the location that is sent to it to show nearby establishments. To acomplish this, we will establish a series of functional objectives that the bot must comply:
+In order to the implement of the bot, this will use the location that it's sent to show nearby establishments. For this, we will establish a series of functional objectives that the bot must comply:
 
 \begin{itemize}
   \item Be able \textbf{to receive a location} and return a series of nearby establishments. This premises must be within a certain radius of variable distance and will be searched by default at the time of the query.
   \item When an establishment is selected , its location and the information that the bot has on it will be returned.
-  \item To be able to give a \textbf{rate} to the establishments and to be able to send photos to the bot.
-  \item To be able to show a \textbf{heatmap} around your location reflecting the locations most crowded by other users.
+  \item It can give a \textbf{rate} to the establishments and to be able to send photos to the bot.
+  \item To be able to show a \textbf{heat map} around your location reflecting the locations most crowded by other users.
   \item To show \textbf{info} of use of the bot for its further development.
 \end{itemize}
 
@@ -239,18 +239,18 @@ Regarding the implementation of the bot, it will use the location that is sent t
 \section{Structure of the document}
 We're going to structure this document according to the order in which we were developing the bot. For each version with new features, we'll document what we have changed, how we have done it and which problems we have faced.
 
-The following is what each chapter will cover:
+Following is what will treat each chapter:
 
 \begin{itemize}
-  \item \textbf{Chapter 2: Infrastructure for bots - \texttt{Telepot}}. In these chapter we'll introduce the reader to the development of bots in \texttt{Telegram} telling how is the infrastructure that they have and the API that \texttt{Telegram} offers to the developers. We'll also talk about what it is and why we have used the \texttt{Telepot} framework for our bot instead of the \texttt{Telegram} native API.
+  \item \textbf{Chapter 2: Infrastructure for bots - \texttt{Telepot}}. In these chapter we'll introduce the reader to the development of bots in \texttt{Telegram} telling how is the infrastructure that they have and the API that \texttt{Telegram} offers to the developers. Also we'll talk what it's and why we have used the \texttt{Telepot} framework for our bot instead of the \texttt{Telegram} native API.
 	
   \item \textbf{Chapter 3: Previous experimentation}. This part will deal with our first approach to the creation of bots. We talk about how we start to use \texttt{Telepot} to encode simple bots and what we learned to use in our final bot.
 	
-  \item \textbf{Chapter 4: First version - Nearby establishments}. In this chapter we talk about the development of the first stable version of \textbf{YourPlacesBot}. This version carries out with our first objective that was to offer the the establishments near the user. 
+  \item \textbf{Chapter 4: First version - Nearby establishments}. In this chapter we talk about the development of the first stable version \textbf{YourPlacesBot}. This version carries out with our first objective that was to offer the the establishments near the user. 
   
   \item \textbf{Chapter 5: Second version - Database and interaction}. Here we treat the development of the version which was already capable of performing all the interaction between the bot and the user. This is the first version that we put to run continuously in \texttt{Telegram}.
   
-  \item \textbf{Chapter 6: Third version - Options and Heatmaps}. This chapter deals with our third version, which introduces options about the operation of the bot that each user can change and heatmaps based on your location. 
+  \item \textbf{Chapter 6: Third version - Options and Heatmaps}. This chapter deals with our third version, which introduces options about the operation of the bot that each user can change and heat maps based on your location. 
 	
   \item \textbf{Chapter 7: Fourth version - Write addresses and statistics}. This chapter is about the latest version of the bot, in which our goal was to improve and facilitate the use of the bot. Allowing the user to type their city, neighborhood, address instead of having to send the location or check the statistics of use of the bot at global level.
   
@@ -324,7 +324,7 @@ En estos primeros bots también experimentamos con los distintos tipos de teclado
 Lo último con lo que hicimos pruebas en esta primera fase fue con la gestión del servidor. En un principio, nuestros bots procesaban los \textit{updates} que les llegaban de manera secuencial. Cuando ya empezaron a realizar tareas más complejas, tuvimos que crear servidores simples que lanzasen un hilo por cada nuevo \textit{chat\_id} que les llegase en un mensaje. Así, el bot disponía de un diccionario con los \textit{chat\_id} y una cola, para que cada mensaje proveniente de un \textit{chat\_id} ya conocido se encolase para su hilo correspondiente.
 \lstinputlisting[language=Python, firstline=82, lastline=87, title=Ejemplo de gestión de mensajes nuevos]{Samples/espiaBot.py}
 Tras crear algunos bots que utilizaban este sistema de servidor con hilos por paso de mensajes, nos dimos cuenta de que \texttt{Telepot} proporciona una clase para gestionar todo esto de manera cómoda: la clase \textit{DelegatorBot} y los \textit{handlers}. Esta clase tiene la particularidad de que el objeto bot que creas trata de manera diferente los \textit{updates} que le llegan dependiendo del tipo que sean. Además, este objeto se encarga de lanzar hilos por cada nuevo \textit{chat\_id} que le llega y los tiene todos registrados por debajo en un diccionario, para poder redirigirles los mensajes que les correspondan a cada uno y poder cerrarlos cuando sea necesario.
-\lstinputlisting[language=Python, firstline=417, lastline=424, title=Ejemplo de creación de un \textit{DelegatorBot}]{../socialBot.py}
+\lstinputlisting[language=Python, firstline=323, lastline=330, title=Ejemplo de creación de un \textit{DelegatorBot}]{../socialBot.py}
 Para gestionar cada mensaje de una forma u otra es necesario definir un \textit{handler} del tipo que corresponda: para gestionar lo relacionado con mensajes en un \textit{chat} se necesita un \textit{ChatHandler} y para tratar las pulsaciones en teclados \textit{inline} se necesita un \textit{CallbackQueryOriginHandler}. Una vez creadas las clases de los \textit{handlers}, debe ponerse un \textit{pave\_event\_space()} por cada tipo de \textit{updates} diferentes que vaya a tratarse. En los argumentos de esta función se especifica qué evento genera un nuevo hilo, en el caso de ejemplo serían \textit{per\_chat\_id()} para el \textit{ChatHandler} y \textit{per\_callback\_query\_origin()} para las pulsaciones en los teclados \textit{inline}. 
 
 El uso del \textit{DelegatorBot} y los \textit{handlers} facilita en gran medida la creación de bots más complejos. Una vez que te acomodas a los diferentes eventos de creación de hilos y de \textit{handlers} que te ofrece \texttt{Telepot}, te ahorra el tener que gestionar tú los hilos y los mensajes, siempre y cuando comprendas bien la gestión interna de estos hilos por parte del \textit{DelegatorBot}.
@@ -384,7 +384,7 @@ Como indicabamos en el capítulo anterior el uso del \textit{DelegatorBot} tenía 
 Para gestionar la base de datos con el bot implementamos un nuevo módulo utilizando \texttt{Pymongo}, que es una librería de \texttt{Python} que ayuda a gestionar las bases de datos con \texttt{MongoDB}. Dentro de la nueva base de datos establecimos dos colecciones, una de usuarios y otra de establecimientos. Estas dos colecciones no implementan funciones \textit{join}, dado que en \texttt{MongoDB} y en \textit{NoSQL} en general son muy lentas. El bot cuando quiere guardar datos o extraerlos de la base de datos llama a una función específica del nuevo módulo, y este se encargará de conectar con la base de datos para extraer o persistir los datos. Para solucionar el problema del \textit{timeout}, cuando este período de tiempo transcurre invocamos al método \textit{on\_close()} que persiste los atributos que van a expirar en la base de datos.
 
 \section{Interacción con el usuario}
-Llegados a este punto, aumentamos la funcionalidad del bot para que una vez que te enviase la localización de algún local y también te diese más opciones a realizar con ella. Pusimos la posibilidad de darle una valoración al local que se haya seleccionado, de cero a cinco estrellas, que también se muestra a la hora de enseñarte los locales cercanos a tí. Introducimos también la posibilidad de mandar imágenes de los locales, de forma que si un local tiene imágenes en la base de datos damos la opción de ir viéndolas a través de la interfaz con botones.
+Llegados a este punto, aumentamos la funcionalidad del bot para que una vez que te enviase la localización de algún local también te diese más opciones a realizar con ella. Pusimos la posibilidad de darle una valoración al local que se haya seleccionado, de cero a cinco estrellas, que también se muestra a la hora de enseñarte los locales cercanos a tí. Introducimos también la posibilidad de mandar imágenes de los locales, de forma que si un local tiene imágenes en la base de datos damos la opción de ir viéndolas a través de la interfaz con botones.
 
 \begin{figure}[h!]
   \centering
@@ -494,7 +494,7 @@ En anteriores versiones la única forma de que el bot supiera tu localización era
 \section{Cambios al mostrar los locales}
 Anteriormente al mostrar los locales mostrábamos primero en el texto uno por uno todos los establecimientos con la distancia a la que se encontraba el usuario y la puntuación media que tenía y luego una lista de \textit{InlineKeyboardMarkups} de cada uno de los locales. Pero esto en lugares donde hay muchos locales provoca un mensaje muy largo por lo que decidimos cambiarlo. Ya que además como indicabamos en la sección de motivación uno de los problemas que nos encontramos en los servicios para buscar locales de ocio era la gran cantidad de información que nos ofrecían y que éramos incapaces de procesar.
 
-Por ello a partir de esta versión, después de elegir el tipo de establecimiento al que el usuarios quiera ir ofrecemos, por mensaje de texto, los tres locales más cercanos a su posición y los tres mejor valorados por el resto de usuarios en el radio que el cliente tenga establecido. Y también mostramos la lista  de \textit{InlineKeyboardMarkups} de cada uno de los locales para que el usuario pueda seleccionar el que quiera.
+Por ello a partir de esta versión, después de elegir el tipo de establecimiento al que el usuarios quiera ir ofrecemos, por mensaje de texto, los tres locales más cercanos a su posición y los tres mejor valorados por el resto de usuarios en el radio que el cliente tenga establecido. También mostramos la lista  de \textit{InlineKeyboardMarkups} de cada uno de los locales para que el usuario pueda seleccionar el que quiera.
 
 \begin{figure}[h!]
   \centering
@@ -504,7 +504,7 @@ Por ello a partir de esta versión, después de elegir el tipo de establecimiento 
 \end{figure}
 
 \section{Estadísticas}
-Esta nueva opción solo está disponible para los desarrolladores, se trata de un comando \textit{/stats}, que ofrece las estadísticas de uso del bot. Tras introducir el comando, que no mostramos en la lista de comandos, comprueba si el cliente que introdujo el comando es un superusuario. Los dos únicos superusuarios somos los dos desarrolladores. Si un usuario no autorizado introduce el comando se le enviará un mensaje que le advierte que no tiene permiso para ver ese contenido y se le ofrece la única opción de volver hacia atrás. En el caso de que sí sea un superusuario se muestra el total de usuarios, los usuarios activos durante los últimos siete días, el total de local valorados y los que tienen fotos, y también las estadísticas en cuanto al idioma utilizado.
+Esta nueva opción solo está disponible para los desarrolladores, se trata de un comando \textit{/stats}, que ofrece las estadísticas de uso del bot. Tras introducir el comando, que no mostramos en la lista de comandos, comprueba si el cliente que introdujo el comando es un superusuario. Los dos únicos superusuarios somos los dos desarrolladores. Si un usuario no autorizado introduce el comando se le enviará un mensaje que le advierte que no tiene permiso para ver ese contenido y se le ofrece la única opción de volver hacia atrás. En el caso de que sí sea un superusuario se muestra el total de usuarios, los usuarios activos durante los últimos siete días, el total de local valorados y los que tienen fotos, también las estadísticas en cuanto al idioma utilizado.
 
 \begin{figure}[h!]
   \centering
@@ -561,7 +561,7 @@ Durante el grado, nunca nos habíamos enfrentado a la tarea de generar un documen
 A pesar de que al principio cuesta un poco comprender la sintaxis, después resulta bastante sencillo su uso, dando facilidades a la hora de insertar citas al código y a la hora de estructurar el documento.
 
 \section{Trabajo futuro}
-Los objetivos marcados antes del desarrollo del bot los hemos cumplido, pero a medida que se íbamos desarrollando el código nos surgieron nuevas ideas y funcionalidades para añadir al bot y también para mejorar algunas de las partes que del bot.
+Los objetivos marcados antes del desarrollo del bot los hemos cumplido, pero a medida que se íbamos desarrollando el código nos surgieron nuevas ideas y funcionalidades para añadir al bot, también para mejorar algunas de las partes que del bot.
 
 La idea de añadir reconocimiento de imágenes para que los usuarios nos pudieran enviar fotos de las cartas de comida o bebidas y poder mostrar la información al resto de los usuarios, surgió cuando implementamos la capacidad de poder enviar y ver fotos en el bot. Pero debido a las restricciones temporales tuvimos que decidir si implementar los mapas de calor o el reconocimiento de imágenes, y al final dimos prioridad a los mapas de calor.
 
