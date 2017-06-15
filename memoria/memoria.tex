@@ -546,7 +546,7 @@ La sencillez al la hora de escribir código en \texttt{Python} hace bastante fáci
 En un principio, el uso de \texttt{Telepot} sólo sirve para codificar los bots en \texttt{Python}, pero una vez comprendido el uso de los \textit{handlers} y de \textit{DelegatorBot}, la carga de trabajo se ve reducida notablemente. 
 
 \section{Base de datos}
-Para la base de datos, estamos en un entorno adecuado para \textit{NoSQL}. Dada la diversidad de los datos y el formato \textit{JSON} que utiliza \texttt{Telegram} para hacer llegar los mensajes enviados al bot, resultó una buena opción \texttt{MongoDB}. Este lenguaje orientado a documentos funciona bien fuera del entorno \textit{cluster} al que están dirigidos gran parte de los lenguajes \textit{NoSQL}.
+Para la base de datos, estamos en un entorno adecuado para \textit{NoSQL}. Dada la diversidad de los datos y el formato \textit{JSON} que utiliza \texttt{Telegram} para hacer llegar los mensajes enviados al bot, resultó una buena opción \texttt{MongoDB}. Esta base de datos orientada a documentos funciona bien fuera del entorno \textit{cluster} al que están dirigidos gran parte de las bases \textit{NoSQL}.
 
 Además, es sencillo integrarlo con \texttt{Python} a través de \texttt{Pymongo}. Como este lenguaje sí lo habíamos practicado antes, pudimos aplicar lo que ya sabíamos de su uso en terminal, dado que el funcionamiento es el mismo que con \texttt{Pymongo}. 
 
@@ -561,13 +561,13 @@ Durante el grado, nunca nos habíamos enfrentado a la tarea de generar un documen
 A pesar de que al principio cuesta un poco comprender la sintaxis, después resulta bastante sencillo su uso, dando facilidades a la hora de insertar citas al código y a la hora de estructurar el documento.
 
 \section{Trabajo futuro}
-Los objetivos marcados antes del desarrollo del bot los hemos cumplido, pero a medida que se íbamos desarrollando el código nos surgieron nuevas ideas y funcionalidades para añadir al bot. Y también mejorar algunas de las partes que ya son funcionales en el bot.
+Los objetivos marcados antes del desarrollo del bot los hemos cumplido, pero a medida que se íbamos desarrollando el código nos surgieron nuevas ideas y funcionalidades para añadir al bot y también para mejorar algunas de las partes que del bot.
 
 La idea de añadir reconocimiento de imágenes para que los usuarios nos pudieran enviar fotos de las cartas de comida o bebidas y poder mostrar la información al resto de los usuarios, surgió cuando implementamos la capacidad de poder enviar y ver fotos en el bot. Pero debido a las restricciones temporales tuvimos que decidir si implementar los mapas de calor o el reconocimiento de imágenes, y al final dimos prioridad a los mapas de calor.
 
-Nos gustaría aumentar la funcionalidad de los mapas de calor. Aprovechando el navegador interno de \texttt{Telegram} que permite usar \texttt{HTML5} poder hacer un navegador sobre un mapa con todos los datos de nuestros usuarios. Es cierto que \texttt{Google Maps} ofrece un servicio parecido en su \textit{API}, pero debido a las restricciones de uso de \texttt{Telegram Bot API} no lo podemos utilizar, ya que no está permitido abrir enlaces externos dentro del navegador. Además nos gustaría ampliar la funcionalidad temporal de los \textit{heatmaps}, es decir, que se pudieran mostrar los mapas de calor según el día elegido o la hora. Para esto también tendríamos que añadir nuevos campos o incluso una nueva colección a nuestra base de datos.
+Nos gustaría aumentar la funcionalidad de los mapas de calor. Aprovechando el navegador interno de \texttt{Telegram} que permite usar \texttt{HTML5}, poder hacer un navegador sobre un mapa con todos los datos de nuestros usuarios. Es cierto que \texttt{Google Maps} ofrece un servicio parecido en su \textit{API}, pero debido a las restricciones de uso de \texttt{Telegram Bot API} no lo podemos utilizar, ya que no está permitido abrir enlaces externos dentro del navegador. Además nos gustaría ampliar la funcionalidad temporal de los \textit{heatmaps}, es decir, que se pudieran mostrar los mapas de calor según el día elegido o la hora. Para esto también tendríamos que añadir nuevos campos o incluso una nueva colección a nuestra base de datos.
 
-Otra idea que se nos ocurrió pero debido a la falta de tiempo y de datos en nuestra base de datos aún no pudimos implementar. Se trata de recomendaciones de locales, según lo que otros usuarios que hayan valorado con una buena puntuación los mismos establecimientos a los que el usuario también haya dado una buena puntuación, ofrecer otros locales con buenas valoraciones por parte de estos usuarios en los que el usuario aún no haya estado.
+Otra idea que se nos ocurrió pero debido a la falta de tiempo y de datos en nuestra base de datos aún no pudimos implementar eran recomendaciones de locales. Según lo que otros usuarios que hayan valorado con una buena puntuación los mismos establecimientos a los que el usuario también haya dado una buena puntuación, ofrecer otros locales con buenas valoraciones por parte de estos usuarios en los que el usuario aún no haya estado.
 
 Además de esto, como \texttt{Telegram Bot API} es una plataforma que está en continuo crecimiento, con nuevas actualizaciones y nuevas funcionalidades cada cierto tiempo nuestra idea es actualizar el bot a la vez que lo hace la plataforma. E implementaremos nuevas funcionalidades si siguen creciendo las opciones, que sean interesantes para el uso del bot, de la plataforma.
 
@@ -593,17 +593,28 @@ The easiness of writing code in \texttt{Python} makes learning it very comfortab
 
 At first, using \texttt{Telepot} is only useful to be able to code your bots in \texttt{Python}, but when you comprehend how handlers and the \textit{DelegatorBot} works, it saves you a great amount of work.
 
-\section{Database}
-For the database, we are in a suitable environment for NoSQL. Given the diversity of the data and the JSON format used by \texttt{Telegram} to get the messages sent to the bot, it was a good option \texttt{MongoDB}. This document-oriented language works well outside the cluster environment to which most of the NoSQL languages are addressed. 
+\section{Data base}
+Regarding the data base, we are in a propper enviroment for \textit{NoSQL}. Given the diversity of the data and the \textit{JSON} format \texttt{Telegram} uses in the bot messages, \texttt{MongoDB} turned out to be a good option. This document oriented data base works well out of the cluster enviroment that most of the \textit{NoSQL} data bases are directed.
 
-In addition, it's easy to integrate it with \texttt{Python} through \texttt{Pymongo}. As this language we had practiced before, we could apply what we already know of its use in terminal, since the operation is the same as with \texttt{Pymongo}.
- 
-For now we don't plan to use a cluster for the database, since traffic and size aren't enough. However, if in the future we want to mount it it's possible to create a replica set since we are already using \texttt{MongoDB}.
+In addition, it's easy to integrate it with \texttt{Python} through the \texttt{Pymongo} library. Given that we had already practiced with \texttt{MongoDB} before, we were able to apply what we already knew about its use in terminal with \texttt{Pymongo}.
 
-\section{Creating Memory}
-During the grade, we had never faced to the task of generating a document of these dimensions and characteristics. Therefore, in order to face it, we decided to use \texttt{LaTeX}, a system of task-oriented text composition of this style.
- 
-Although it's a little difficult to understand the syntax at first, then it is quite easy to use, giving easy access at the time to insert cites to the code and the time to structure the document.
+For now we are not thinking about using a cluster for the data base because its traffic and size are not big enough. Even so, if in the future we want one, it's possible to create a replication set from the data base we already have.
+
+\section{Creation of this report}
+During our degree, we never faced the task of writing a document with this length and characteristics. Therefore, in order to tackle it int the best way possible, we decided to use \texttt{LaTeX}, a typesetting system oriented to this kind of tasks.
+
+Even though at fist it takes a while to understand its syntax, after that using it is quite straight forward, making it easy to quote the code and to structure the document.
+
+\section{Future work}
+We acomplished the objectives proposed for the bot development, but as we were developing the code we thought of new ideas and functionalities that we could add to the bot and that we could use to improve it.
+
+We thought about adding image recognition so that users could send photos of restaurants menus and then show it to the rest of users. We thought about this when we implemented the image sending and recieving of the bot. But due to time restrictions, we had to decide whether we implemented the heatmaps or the image recognition, and eventually we decided on the heatmaps.
+
+We would like to improve the functionality of the heatmaps. We could use \texttt{Telegram} internal web browser that allows us to use \texttt{HTML5}, and then we could make the heatmap inside that browser. \texttt{Google Maps} offers a similar service in its \textit{API}, but due to the restrictions of using the \texttt{Telegram Bot API} we couldn't use it, because you can't open external links inside the browser. We would also like to make heatmaps depending on the day or the time you want them. To make this possible we would also have to add new information in the data base.
+
+Another idea we had but that we didn't have enough time and user data to implement was stablishments recomendations to users. Comparing what other users have rated positively with what you have, offer stablishments these users have rated and that you havent visited.
+
+On top of this all, given that \texttt{Telegram Bot API} is in continuous development with new updates and new functionalities, our idea was to improve our bot when \texttt{Telegram} offers new interesting ways of interaction.
 
 \setcounter{secnumdepth}{0}% Desabilita la numeración de las secciones
 \newpage
