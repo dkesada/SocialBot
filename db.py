@@ -55,7 +55,13 @@ def storeRating(loc, chat_id, rate):
 		pRate = previousRate['ratings'][0]['rate']
 		places.update_one({'loc.coordinates':loc, 'ratings.user':chat_id}, {'$inc': {'rate':rate-pRate}, '$set':{'ratings.$.rate':rate}})	
 	else:
-		places.update_one({'loc':{'type':'Point','coordinates':loc}},{'$push':{'ratings':{'user':chat_id, 'rate':rate}}, '$inc':{'rate':rate}, '$inc':{'numRate':1}},upsert=True)
+		previousRate = places.find_one({'loc.coordinates':loc}, {'_id':0})
+		if previousRate != None:
+			pRate = previousRate['rate']
+		else:
+			pRate = 0
+		places.update_one({'loc':{'type':'Point','coordinates':loc}},{'$push':{'ratings':{'user':chat_id, 'rate':rate}}, '$set':{'rate':rate+pRate}, '$inc':{'numRate':1}},upsert=True)
+		
 		
 def storePlacePhoto(loc, photo):
 	"""Stores a file_id from a photo of a stablishment sent by an user."""

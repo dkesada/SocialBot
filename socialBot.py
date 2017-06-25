@@ -203,9 +203,9 @@ class ButtonHandler(telepot.helper.CallbackQueryOriginHandler):
 				location = str(lat) + " " + str(lng)
 				distance = int((self.haversine(location, uLoc)))
 				distanceL[distance] = resultList[i]['name']
-				rate = db.avgRatePlace([str(lat), str(lng)])
+				rate = db.avgRatePlace([str(lng), str(lat)])
 				if rate != None:
-					rateL[rate] = c[i]['name']
+					rateL[rate] = resultList[i]['name']
 				i += 1
 			
 			self.lim = lim
