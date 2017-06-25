@@ -262,9 +262,9 @@ def prox(lang, prlist, pos):
 	if len(prlist) > 1:
 		second = ", " + prlist[pos[1]] + " (" + str(pos[1]) + " m)"
 		if lang == "Espanol":
-			text += " y " + second.encode('utf-8') + ".\n"
+			text += second.encode('utf-8')
 		else:
-			text += " and " + second + ".\n"	
+			text +=  second	
 	if len(prlist) > 2:
 		third = prlist[pos[2]] + " (" + str(pos[2])+ " m)"
 		if lang == "Espanol":
@@ -285,9 +285,9 @@ def rated(lang, prlist, pos):
 	if len(prlist) > 1:
 		second = ", "+ prlist[pos[1]] + " (" + str(pos[1]) + " " + star + ")"
 		if lang == "Espanol":
-			msg += " y " + second.encode('utf-8') + ".\n"
+			msg += second.encode('utf-8')
 		else:
-			msg +=" and " + second + ".\n"	
+			msg += second	
 	if len(prlist) > 2:
 		third = prlist[pos[2]] + " (" + str(pos[2])+ " " + star + ")"
 		if lang == "Espanol":
