@@ -175,7 +175,7 @@ def settingsBoard(lang):
 def inlineEstablishment(lang):
 	text = []
 	if lang == "Espanol":
-		text = ["Bar", "Café", "Alimentación", "Local nocturno" "Restaurante", "Atrás"]
+		text = ["Bar", "Café", "Alimentación", "Local nocturno", "Restaurante", "Atrás"]
 	else:
 		text = ["Bar", "Cafe", "Food", "Night club", "Restaurant", "Back"]
 	return text
